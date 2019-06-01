@@ -3,17 +3,14 @@
   "version": "0.0.1",
   "description": "apicloud-polyfill,以模块化方式开发 APICloud App!",
   "main": "index.js",
-  "repository":"http://www.apicloud.com",
+  "repository": "http://www.apicloud.com",
   "scripts": {
-    "webpack":"webpack",
+    "webpack": "webpack",
+    "sync": "apicloud wifiSync --project ./ --updateAll false",
     "bundle": "webpack --color --progress",
     "bundle_s": "webpack --color --progress && apicloud wifiSync --project ./ --updateAll false",
     "bundle_d": "webpack -d --color --progress",
-    "bundle_d_s": "webpack -d --color --progress && apicloud wifiSync --project ./ --updateAll false",
-    "wifiStart": "apicloud wifiStart --port 9999",
-    "wifiSync": "apicloud wifiSync --project ./ --updateAll false",
-    "wifiAllSync": "apicloud wifiSync --project ./ --updateAll true",
-    "wifiLog": "apicloud wifiLog --port 9999"
+    "bundle_d_s": "webpack -d --color --progress && apicloud wifiSync --project ./ --updateAll false"
   },
   "author": "APICloud",
   "license": "ISC",
@@ -23,6 +20,11 @@
     "babel-polyfill": "^6.16.0",
     "babel-preset-latest": "^6.16.0",
     "glob": "^7.1.1",
+    "moment": "^2.24.0",
     "webpack": "^1.13.3"
+  },
+  "dependencies": {
+    "apicloud-polyfill": "^0.1.1",
+    "apicloud-tools-core": "^0.1.0"
   }
 }
