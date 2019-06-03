@@ -7,36 +7,52 @@
     <title>index</title>
     <link rel="stylesheet" type="text/css" href="./css/api.css" />
     <link rel="stylesheet" type="text/css" href="./css/style.css" />
-    <style>
-        header{ background-color: #f2f2f2;  line-height: 42px; font-size: 18px; text-align: center; }
-    </style>
 </head>
 <body>
-<div id="wrap" class="flex-wrap flex-vertical" >
-    <header class="border-b" >APICloud</header>
-    <div id="main" class="flex-con" >
+<div id="app">
 
-    </div>
 </div>
 </body>
 </html>
 <script type="text/javascript" src="./script/api.js"></script>
 <script type="text/javascript">
     apiready = function(){
-        $api.fixStatusBar( $api.dom('header') );
-        api.setStatusBarStyle({
-            style: 'dark',
-            color: '#6ab494'
-        });
-        api.openFrame({
-            name: 'win_home',
-            url: './html/win_home.html',
-            rect: {
-                x: 0,
-                y: $api.dom('header').offsetHeight,
-                w: api.winWidth,
-                h: $api.dom('#main').offsetHeight
+        // api.openFrame({
+        //     name: 'win_home',
+        //     url: './html/win_home.html',
+        //     rect: {
+        //         x: 0,
+        //         y: $api.dom('header').offsetHeight,
+        //         w: $api.dom('#main').offsetWidth,
+        //         h: $api.dom('#main').offsetHeight
+        //     }
+        // });
+        api.removeLaunchView()
+        function fnOpenWelcome() {
+            var frames = [];
+            for (var i = 1; i <= 2; i++) {
+                frames.push({
+                    name: 'welcome_frame_' + i,
+                    url: './html/welcome_frame_' + i + '.html',
+                    bounces: false,
+                    opaque : true,
+                    bgColor: './image/welcome/' + i + '.png'
+                });
             }
-        });
+
+            api.openFrameGroup({
+                name: 'welcome_group',
+                scrollEnabled: true,
+                rect: {
+                    x: 0,
+                    y: 0,
+                    w: 'auto',
+                    h: 'auto'
+                },
+                index: 0,
+                frames: frames
+            });
+        }
+        fnOpenWelcome();
     };
 </script>
