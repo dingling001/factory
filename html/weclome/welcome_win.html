@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+</body>
+</html>
+<script src="../../assets/js/api.js"></script>
+<script>
+    apiready=function () {
+        function fnShowWelcome(){
+            api.openFrameGroup({
+                name: 'welcomeGroup',
+                scrollEnable: true,
+                preload:1,
+                ract: {
+                    x: 0,
+                    y: 0,
+                    w: 'auto',
+                    h: 'auto',
+                    marginLeft:0,
+                    marginTop:0,
+                    marginBottom:0,
+                    marginRight:0
+                },
+                index: 0,
+                frames: [{
+                    name: 'welcome1',
+                    url: './html/welcome_frame_1.html',
+                    bgcolor: './image/welcome/1.jpg',
+                    bounces: false
+                },{
+                    name: 'welcome2',
+                    url: './html/welcome_frame_2.html',
+                    bgcolor: './image/welcome/2.jpg',
+                    bounces: false
+                }]
+            },function( ret, err ){
+                var name = ret.name;
+                var index = ret.index;
+            })
+        }
+
+    }
+
+</script>
