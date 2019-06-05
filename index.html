@@ -2,11 +2,12 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+    <meta name="viewport"
+          content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
     <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
     <title>index</title>
-    <link rel="stylesheet" type="text/css" href="assets/css/api.css" />
-    <link rel="stylesheet" type="text/css" href="assets/css/style.css" />
+    <link rel="stylesheet" type="text/css" href="assets/css/api.css"/>
+    <link rel="stylesheet" type="text/css" href="assets/css/style.css"/>
 </head>
 <body>
 <div id="app">
@@ -16,7 +17,7 @@
 </html>
 <script type="text/javascript" src="assets/js/api.js"></script>
 <script type="text/javascript">
-    apiready = function(){
+    apiready = function () {
         // api.getPrefs({
         //     key: 'isNeedWelcome'
         // },function( ret, err ){
@@ -35,13 +36,13 @@
         //         })
         //     }
         // })
-        if(!localStorage.getItem('first')){
+        if (!localStorage.getItem('first')) {
             api.openWin({
-                            name: 'welcome_win',
-                            url: './html/welcome/welcome_win.html',
-                            bounces: true,
-                            slidBackEnabled:false
-                        })
+                name: 'welcome_win',
+                url: './html/welcome/welcome_win.html',
+                bounces: true,
+                slidBackEnabled: false
+            })
         }
     }
 </script>
