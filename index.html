@@ -18,7 +18,7 @@
 <body>
 <div id="app">
     <header>
-
+        <div>1234</div>
     </header>
 </div>
 </body>
@@ -27,21 +27,17 @@
 
 <script type="text/javascript">
     apiready = function () {
-        apiready = function () {
-            api.parseTapmode();
-            var showGuide = $api.getStorage('firstStart');
-            var fac_token = $api.getStorage('fac_token');
-            //判断条件 
-            if (showGuide == 1) {
-                openGuide();//首次下载安装操作 
-            } else if (showGuide == 2 && fac_token) {
-                openIndex()
-            } else {
-                openLogin();//不是首次未登录
-
-            }
-        }
-
+        var firstStart = $api.getStorage('firstStart');
+        var fac_token = $api.getStorage('fac_token');
+        //判断条件 
+        openGuide()
+        // if (!firstStart) {
+        //     openGuide();//首次下载安装操作 
+        // } else if (firstStart ==1 && fac_token) {
+        //     openIndex()
+        // } else {
+        //     openLogin();//不是首次未登录
+        // }
     }
 
     // 跳转启动页
@@ -72,7 +68,7 @@
             var index = ret.index;
             $api.fixStatusBar($api.dom('header'));
             api.setStatusBarStyle({
-                style: 'light',
+                style: 'dark',
             });
             if (index == 0) {
                 $api.setStorage('firstStart', '1');
@@ -82,7 +78,19 @@
 
     // 跳转到登录
     function openLogin() {
-
+        api.openFrame({
+            name: 'login_index',
+            url: './html/lgoin/login_index.html',
+            rect: {
+                x: 0,
+                y: 0,
+                w: 'auto',
+                h: 'auto'
+            },
+            pageParam: {
+                name: 'test'
+            }
+        });
     }
 
     // 跳转到首页

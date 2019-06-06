@@ -23,7 +23,7 @@
             <b tapmode="hover" onclick="funActionSheet();"  class="ic-check"></b>
         </header>
         <div id="main" class="flex-con" >
-                
+
         </div>
     </div>
 </body>
@@ -37,9 +37,9 @@
             name: 'frm_mine',
             url: './frm_mine.html',
             rect: {
-                x: 0, 
-                y: $api.dom('header').offsetHeight, 
-                w: api.winWidth, 
+                x: 0,
+                y: $api.dom('header').offsetHeight,
+                w: api.winWidth,
                 h: $api.dom('#main').offsetHeight
             },
             bounces : true,
@@ -48,12 +48,12 @@
            }
         });
     };
-    
+
     function funActionSheet(){
         api.actionSheet({
             title: '底部弹出框',
             cancelTitle: '取消',
-            destructiveTitle: '红色警告按钮',
+            destructiveTitle: '红1111色警告按钮',
             buttons: ['按钮1','按钮2','按钮3']
         },function(ret,err){
             // api.alert({
