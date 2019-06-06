@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title></title>
+    <script src="../../../assets/js/fontsize.js"></script>
+    <link rel="stylesheet" href="../../../assets/css/api.css"/>
+    <link rel="stylesheet" href="../../../assets/icon/iconfont.css">
+
+    <style>
+        header {
+            width: 100%;
+            height: auto;
+            font-size: 18px;
+            color: #424242;
+        } 
+
+        .index_header {
+            line-height: 0.44rem;
+            color: #424242;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.2rem 0.4rem;
+            border-bottom: 1px solid #ececec;
+        }
+
+        .icon-fanhui {
+            color: #dbb25f;
+            font-size: 18px;
+        }
+
+        .win_mid {
+            padding-right: 0.5rem;
+            color: #424242;
+        }
+
+        .center {
+            line-height: 0.44rem;
+            color: #424242;
+            text-align: center;
+            padding: 0.2rem 0.4rem;
+            border-bottom: 1px solid #ececec;
+        }
+    </style>
+</head>
+<body>
+<div id='app' v-cloak>
+    <header id="header">
+        <div class=" center" v-if="winTitle=='登录'">{{winTitle}}</div>
+        <div class="index_header" v-else>
+            <div class="close_left" @click="closeWindow()"><span class="iconfont icon-fanhui"></span></div>
+            <div class="win_mid">{{winTitle}}</div>
+            <div></div>
+        </div>
+    </header>
+</div>
+</body>
+</html>
+<script type="text/javascript" src="../../../assets/js/api.js"></script>
+<script type="text/javascript" src="../../../assets/js/public.js"></script>
+<script type="text/javascript" src="../../../assets/js/fastclick.js"></script>
+<script>
+    new FastClick(document.body);
+</script>
+<script type="text/javascript" src="../../../assets/js/vue.min.js"></script>
+<script type="text/javascript" src="../../../assets/js/axios.min.js"></script>
+<script type="text/javascript" src="../../../assets/icon/iconfont.js"></script>
+<script type="text/javascript">
+    window.apiready = function () {
+        var app = new Vue({
+            el: '#app',
+            data: {
+                winTitle: api.pageParam.winTitle,
+                win: api.pageParam.win,
+                pageload: 0
+            },
+            created: function () {
+                apiready = function () {
+                    api.setWinAttr({
+                        slidBackEnabled: false
+                    });
+                }
+            },
+            mounted: function () {
+                $api.fixStatusBar($api.dom('header'));
+                api.setStatusBarStyle({
+                    style: 'dark'
+                });
+                if (api.systemType == "ios") {
+                    api.openFrame({
+                        name: api.pageParam.fmName,
+                        url: api.pageParam.fmUrl,
+                        rect: {
+                            x: 0,
+                            y: getHeight('header'),
+                            w: 'auto',
+                            h: 'auto'
+                        },
+                        pageParam: api.pageParam.fm,
+                        bounces: false,
+                        reload: true,
+                        vScrollBarEnabled: false,
+                        hScrollBarEnabled: false,
+                        softInputBarEnabled: false
+                    });
+                } else {
+                    //viewappear事件在ios中首次打开不会调用，在安卓使用以避免切换时加载frame造成卡顿。
+                    api.addEventListener({
+                        name: 'viewappear'
+                    }, function (ret, err) {
+                        if (app.pageload < 1) {
+                            api.openFrame({
+                                name: api.pageParam.fmName,
+                                url: api.pageParam.fmUrl,
+                                reload: true,
+                                rect: {
+                                    x: 0,
+                                    y: getHeight('header'),
+                                    w: 'auto',
+                                    h: 'auto'
+                                },
+                                pageParam: api.pageParam.fm,
+                                bounces: false,
+                                vScrollBarEnabled: false,
+                                hScrollBarEnabled: false,
+                                softInputBarEnabled: false
+                            });
+                        }
+                        app.pageload++;
+                    });
+                }
+            },
+            methods: {
+                closeWindow: function () {
+                    api.sendEvent({
+                        name: 'go_back',
+                    });
+                    closeWindow();
+                }
+            }
+        })
+    }
+</script>

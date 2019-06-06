@@ -6,6 +6,9 @@
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title></title>
+    <style>
+        html,body{ height: 100%; }
+    </style>
 </head>
 <body onclick="fnClose()">
 
@@ -13,6 +16,9 @@
 </html>
 <script src="../../assets/js/api.js"></script>
 <script>
+    apiready=function () {
+
+    }
     function fnClose() {
         if (typeof api.pageParam === 'boolean' && $api.getStorage('firstStart')) {
             api.setFrameGroupAttr({
@@ -29,4 +35,5 @@
             });
         }
     }
+
 </script>

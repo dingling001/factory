@@ -8,41 +8,87 @@
     <title>index</title>
     <link rel="stylesheet" type="text/css" href="assets/css/api.css"/>
     <link rel="stylesheet" type="text/css" href="assets/css/style.css"/>
+    <style>
+        header {
+            width: 100%;
+            height: auto;
+        }
+    </style>
 </head>
 <body>
 <div id="app">
+    <header>
 
+    </header>
 </div>
 </body>
 </html>
 <script type="text/javascript" src="assets/js/api.js"></script>
+
 <script type="text/javascript">
     apiready = function () {
-        // api.getPrefs({
-        //     key: 'isNeedWelcome'
-        // },function( ret, err ){
-        //     if( ret.value === '' ){
-        //         fnShowWelcome();
-        //         api.setPrefs({
-        //             key: 'isNeedWelcome',
-        //             value: true
-        //         })
-        //     }else{
-        //         api.openWin({
-        //             name: 'main',
-        //             url: './html/main_win.html',
-        //             bounces: true,
-        //             slidBackEnabled:false
-        //         })
-        //     }
-        // })
-        if (!localStorage.getItem('first')) {
-            api.openWin({
-                name: 'welcome_win',
-                url: './html/welcome/welcome_win.html',
-                bounces: true,
-                slidBackEnabled: false
-            })
+        apiready = function () {
+            api.parseTapmode();
+            var showGuide = $api.getStorage('firstStart');
+            var fac_token = $api.getStorage('fac_token');
+            //判断条件 
+            if (showGuide == 1) {
+                openGuide();//首次下载安装操作 
+            } else if (showGuide == 2 && fac_token) {
+                openIndex()
+            } else {
+                openLogin();//不是首次未登录
+
+            }
         }
+
     }
+
+    // 跳转启动页
+    function openGuide() {
+        api.openFrameGroup({
+            name: 'welcome',
+            bounces: false,
+            index: 0,
+            rect: {
+                x: 0,
+                y: 0,
+                w: 'auto',
+                h: 'auto'
+            },
+            scrollEnabled: true,
+            frames: [{
+                name: 'welcome_1',
+                url: './html/welcome_1.html',
+                bounces: false,
+                bgColor: 'widget://assets/image/welcome/1.jpg'
+            }, {
+                name: 'welcome_2',
+                url: './html/welcome_1.html',
+                bounces: false,
+                bgColor: 'widget://assets/image/welcome/2.jpg'
+            }]
+        }, function (ret, err) {
+            var index = ret.index;
+            $api.fixStatusBar($api.dom('header'));
+            api.setStatusBarStyle({
+                style: 'light',
+            });
+            if (index == 0) {
+                $api.setStorage('firstStart', '1');
+            }
+        });
+    };
+
+    // 跳转到登录
+    function openLogin() {
+
+    }
+
+    // 跳转到首页
+    function openIndex() {
+        $api.setStorage('firstStart', '2');
+
+    }
+
 </script>
