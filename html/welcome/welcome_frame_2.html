@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title></title>
+    <script src="../../assets/js/fontsize.js"></script>
+    <link rel="stylesheet" href="../../assets/css/api.css">
+    <style type="text/css">
+        .dot_box {
+            position: fixed;
+            width: 100%;
+            left: 0;
+            top: 85vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .dot_box span {
+            background-color: #E5E5E5;
+            height: .18rem;
+            width: .18rem;
+            border-radius: 50%;
+            margin-right: .37rem;
+
+        }
+
+        .dot_box .active {
+            background-color: #FF3B3B;
+            margin: 0;
+        }
+
+        .start {
+            position: fixed;
+            left: 0;
+            right: 0;
+            margin: 0 auto;
+            width: 33%;
+            bottom: .72rem;
+            text-align: center;
+            padding: .15rem 0;
+            font-size: 20px;
+            color: #F94A56;
+            border: 1px solid #F94A56;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+<div id="app">
+    <div class="dot_box">
+        <span></span>
+        <span class="active"></span>
+    </div>
+    <div class="start" @click="start_fn">立即开启</div>
+</div>
+</body>
+</html>
+<script type="text/javascript" src="../../assets/js/vue.min.js"></script>
+<script type="text/javascript" src="../../assets/js/public.js"></script>
+<script>
+    var app = new Vue({
+        el: '#app',
+        data: {},
+        created: function () {
+            apiready = function () {
+
+            }
+        },
+        methods: {
+            start_fn:function () {
+                // api.closeFrameGroup({
+                //     name: 'welcome'
+                // });
+                api.openWin({
+                    name: 'index_win',
+                    url: '../index/index_win.html',
+                });
+            }
+        }
+    })
+</script>

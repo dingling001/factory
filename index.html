@@ -12,13 +12,14 @@
         header {
             width: 100%;
             height: auto;
+            background-color: #fff;
         }
     </style>
 </head>
 <body>
 <div id="app">
     <header>
-        <div>1234</div>
+        <div style="height: 44px"></div>
     </header>
 </div>
 </body>
@@ -30,6 +31,7 @@
         var firstStart = $api.getStorage('firstStart');
         var fac_token = $api.getStorage('fac_token');
         //判断条件 
+
         openGuide()
         // if (!firstStart) {
         //     openGuide();//首次下载安装操作 
@@ -38,8 +40,9 @@
         // } else {
         //     openLogin();//不是首次未登录
         // }
-    }
 
+    }
+    var headerH = $api.offset($api.dom('header')).h;
     // 跳转启动页
     function openGuide() {
         api.openFrameGroup({
@@ -48,25 +51,26 @@
             index: 0,
             rect: {
                 x: 0,
-                y: 0,
+                y: headerH,
                 w: 'auto',
                 h: 'auto'
             },
             scrollEnabled: true,
             frames: [{
                 name: 'welcome_1',
-                url: './html/welcome_1.html',
+                url: './html/welcome/welcome_frame_1.html',
                 bounces: false,
                 bgColor: 'widget://assets/image/welcome/1.jpg'
             }, {
                 name: 'welcome_2',
-                url: './html/welcome_1.html',
+                url: './html/welcome/welcome_frame_2.html',
                 bounces: false,
                 bgColor: 'widget://assets/image/welcome/2.jpg'
             }]
         }, function (ret, err) {
             var index = ret.index;
             $api.fixStatusBar($api.dom('header'));
+
             api.setStatusBarStyle({
                 style: 'dark',
             });
@@ -74,13 +78,16 @@
                 $api.setStorage('firstStart', '1');
             }
         });
-    };
+    }
 
     // 跳转到登录
     function openLogin() {
+        api.closeFrameGroup({
+            name: 'welcome'
+        });
         api.openFrame({
             name: 'login_index',
-            url: './html/lgoin/login_index.html',
+            url: './html/login/login_index.html',
             rect: {
                 x: 0,
                 y: 0,
@@ -95,6 +102,9 @@
 
     // 跳转到首页
     function openIndex() {
+        api.closeFrameGroup({
+            name: 'welcome'
+        });
         $api.setStorage('firstStart', '2');
 
     }

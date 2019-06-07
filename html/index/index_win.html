@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title></title>
+    <script src="../../assets/js/fontsize.js"></script>
+    <link rel="stylesheet" href="../../assets/css/api.css">
+    <style type="text/css">
+
+
+    </style>
+</head>
+<body>
+<div id="app">
+    <header id="header">搜索</header>
+    <footer id="footer">底部</footer>
+</div>
+</body>
+</html>
+<script type="text/javascript" src="../../assets/js/vue.min.js"></script>
+<script type="text/javascript" src="../../assets/js/public.js"></script>
+<script>
+    var app = new Vue({
+        el: '#app',
+        data: {},
+        created: function () {
+            apiready = function () {
+                api.openFrameGroup({
+                    name: 'index',
+                    rect: {
+                        x: 0,
+                        y: 0,
+                        w: 'auto',
+                        h: 'auto'
+                    },
+                    frames: [{
+                        name: 'index_f',
+                        url: 'index_f.html',
+                        bgColor: '#fff'
+                    }, {
+                        name: 'order_f',
+                        url: 'order_f.html',
+                        bgColor: '#fff'
+                    }, {
+                        name: 'my_f',
+                        url: 'my_f.html',
+                        bgColor: '#fff'
+                    }
+                    ]
+                }, function (ret, err) {
+                    var index = ret.index;
+                    // alert(index)
+                });
+            }
+        },
+        methods: {}
+    })
+</script>
