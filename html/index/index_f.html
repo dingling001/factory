@@ -8,29 +8,201 @@
     <title></title>
     <script src="../../assets/js/fontsize.js"></script>
     <link rel="stylesheet" href="../../assets/css/api.css">
+    <link rel="stylesheet" href="http://at.alicdn.com/t/font_1220513_pteag2v2ad.css">
+    <link rel="stylesheet" href="../../assets/css/swiper-3.4.2.min.css">
     <style type="text/css">
+        .banner {
+            /*height: 3rem;*/
+        }
+
+        .swiper-container {
+            width: 100%;
+            height: 100%;
+        }
+
+        .banner .swiper-slide {
+            width: 80% !important;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all .3s;
+        }
+
+        .swiper-slide img {
+            width: 90%;
+        }
+
+        .swiper-slide-active {
+            transform: scale(1.2);
+        }
+
+        /*.swiper-pagination {*/
+        /*display: flex;*/
+        /*justify-content: flex-end;*/
+        /*padding: 0 .25rem;*/
+        /*}*/
+
+        .swiper-pagination .swiper-pagination-bullet {
+            width: 12px;
+            height: 5px;
+            background: #F11C15;
+            transition: 0.3s ease-in-out;
+            border-radius: 3px;
+        }
+
+        .swiper-pagination .swiper-pagination-bullet-active {
+            height: 5px;
+            width: 20px;
+            background: #F11C15;
+            border-radius: 6px;
+        }
+        .index {
+            padding: 0  0 .7rem 0;
+        }
+
+        .nav_box {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 .45rem;
+            flex-wrap: wrap;
+            margin: .3rem 0;
+        }
+
+        .nav_item {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            width: 20%;
+            margin: 0 0 .21rem 0;
+            color: #454545;
+            font-size: 11px;
+        }
+
+        .icon_box {
+            width: .7rem;
+            height: .7rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .icon_box img {
+            width: 100%;
+        }
 
 
     </style>
 </head>
 <body>
-<div id="app">
-首页
+<div id="app" class="index">
+    <div class="swiper-container banner">
+        <div class="swiper-wrapper">
+            <div class="swiper-slide">
+                <img src="../../assets/image/test/b1.png" alt>
+            </div>
+            <div class="swiper-slide">
+                <img src="../../assets/image/test/b1.png" alt>
+            </div>
+            <div class="swiper-slide">
+                <img src="../../assets/image/test/b1.png" alt>
+            </div>
+            <div class="swiper-slide">
+                <img src="../../assets/image/test/b1.png" alt>
+            </div>
+        </div>
+        <!-- 如果需要分页器 -->
+        <div class="swiper-pagination"></div>
+    </div>
+    <div class="nav_box">
+        <div class="nav_item" v-for="item in 10">
+            <span class="icon_box"><img src="../../assets/image/test/n1.png" alt=""></span>
+            <span>机加工</span>
+        </div>
+    </div>
+    <div class="new_title">最新订单</div>
+    <div class="new_list">
+        <div class="new_item" v-for="item in 5">
+            <div class="new_img"><img src="../../assets/image/test/b1.png" alt=""></div>
+            <div class="new_right">
+                <div>
+                    <div class="new_name"><span>寻找封头厂家</span><span class="new_num">50000件</span></div>
+                    <div class="new_city">河北省-唐山市</div>
+                </div>
+                <div class="new_date">发布日期：2019年5月20日</div>
+            </div>
+        </div>
+    </div>
 </div>
 </body>
 </html>
+<script type="text/javascript" src="../../assets/js/api.js"></script>
 <script type="text/javascript" src="../../assets/js/vue.min.js"></script>
 <script type="text/javascript" src="../../assets/js/public.js"></script>
+<script type="text/javascript" src="../../assets/js/swiper-3.4.2.min.js"></script>
 <script>
     var app = new Vue({
         el: '#app',
-        data: {},
+        data: {
+            mySwiper: {}
+        },
         created: function () {
+            // var mySwiper = new Swiper('.swiper-container', {
+            //     slidesPerView: 'auto', //重要 可以去swiper搜索
+            //     centeredSlides: true,   //重要
+            //     paginationClickable: true,
+            //     // spaceBetween: 28,
+            //     effect: 'left',
+            //     // loop: true,
+            //     // coverflowEffect: {
+            //     //     rotate: 20,
+            //     //     stretch: 10,
+            //     //     depth: 60,
+            //     //     modifier: 2,
+            //     // },
+            //     pagination: '.swiper-pagination',
+            //     lazy: {
+            //         loadPrevNext: true,
+            //     },
+            //     observer: true,
+            //     observeParents: true
+            // })
             apiready = function () {
-
+                app.int_swiper();
             }
         },
         methods: {
+            int_swiper: function () {
+                var mySwiper = new Swiper('.swiper-container', {
+                    slidesPerView: 'auto', //重要 可以去swiper搜索
+                    centeredSlides: true,   //重要
+                    paginationClickable: true,
+                    // spaceBetween: 28,
+                    effect: 'left',
+                    // loop: true,
+                    // coverflowEffect: {
+                    //     rotate: 20,
+                    //     stretch: 10,
+                    //     depth: 60,
+                    //     modifier: 2,
+                    // },
+                    coverflow: {
+                        rotate: 30,
+                        stretch: 10,
+                        depth: 60,
+                        modifier: 2,
+                        slideShadows: true
+                    },
+                    pagination: '.swiper-pagination',
+                    lazy: {
+                        loadPrevNext: true,
+                    },
+                    observer: true,
+                    observeParents: true
+                })
+            }
 
         }
     })

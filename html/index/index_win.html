@@ -8,54 +8,98 @@
     <title></title>
     <script src="../../assets/js/fontsize.js"></script>
     <link rel="stylesheet" href="../../assets/css/api.css">
-    <style type="text/css">
-
-
-    </style>
+    <link rel="stylesheet" href="http://at.alicdn.com/t/font_1220513_pteag2v2ad.css">
 </head>
 <body>
-<div id="app">
-    <header id="header">搜索</header>
-    <footer id="footer">底部</footer>
+<div id="app" v-chock>
+    <header id="header" class="index_header"  v-if="index==0||index==1">
+        <span class="input">请输入您要搜索的内容</span>
+        <span class="iconfont icon-sousuo"></span>
+    </header>
+    <footer id="footer">
+        <div class="footer_item" :class="{footer_item_active:index==0}" @click="changeTab(0)">
+            <i :class="['iconfont' ,index==0?'icon-shouye1':'icon-shouye']"></i>
+            <span>首页</span>
+        </div>
+        <div class="footer_item" :class="{footer_item_active:index==1}" @click="changeTab(1)">
+            <i :class="['iconfont' ,index==1?'icon-dingdanzhongxin1':'icon-dingdanzhongxin']"></i>
+            <span>订单中心</span>
+        </div>
+        <div class="footer_item" :class="{footer_item_active:index==2}" @click="changeTab(2)">
+            <i :class="['iconfont' ,index==2?'icon-gerenzhongxin':'icon-gerenzhongxin_']"></i>
+            <span>个人中心</span>
+        </div>
+    </footer>
 </div>
 </body>
 </html>
+<script type="text/javascript" src="../../assets/js/api.js"></script>
 <script type="text/javascript" src="../../assets/js/vue.min.js"></script>
 <script type="text/javascript" src="../../assets/js/public.js"></script>
 <script>
     var app = new Vue({
         el: '#app',
-        data: {},
+        data: {
+            index: 0,
+            headerH: '',
+            footerH: '',
+        },
         created: function () {
             apiready = function () {
+                $api.fixStatusBar($api.dom('header'));
+                $api.fixTabBar($api.byId('footer'));
+                app.headerH = $api.offset($api.dom('header')).h;
+                app.footerH = $api.offset($api.dom('footer')).h;
                 api.openFrameGroup({
                     name: 'index',
                     rect: {
                         x: 0,
-                        y: 0,
+                        y: app.headerH,
                         w: 'auto',
-                        h: 'auto'
+                        h: api.winHeight - app.headerH - app.footerH
                     },
+                    background: '#fff',
+                    scrollEnabled: false,
+                    index: app.index,
+                    preload: 0,
+                    reload: true,
                     frames: [{
                         name: 'index_f',
                         url: 'index_f.html',
-                        bgColor: '#fff'
+                        bounces: true,
+                        reload: true,
                     }, {
                         name: 'order_f',
                         url: 'order_f.html',
-                        bgColor: '#fff'
+                        bounces: true,
+                        reload: true,
                     }, {
                         name: 'my_f',
                         url: 'my_f.html',
-                        bgColor: '#fff'
+                        bounces: true,
+                        reload: true,
                     }
                     ]
                 }, function (ret, err) {
-                    var index = ret.index;
+                    // var index = ret.index;
+                    app.index = ret.index;
                     // alert(index)
+                });
+                api.setWinAttr({
+                    slidBackEnabled: false
                 });
             }
         },
-        methods: {}
+        methods: {
+            // 切换底部导航
+            changeTab: function (res) {
+                app.index = res;
+                api.setFrameGroupIndex({
+                    name: 'index',
+                    index: res
+                })
+            },
+
+        }
     })
 </script>

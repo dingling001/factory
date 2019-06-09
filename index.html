@@ -33,6 +33,7 @@
         //判断条件 
 
         openGuide()
+        // openIndex()
         // if (!firstStart) {
         //     openGuide();//首次下载安装操作 
         // } else if (firstStart ==1 && fac_token) {
@@ -45,6 +46,10 @@
     var headerH = $api.offset($api.dom('header')).h;
     // 跳转启动页
     function openGuide() {
+        $api.fixStatusBar($api.dom('header'));
+        api.setStatusBarStyle({
+            style: 'dark',
+        });
         api.openFrameGroup({
             name: 'welcome',
             bounces: false,
@@ -69,11 +74,7 @@
             }]
         }, function (ret, err) {
             var index = ret.index;
-            $api.fixStatusBar($api.dom('header'));
 
-            api.setStatusBarStyle({
-                style: 'dark',
-            });
             if (index == 0) {
                 $api.setStorage('firstStart', '1');
             }
@@ -94,6 +95,7 @@
                 w: 'auto',
                 h: 'auto'
             },
+            bgColor:'#fff',
             pageParam: {
                 name: 'test'
             }
@@ -102,11 +104,12 @@
 
     // 跳转到首页
     function openIndex() {
-        api.closeFrameGroup({
-            name: 'welcome'
-        });
-        $api.setStorage('firstStart', '2');
 
+        $api.setStorage('firstStart', '2');
+        api.openWin({
+            name: 'index_win',
+            url: './html/index/index_win.html',
+        });
     }
 
 </script>

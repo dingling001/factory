@@ -8,38 +8,35 @@
     <title></title>
     <script src="../../assets/js/fontsize.js"></script>
     <link rel="stylesheet" href="../../assets/css/api.css">
+    <link rel="stylesheet" href="http://at.alicdn.com/t/font_1220513_pteag2v2ad.css">
 </head>
 <body>
-<div id="app">
-    <div class="dot_box">
-        <span></span>
-        <span class="active"></span>
-    </div>
-    <div class="start" @click="start_fn">立即开启</div>
+<div id="app" v-chock>
+    <header id="header" class="index_header"  v-if="index==0||index==1">
+        <span class="input">请输入您要搜索的内容</span>
+        <span class="iconfont icon-sousuo"></span>
+    </header>
 </div>
 </body>
 </html>
+<script type="text/javascript" src="../../assets/js/api.js"></script>
 <script type="text/javascript" src="../../assets/js/vue.min.js"></script>
 <script type="text/javascript" src="../../assets/js/public.js"></script>
 <script>
     var app = new Vue({
         el: '#app',
-        data: {},
+        data: {
+            headerH: '',
+        },
         created: function () {
             apiready = function () {
-
+                $api.fixStatusBar($api.dom('header'));
+                app.headerH = $api.offset($api.dom('header')).h;
             }
         },
         methods: {
-            start_fn: function () {
-                // api.closeFrameGroup({
-                //     name: 'welcome'
-                // });
-                api.openWin({
-                    name: 'index_win',
-                    url: '../index/index_win.html',
-                });
-            }
+            // 切换底部导航
+
         }
     })
 </script>
