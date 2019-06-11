@@ -16,6 +16,7 @@
             justify-content: space-between;
             /*padding: ;*/
         }
+
         .index_header {
 
         }
@@ -24,11 +25,11 @@
 </head>
 <body>
 <div id="app">
-    <header class="index_header" v-if="first==0" id="header">
+    <header class="index_header" v-if="first==0">
         <span class="title">账号登录</span>
         <span>跳过</span>
     </header>
-    <header class="index_header" v-else id="header">
+    <header class="index_header" v-else>
         <span class="iconfont icon-fanhui"></span>
         <span>账号登录</span>
         <span></span>
