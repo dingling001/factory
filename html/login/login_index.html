@@ -8,50 +8,93 @@
     <title>登录</title>
     <script src="../../assets/js/fontsize.js"></script>
     <link rel="stylesheet" href="../../assets/css/api.css">
-    <link rel="stylesheet" href="http://at.alicdn.com/t/font_1220513_pteag2v2ad.css">
-    <style type="text/css">
-        .login_h {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            /*padding: ;*/
-        }
-
-        .index_header {
-
-        }
-
-    </style>
+    <link rel="stylesheet" href="../../assets/css/style.css">
+    <!--<link rel="stylesheet" href="https://unpkg.com/mint-ui@1/lib/style.css">-->
+    <link rel="stylesheet" href="http://at.alicdn.com/t/font_1220513_nualw3bh5ve.css">
 </head>
 <body>
-<div id="app">
-    <header class="index_header" v-if="first==0">
+<div id="app" v-cloak>
+    <header class="index_header" v-if="first==0" id="header">
         <span class="title">账号登录</span>
-        <span>跳过</span>
+        <span @click="go_index">跳过</span>
     </header>
-    <header class="index_header" v-else>
+    <header class="index_header" v-else id="header">
         <span class="iconfont icon-fanhui"></span>
-        <span>账号登录</span>
+        <span class="title">账号登录</span>
         <span></span>
     </header>
+    <div class="input_box box"><span class="iconfont icon-zhanghao"></span> <input type="text" placeholder="请输入您的账号"
+                                                                               v-model="user_name"></div>
+    <div class="input_box"><span class="iconfont icon-mima"></span> <input type="password" placeholder="请输入您的密码"
+                                                                           v-model="password"></div>
+    <div class="input_box red_text"><span>验证码登录</span><span @click="forgot_fn">忘记密码</span></div>
+    <div class="login_btn" @click="login">登录</div>
+    <!--<mt-button @click="login">按钮</mt-button>-->
+    <div class="login_agree" @click="go_agree">登录及代表您同意<span>《加工宝用户协议》</span></div>
 </div>
 </body>
 </html>
 <script type="text/javascript" src="../../assets/js/api.js"></script>
-<script type="text/javascript" src="../../assets/js/vue.min.js"></script>
 <script type="text/javascript" src="../../assets/js/public.js"></script>
+<script type="text/javascript" src="../../assets/js/fastclick.js"></script>
+<script>
+    new FastClick(document.body);
+</script>
+<script type="text/javascript" src="../../assets/js/vue.min.js"></script>
+<script type="text/javascript" src="../../assets/js/index.js"></script>
+<!--<script src="https://unpkg.com/mint-ui@1/lib/index.js"></script>-->
+
 <script>
     var app = new Vue({
         el: '#app',
         data: {
-            first: 0
+            first: 0,
+            user_name: '',
+            password: '',
         },
         created: function () {
             apiready = function () {
                 $api.fixStatusBar($api.dom('header'));
                 app.headerH = $api.offset($api.dom('header')).h;
+                app.first = api.pageParam.first || 0;
             }
         },
-        methods: {}
+        methods: {
+            // 登录
+            login: function () {
+                if (app.user_name == '') {
+                    toastMsg('请输入您的账号')
+                } else if (app.password == '') {
+                    toastMsg('请输入您的密码')
+                } else {
+
+                }
+            },
+            // 去忘记密码
+            forgot_fn:function(){
+                api.openWin({
+                    name: 'login_forgot',
+                    url: './login_forgot.html',
+                });
+            },
+            // 跳过去首页
+            go_index: function () {
+                api.openWin({
+                    name: 'index_win',
+                    url: '../index/index_win.html',
+                    animation: {
+                        type: "fade",                //动画类型（详见动画类型常量）
+                        duration: 300
+                    }
+                });
+            },
+            // 查看协议
+            go_agree: function () {
+                api.openWin({
+                    name: 'login_agree',
+                    url: './login_agree.html',
+                });
+            }
+        }
     })
 </script>

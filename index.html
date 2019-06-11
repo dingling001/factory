@@ -31,19 +31,18 @@
         var firstStart = $api.getStorage('firstStart');
         var fac_token = $api.getStorage('fac_token');
         //判断条件 
-
+        if (!firstStart) {
+            openGuide();//首次下载安装操作 
+        } else if (firstStart == 1 && fac_token) {
+            openIndex()
+        } else if (!fac_token) {
+            openLogin();//不是首次未登录
+        }
         // openGuide()
-        openIndex()
-        // if (!firstStart) {
-        //     openGuide();//首次下载安装操作 
-        // } else if (firstStart ==1 && fac_token) {
-        //     openIndex()
-        // } else {
-        //     openLogin();//不是首次未登录
-        // }
-
-    }
+        // openIndex()
+    };
     var headerH = $api.offset($api.dom('header')).h;
+
     // 跳转启动页
     function openGuide() {
         $api.fixStatusBar($api.dom('header'));
@@ -74,7 +73,6 @@
             }]
         }, function (ret, err) {
             var index = ret.index;
-
             if (index == 0) {
                 $api.setStorage('firstStart', '1');
             }
@@ -95,7 +93,7 @@
                 w: 'auto',
                 h: 'auto'
             },
-            bgColor:'#fff',
+            bgColor: '#fff',
             pageParam: {
                 name: 'test'
             }
@@ -104,7 +102,6 @@
 
     // 跳转到首页
     function openIndex() {
-
         $api.setStorage('firstStart', '2');
         api.openWin({
             name: 'index_win',
