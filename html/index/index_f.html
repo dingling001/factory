@@ -21,20 +21,22 @@
         }
 
         .banner .swiper-slide {
-            width: 80% !important;
+            /*width: 80% !important;*/
 
             display: flex;
             align-items: center;
             justify-content: center;
-            transition: all .3s;
+            /*transition: all .3s;*/
+            /*transform: scale(.8);*/
+
         }
 
         .swiper-slide img {
-            width: 90%;
+            width: 100%;
         }
 
         .swiper-slide-active {
-            transform: scale(1.2);
+            /*transform: scale(1);*/
         }
 
         /*.swiper-pagination {*/
@@ -57,8 +59,9 @@
             background: #F11C15;
             border-radius: 6px;
         }
+
         .index {
-            padding: 0  0 .7rem 0;
+            padding: 0 0 .7rem 0;
         }
 
         .nav_box {
@@ -93,6 +96,9 @@
             width: 100%;
         }
 
+        .nav_item .icon_name {
+            padding: .1rem;
+        }
 
     </style>
 </head>
@@ -117,9 +123,13 @@
         <div class="swiper-pagination"></div>
     </div>
     <div class="nav_box">
-        <div class="nav_item" v-for="item in 10">
+        <div class="nav_item" v-for="item in 9">
             <span class="icon_box"><img src="../../assets/image/test/n1.png" alt=""></span>
-            <span>机加工</span>
+            <span class="icon_name">机加工</span>
+        </div>
+        <div class="nav_item" @click="more_fn">
+            <span class="icon_box"><img src="../../assets/image/more.png" alt=""></span>
+            <span class="icon_name">更多</span>
         </div>
     </div>
     <div class="new_title">最新订单</div>
@@ -176,32 +186,15 @@
         methods: {
             int_swiper: function () {
                 var mySwiper = new Swiper('.swiper-container', {
-                    slidesPerView: 'auto', //重要 可以去swiper搜索
-                    centeredSlides: true,   //重要
-                    paginationClickable: true,
-                    // spaceBetween: 28,
-                    effect: 'left',
-                    // loop: true,
-                    // coverflowEffect: {
-                    //     rotate: 20,
-                    //     stretch: 10,
-                    //     depth: 60,
-                    //     modifier: 2,
-                    // },
-                    coverflow: {
-                        rotate: 30,
-                        stretch: 10,
-                        depth: 60,
-                        modifier: 2,
-                        slideShadows: true
-                    },
-                    pagination: '.swiper-pagination',
-                    lazy: {
-                        loadPrevNext: true,
-                    },
+                    effect: 'coverflow',
+                    slidesPerView: 3,
+                    centeredSlides: true,
                     observer: true,
                     observeParents: true
                 })
+            },
+            more_fn() {
+
             }
 
         }

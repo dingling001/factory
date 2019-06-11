@@ -168,10 +168,15 @@ td, th {
     font-size: 13px;
 }
 
-.index_header .iconfont {
+.index_header .icon-sousuo {
     flex-shrink: 0;
     color: #BBBBBB;
     font-size: 22px;
+}
+.index_header .icon-fanhui {
+    flex-shrink: 0;
+    color: #333;
+    font-size: 17px;
 }
 
 footer {

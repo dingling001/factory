@@ -1,12 +1,56 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <title>Document</title>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>登录</title>
+    <script src="../../assets/js/fontsize.js"></script>
+    <link rel="stylesheet" href="../../assets/css/api.css">
+    <link rel="stylesheet" href="http://at.alicdn.com/t/font_1220513_pteag2v2ad.css">
+    <style type="text/css">
+        .login_h {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            /*padding: ;*/
+        }
+        .index_header {
+
+        }
+
+    </style>
 </head>
 <body>
-登录
+<div id="app">
+    <header class="index_header" v-if="first==0" id="header">
+        <span class="title">账号登录</span>
+        <span>跳过</span>
+    </header>
+    <header class="index_header" v-else id="header">
+        <span class="iconfont icon-fanhui"></span>
+        <span>账号登录</span>
+        <span></span>
+    </header>
+</div>
 </body>
 </html>
+<script type="text/javascript" src="../../assets/js/api.js"></script>
+<script type="text/javascript" src="../../assets/js/vue.min.js"></script>
+<script type="text/javascript" src="../../assets/js/public.js"></script>
+<script>
+    var app = new Vue({
+        el: '#app',
+        data: {
+            first: 0
+        },
+        created: function () {
+            apiready = function () {
+                $api.fixStatusBar($api.dom('header'));
+                app.headerH = $api.offset($api.dom('header')).h;
+            }
+        },
+        methods: {}
+    })
+</script>
