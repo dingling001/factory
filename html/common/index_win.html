@@ -19,7 +19,7 @@
     </header>
     <header class="order_index" v-else-if="index==1">
         <span></span>
-        <span>订单1中心</span>
+        <span>订单中心</span>
         <span class="iconfont icon-fenxiangfeiji"></span>
     </header>
     <header class="index_header height0" v-else-if="index==2">
@@ -27,7 +27,7 @@
     <footer id="footer">
         <div class="footer_item" :class="{footer_item_active:index==0}" @click="changeTab(0)">
             <i :class="['iconfont' ,index==0?'icon-shouye1':'icon-shouye']"></i>
-            <span>首页</span>
+            <span>首页1</span>
         </div>
         <div class="footer_item" :class="{footer_item_active:index==1}" @click="changeTab(1)">
             <i :class="['iconfont' ,index==1?'icon-dingdanzhongxin1':'icon-dingdanzhongxin']"></i>
