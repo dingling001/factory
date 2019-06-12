@@ -62,13 +62,18 @@
         methods: {
             // 登录
             login: function () {
-                if (app.user_name == '') {
-                    toastMsg('请输入您的账号')
-                } else if (app.password == '') {
-                    toastMsg('请输入您的密码')
-                } else {
-
-                }
+                // if (app.user_name == '') {
+                //     toastMsg('请输入您的账号')
+                // } else if (app.password == '') {
+                //     toastMsg('请输入您的密码')
+                // } else {
+                //
+                // }
+                api.openWin({
+                    name: 'login_info',
+                    url: './login_info.html',
+                    slidBackEnabled: false
+                });
             },
             // 去验证码登录
             code_fn: function () {
@@ -89,6 +94,7 @@
                 api.openWin({
                     name: 'index_win',
                     url: '../index/index_win.html',
+                    slidBackEnabled: false,
                     animation: {
                         type: "fade",                //动画类型（详见动画类型常量）
                         duration: 300

@@ -1,7 +1,7 @@
 {
   "name": "apicloud-polyfill-sample",
   "version": "0.0.1",
-  "description": "apicloud-polyfill,以模块化方式开发 APICloud App!",
+  "description": "加工宝",
   "main": "index.js",
   "repository": "http://www.apicloud.com",
   "scripts": {

@@ -12,7 +12,11 @@
 </head>
 <body>
 <div id="app" v-chock>
-    <header id="header" class="index_header" v-if="index==0||index==1" @click="openSearch">
+    <header class="index_header" v-if="index==0||index==1" @click="openSearch">
+        <span class="input">请输入您要搜索的内容</span>
+        <span class="iconfont icon-sousuo"></span>
+    </header>
+    <header  class="index_header" v-if="index==0||index==1" @click="openSearch">
         <span class="input">请输入您要搜索的内容</span>
         <span class="iconfont icon-sousuo"></span>
     </header>
