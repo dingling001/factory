@@ -1,30 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="6e3f121d-82ec-488a-a733-ad1df084e993" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/assets/image/load.gif" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/assets/image/loading.gif" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/assets/image/loading1.gif" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.babelrc" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.syncignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/css/api.css" beforeDir="false" afterPath="$PROJECT_DIR$/assets/css/api.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/js/public.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/js/public.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/html/index/index_f.html" beforeDir="false" afterPath="$PROJECT_DIR$/html/index/index_f.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/html/index/index_win.html" beforeDir="false" afterPath="$PROJECT_DIR$/html/common/index_win.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/html/index/my_f.html" beforeDir="false" afterPath="$PROJECT_DIR$/html/my/my_f.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/html/index/order_f.html" beforeDir="false" afterPath="$PROJECT_DIR$/html/order/order_f.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/html/index/search_f.html" beforeDir="false" afterPath="$PROJECT_DIR$/html/index/search_f.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/html/index/search_w.html" beforeDir="false" afterPath="$PROJECT_DIR$/html/index/search_w.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/html/login/login_agree.html" beforeDir="false" afterPath="$PROJECT_DIR$/html/login/login_agree.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/html/login/login_code.html" beforeDir="false" afterPath="$PROJECT_DIR$/html/login/login_code.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/html/login/login_forgot.html" beforeDir="false" afterPath="$PROJECT_DIR$/html/login/login_forgot.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/html/login/login_index.html" beforeDir="false" afterPath="$PROJECT_DIR$/html/login/login_index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/html/login/login_info.html" beforeDir="false" afterPath="$PROJECT_DIR$/html/login/login_info.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/webpack.config.js" beforeDir="false" />
-    </list>
+    <list default="true" id="6e3f121d-82ec-488a-a733-ad1df084e993" name="Default Changelist" comment="" />
     <ignored path="$PROJECT_DIR$/.tmp/" />
     <ignored path="$PROJECT_DIR$/temp/" />
     <ignored path="$PROJECT_DIR$/tmp/" />
@@ -272,23 +249,6 @@
               <item name="factory" type="b2602c69:ProjectViewProjectNode" />
               <item name="factory" type="462c0819:PsiDirectoryNode" />
             </path>
-            <path>
-              <item name="factory" type="b2602c69:ProjectViewProjectNode" />
-              <item name="factory" type="462c0819:PsiDirectoryNode" />
-              <item name="html" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="factory" type="b2602c69:ProjectViewProjectNode" />
-              <item name="factory" type="462c0819:PsiDirectoryNode" />
-              <item name="html" type="462c0819:PsiDirectoryNode" />
-              <item name="my" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="factory" type="b2602c69:ProjectViewProjectNode" />
-              <item name="factory" type="462c0819:PsiDirectoryNode" />
-              <item name="html" type="462c0819:PsiDirectoryNode" />
-              <item name="order" type="462c0819:PsiDirectoryNode" />
-            </path>
           </expand>
           <select />
         </subPane>
@@ -412,7 +372,7 @@
       <workItem from="1560127238174" duration="654000" />
       <workItem from="1560219940079" duration="14928000" />
       <workItem from="1560299833680" duration="13434000" />
-      <workItem from="1560319521381" duration="237000" />
+      <workItem from="1560319521381" duration="1240000" />
     </task>
     <task id="LOCAL-00001" summary="6.5">
       <created>1559727630823</created>
@@ -446,19 +406,18 @@
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="32102000" />
+    <option name="totallyTimeSpent" value="33105000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-6" y="1" width="1932" height="1045" extended-state="0" />
-    <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" sideWeight="0.7346939" visible="true" weight="0.24973601" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" sideWeight="0.7360483" visible="true" weight="0.24973601" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
-      <window_info id="npm" order="2" sideWeight="0.26530612" side_tool="true" visible="true" weight="0.24973601" />
+      <window_info id="npm" order="2" sideWeight="0.26395175" side_tool="true" visible="true" weight="0.24973601" />
       <window_info id="Favorites" order="3" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" weight="0.32967034" />
-      <window_info anchor="bottom" id="Run" order="2" sideWeight="0.49894404" visible="true" weight="0.35384616" />
+      <window_info anchor="bottom" id="Run" order="2" sideWeight="0.49894404" visible="true" weight="0.27142859" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
