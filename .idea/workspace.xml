@@ -15,7 +15,7 @@
     <session id="-370579887">
       <usages-collector id="statistics.lifecycle.project">
         <counts>
-          <entry key="project.closed" value="4" />
+          <entry key="project.closed" value="5" />
           <entry key="project.open.time.0" value="2" />
           <entry key="project.open.time.16" value="2" />
           <entry key="project.open.time.2" value="1" />
@@ -372,7 +372,7 @@
       <workItem from="1560127238174" duration="654000" />
       <workItem from="1560219940079" duration="14928000" />
       <workItem from="1560299833680" duration="13434000" />
-      <workItem from="1560319521381" duration="1240000" />
+      <workItem from="1560319521381" duration="2935000" />
     </task>
     <task id="LOCAL-00001" summary="6.5">
       <created>1559727630823</created>
@@ -406,18 +406,18 @@
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="33105000" />
+    <option name="totallyTimeSpent" value="34800000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-6" y="1" width="1932" height="1045" extended-state="0" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" sideWeight="0.7360483" visible="true" weight="0.24973601" />
+      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.73606557" visible="true" weight="0.24973601" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
-      <window_info id="npm" order="2" sideWeight="0.26395175" side_tool="true" visible="true" weight="0.24973601" />
+      <window_info id="npm" order="2" sideWeight="0.26393443" side_tool="true" visible="true" weight="0.24973601" />
       <window_info id="Favorites" order="3" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" weight="0.32967034" />
-      <window_info anchor="bottom" id="Run" order="2" sideWeight="0.49894404" visible="true" weight="0.27142859" />
+      <window_info anchor="bottom" id="Run" order="2" sideWeight="0.49894404" weight="0.27142859" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
@@ -426,7 +426,7 @@
       <window_info anchor="bottom" id="Version Control" order="8" weight="0.25384617" />
       <window_info anchor="bottom" id="RNConsole" order="9" />
       <window_info anchor="bottom" id="Event Log" order="10" sideWeight="0.50105596" side_tool="true" weight="0.22967033" />
-      <window_info anchor="bottom" id="Terminal" order="11" weight="0.32967034" />
+      <window_info active="true" anchor="bottom" id="Terminal" order="11" visible="true" weight="0.32967034" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />

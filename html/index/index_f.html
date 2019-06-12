@@ -1,5 +1,6 @@
 <!doctype html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport"
@@ -52,7 +53,9 @@
             border-radius: 6px;
         }
 
-        .swiper-container-horizontal > .swiper-pagination-bullets, .swiper-pagination-custom, .swiper-pagination-fraction {
+        .swiper-container-horizontal > .swiper-pagination-bullets,
+        .swiper-pagination-custom,
+        .swiper-pagination-fraction {
             bottom: -10px;
         }
 
@@ -95,9 +98,9 @@
         .nav_item .icon_name {
             padding: .1rem;
         }
-
     </style>
 </head>
+
 <body>
 <div id="loadStart"></div>
 <div id="app" class="index">
@@ -142,8 +145,11 @@
             </div>
         </div>
     </div>
+    <button @click='clear_fn' style="font-size: 20px;">清除缓存</button>
+    <button @click='clear_local' style="font-size: 20px;">清除首次登陆状态</button
 </div>
 </body>
+
 </html>
 <script type="text/javascript" src="../../assets/js/api.js"></script>
 <script type="text/javascript" src="../../assets/js/public.js"></script>
@@ -169,10 +175,20 @@
             }
         },
         methods: {
+            clear_fn: function () {
+                api.clearCache(function () {
+                    api.toast({
+                        msg: '清除完成'
+                    });
+                });
+            },
+            clear_local: function () {
+                localStorage.clear()
+            },
             int_swiper: function () {
                 var mySwiper = new Swiper('.swiper-container', {
                     slidesPerView: 'auto', //重要 可以去swiper搜索
-                    centeredSlides: true,   //重要
+                    centeredSlides: true, //重要
                     paginationClickable: true,
                     effect: 'left',
                     // loop: true,
