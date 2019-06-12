@@ -1,30 +1,17 @@
 {
-  "name": "apicloud-polyfill-sample",
-  "version": "0.0.1",
-  "description": "加工宝",
-  "main": "index.js",
-  "repository": "http://www.apicloud.com",
+  "name": "factory",
+  "description": "加工宝app",
+  "author": "dl",
+  "private": true,
   "scripts": {
-    "webpack": "webpack",
     "wifiStart": "apicloud wifiStart --port 8686",
     "wifiSync": "apicloud wifiSync --project ./ --updateAll false",
     "wifiAllSync": "apicloud wifiSync --project ./ --updateAll true",
-    "wifiLog": "apicloud wifiLog --port 8686",
-    "wifistop": "apicloud wifiStop --port 8686"
-  },
-  "author": "APICloud",
-  "license": "ISC",
-  "devDependencies": {
-    "babel-core": "^6.18.2",
-    "babel-loader": "^6.2.7",
-    "babel-polyfill": "^6.16.0",
-    "babel-preset-latest": "^6.16.0",
-    "glob": "^7.1.1",
-    "moment": "^2.24.0",
-    "webpack": "^1.13.3"
+    "wifiLog": "apicloud wifiLog --port 8686"
   },
   "dependencies": {
-    "apicloud-polyfill": "^0.1.1",
-    "apicloud-tools-core": "^0.1.0"
-  }
+    "node-uuid": "^1.4.8",
+    "ws": "^3.0.0"
+  },
+  "devDependencies": {}
 }

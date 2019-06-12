@@ -8,7 +8,7 @@
     <title></title>
     <script src="../../assets/js/fontsize.js"></script>
     <link rel="stylesheet" href="../../assets/css/api.css">
-    <link rel="stylesheet" href="http://at.alicdn.com/t/font_1220513_nualw3bh5ve.css">
+    <link rel="stylesheet" href="http://at.alicdn.com/t/font_1220513_y7h38su3rxq.css">
     <link rel="stylesheet" href="../../assets/css/swiper-3.4.2.min.css">
     <style type="text/css">
         .banner {
@@ -99,6 +99,7 @@
     </style>
 </head>
 <body>
+<div id="loadStart"></div>
 <div id="app" class="index">
     <div class="swiper-container banner">
         <div class="swiper-wrapper">
@@ -162,6 +163,9 @@
         created: function () {
             apiready = function () {
                 app.int_swiper();
+                setTimeout(function () {
+                    loadEnd('index_f')
+                }, 1500)
             }
         },
         methods: {

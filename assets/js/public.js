@@ -173,11 +173,15 @@ function isLogin(_this, callback) {
 
 function loadEnd() {
     var ele = document.getElementById('loadStart');
+    var app=document.getElementById('app');
     if (ele) {
         ele.style.opacity = 0;
+        app.style.overflow='hidden';
         setTimeout(function () {
             ele.style.display = "none";
+            app.style.overflow='auto';
         }, 1000);
+
     }
 }
 
