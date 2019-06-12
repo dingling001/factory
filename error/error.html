@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title></title>
+    <script src="../assets/js/fontsize.js"></script>
+    <link rel="stylesheet" href="../assets/css/api.css">
+    <link rel="stylesheet" href="http://at.alicdn.com/t/font_1220513_y7h38su3rxq.css">
+    <style>
+        .input {
+            text-align: left;
+            padding: .15rem;
+            width: 100%;
+            margin: 0;
+
+        }
+
+        .input:focus {
+            border: 0;
+            outline: none;
+        }
+
+        .input::placeholder {
+            text-align: center;
+        }
+
+        form {
+            font-size: 13px;
+            flex: 1;
+            margin: 0 .2rem;
+        }
+    </style>
+</head>
+<body>
+<div id="app" v-chock>
+    出错啦。。
+</div>
+</body>
+</html>
+<script type="text/javascript" src="../assets/js/api.js"></script>
+<script type="text/javascript" src="../assets/js/public.js"></script>
+<script type="text/javascript" src="../assets/js/fastclick.js"></script>
+<script>
+    new FastClick(document.body);
+</script>
+<script type="text/javascript" src="../assets/js/vue.min.js"></script>
+<script type="text/javascript" src="../assets/js/index.js"></script>
+<script>
+    var app = new Vue({
+        el: '#app',
+        data: {
+            headerH: '',
+            keyword: ''
+        },
+        created: function () {
+            apiready = function () {
+                $api.fixStatusBar($api.dom('header'));
+                app.headerH = $api.offset($api.dom('header')).h;
+            }
+        },
+        methods: {}
+    })
+</script>
