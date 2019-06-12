@@ -23,6 +23,7 @@
         }
         .input::placeholder{
             text-align: center;
+            line-height: 1.5em;
         }
         form{
             font-size: 13px;
@@ -32,7 +33,7 @@
     </style>
 </head>
 <body>
-<div id="app" v-chock>
+<div id="app" v-cloak>
     <header id="header" class="index_header">
         <span class="iconfont icon-fanhui" @click="closeWindow('search_w')"></span>
         <form>
@@ -73,9 +74,9 @@
                     },
                     bounces: true,
                     animation: {
-                        type: "reveal",                //动画类型（详见动画类型常量）
+                        type: "movein",                //动画类型（详见动画类型常量）
                         subType: "from_bottom",       //动画子类型（详见动画子类型常量）
-                        duration: 300
+                        duration: 400
                     }
                 });
             }

@@ -12,14 +12,14 @@
 </head>
 <body>
 <div id="loadstart"></div>
-<div id="app" v-chock>
+<div id="app" v-cloak >
     <header class="index_header" v-if="index==0" @click="openSearch">
         <span class="input">请输入您要搜索的内容</span>
         <span class="iconfont icon-sousuo"></span>
     </header>
-    <header class="order_index" v-else-if="index==1">
+    <header class="order_index oders" v-else-if="index==1" style="border-bottom: 1px solid #F9F9FA">
         <span></span>
-        <span>订单1中心</span>
+        <span>订单中心</span>
         <span class="iconfont icon-fenxiangfeiji"></span>
     </header>
     <header class="index_header height0" v-else-if="index==2">
@@ -56,6 +56,25 @@
             index: 0,
             headerH: '',
             footerH: '',
+
+
+            active: false,
+            position: '',
+            width: undefined,
+            height: undefined,
+            isSticky: false
+        },
+        destroyed() {
+            window.removeEventListener('scroll', this.handleScroll)
+            window.removeEventListener('resize', this.handleReize)
+        },
+        activated() {
+            this.handleScroll()
+        },
+        mounted: function () {
+            this.height = this.$el.getBoundingClientRect().height
+            window.addEventListener('scroll', this.handleScroll)
+            window.addEventListener('resize', this.handleReize)
         },
         created: function () {
             apiready = function () {
@@ -134,12 +153,12 @@
                 })
             },
             // 搜索页
-            openSearch() {
+            openSearch: function () {
                 api.openWin({
                     name: 'search_w',
-                    url: './search_w.html',
+                    url: '../index/search_w.html',
                 });
-            }
+            },
         }
     })
 </script>
