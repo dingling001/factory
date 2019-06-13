@@ -4,7 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport"
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">     <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
     <title>完善信息</title>
     <script src="../../assets/js/fontsize.js"></script>
     <link rel="stylesheet" href="../../assets/css/api.css">
@@ -73,9 +74,6 @@
 </head>
 <body>
 <div id="app" v-cloak class="company">
-    <header class="index_header" id="header">
-        <span class="title" @click="closeWindow('login_info')"><span class="iconfont icon-fanhui"></span> 完善信息</span>
-    </header>
     <div class="input_box">
         <span class="label need">企业名称</span>
         <input type="number" placeholder="请输入您企业名称" v-model="name">
@@ -122,21 +120,13 @@
         },
         created: function () {
             apiready = function () {
-                $api.fixStatusBar($api.dom('header'));
-                app.headerH = $api.offset($api.dom('header')).h;
-                app.first = api.pageParam.first || 0;
             }
         },
         methods: {
             // 跳过去首页
             go_index: function () {
-                api.openWin({
-                    name: 'index_win',
-                    url: '../common/index_win.html',
-                    animation: {
-                        type: "fade",                //动画类型（详见动画类型常量）
-                        duration: 300
-                    }
+                api.closeWin({
+                    name: 'my_infocahnge'
                 });
             },
         }

@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title></title>
+    <script src="../../assets/js/fontsize.js"></script>
+    <link rel="stylesheet" href="../../assets/css/api.css">
+    <link rel="stylesheet" href="http://at.alicdn.com/t/font_1220513_5oiu4zhxvgd.css">
+    <style>
+        .set .login_btn {
+            width: 45%;
+        }
+    </style>
+</head>
+<body class="my_body">
+<!--<div id="loadStart"></div>-->
+<div id="app" v-chock class="set">
+    <div class="input_box box"><span class="iconfont icon-yanzhengma"></span> <input type="text"
+                                                                                     placeholder="请输入您的新密码（6-12位）"
+                                                                                     v-model="password"></div>
+    <div class="input_box"><span class="iconfont icon-yanzhengma"></span> <input type="password"
+                                                                                 placeholder="请再次输入您的密码（6-12位）"
+                                                                                 v-model="repassword"></div>
+    <div class="login_btn" @click="set_save">{{btn_text}}</div>
+</div>
+</body>
+</html>
+<script type="text/javascript" src="../../assets/js/api.js"></script>
+<script type="text/javascript" src="../../assets/js/public.js"></script>
+<script type="text/javascript" src="../../assets/js/fastclick.js"></script>
+<script>
+    new FastClick(document.body);
+</script>
+<script type="text/javascript" src="../../assets/js/vue.min.js"></script>
+<script type="text/javascript" src="../../assets/js/index.js"></script>
+<script>
+    var app = new Vue({
+        el: '#app',
+        data: {
+            password: '',
+            repassword: '',
+            btn_text: localStorage.btn_text || '保存'
+        },
+        created: function () {
+            apiready = function () {
+
+            }
+        },
+        methods: {
+            set_save: function () {
+
+            }
+        }
+    })
+</script>

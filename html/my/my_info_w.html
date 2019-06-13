@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>完善信息</title>
+    <script src="../../assets/js/fontsize.js"></script>
+    <link rel="stylesheet" href="../../assets/css/api.css">
+    <link rel="stylesheet" href="../../assets/css/style.css">
+    <!--<link rel="stylesheet" href="https://unpkg.com/mint-ui@1/lib/style.css">-->
+    <link rel="stylesheet" href="http://at.alicdn.com/t/font_1220513_5oiu4zhxvgd.css">
+    <style>
+        header {
+            width: 100%;
+            height: auto;
+            font-size: 18px;
+            color: #424242;
+        }
+
+        .my_info {
+            line-height: 0.44rem;
+            color: #424242;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.2rem 0.4rem;
+            border-bottom: 1px solid #ececec;
+        }
+    </style>
+</head>
+<body>
+<div id="app" v-cloak class="company">
+    <header>
+        <div class="my_info">
+            <span class="iconfont icon-fanhui"></span>
+            <span>个人信息</span>
+            <span class="iconfont icon-xiugai" @click="go_infochange"></span>
+        </div>
+    </header>
+</div>
+</body>
+</html>
+<script type="text/javascript" src="../../assets/js/api.js"></script>
+<script type="text/javascript" src="../../assets/js/public.js"></script>
+<script type="text/javascript" src="../../assets/js/fastclick.js"></script>
+<script>
+    new FastClick(document.body);
+</script>
+<script type="text/javascript" src="../../assets/js/vue.min.js"></script>
+<script type="text/javascript" src="../../assets/js/index.js"></script>
+<script>
+    var app = new Vue({
+        el: '#app',
+        data: {
+            name: '',
+            code: '',
+            tel: ''
+        },
+        created: function () {
+            apiready = function () {
+                $api.fixStatusBar($api.dom('header'));
+                app.headerH = $api.offset($api.dom('header')).h;
+                api.setStatusBarStyle({
+                    style: 'dark',
+                });
+                api.openFrame({
+                    name: 'my_info',
+                    url: './my_info.html',
+                    rect: {
+                        x: 0,
+                        y: app.headerH,
+                        w: 'auto',
+                        h: 'auto'
+                    },
+                    bounces: true
+                });
+            }
+        },
+        methods: {
+            // 跳过去首页
+            go_infochange: function () {
+                openView('my_infocahnge', 'my/my_infocahnge', '修改个人信息')
+            },
+        }
+    })
+</script>
