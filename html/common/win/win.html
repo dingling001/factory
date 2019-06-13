@@ -8,17 +8,16 @@
     <title></title>
     <script src="../../../assets/js/fontsize.js"></script>
     <link rel="stylesheet" href="../../../assets/css/api.css"/>
-    <link rel="stylesheet" href="../../../assets/icon/iconfont.css">
-
+    <link rel="stylesheet" href="http://at.alicdn.com/t/font_1220513_5oiu4zhxvgd.css">
     <style>
         header {
             width: 100%;
             height: auto;
             font-size: 18px;
             color: #424242;
-        } 
+        }
 
-        .index_header {
+        .index_headers {
             line-height: 0.44rem;
             color: #424242;
             display: flex;
@@ -28,9 +27,10 @@
             border-bottom: 1px solid #ececec;
         }
 
-        .icon-fanhui {
-            color: #dbb25f;
-            font-size: 18px;
+        .index_headers .icon-fanhui {
+            flex-shrink: 0;
+            color: #333;
+            font-size: 17px;
         }
 
         .win_mid {
@@ -42,16 +42,29 @@
             line-height: 0.44rem;
             color: #424242;
             text-align: center;
-            padding: 0.2rem 0.4rem;
+            /*padding: 0.2rem 0.4rem;*/
             border-bottom: 1px solid #ececec;
         }
+
+        .close_left {
+            position: relative;
+        }
+
+        .close_left::before {
+            position: absolute;
+            left: -0.1rem;
+            right: -0.1rem;
+            top: -0.1rem;
+            bottom: -0.1rem;
+            content: '';
+        }
+
     </style>
 </head>
 <body>
 <div id='app' v-cloak>
     <header id="header">
-        <div class=" center" v-if="winTitle=='登录'">{{winTitle}}</div>
-        <div class="index_header" v-else>
+        <div class="index_headers">
             <div class="close_left" @click="closeWindow()"><span class="iconfont icon-fanhui"></span></div>
             <div class="win_mid">{{winTitle}}</div>
             <div></div>
@@ -68,13 +81,12 @@
 </script>
 <script type="text/javascript" src="../../../assets/js/vue.min.js"></script>
 <script type="text/javascript" src="../../../assets/js/axios.min.js"></script>
-<script type="text/javascript" src="../../../assets/icon/iconfont.js"></script>
 <script type="text/javascript">
     window.apiready = function () {
         var app = new Vue({
             el: '#app',
             data: {
-                winTitle: api.pageParam.winTitle,
+                winTitle: api.pageParam.winTitle || '',
                 win: api.pageParam.win,
                 pageload: 0
             },

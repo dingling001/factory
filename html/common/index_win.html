@@ -4,30 +4,45 @@
     <meta charset="UTF-8">
     <meta name="viewport"
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">     <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
     <title></title>
     <script src="../../assets/js/fontsize.js"></script>
     <link rel="stylesheet" href="../../assets/css/api.css">
-    <link rel="stylesheet" href="http://at.alicdn.com/t/font_1220513_y7h38su3rxq.css">
+    <link rel="stylesheet" href="../../assets/css/swiper-3.4.2.min.css">
+    <link rel="stylesheet" href="http://at.alicdn.com/t/font_1220513_5oiu4zhxvgd.css">
 </head>
 <body>
 <div id="loadstart"></div>
-<div id="app" v-cloak >
+<div id="app" v-cloak>
     <header class="index_header" v-if="index==0" @click="openSearch">
         <span class="input">请输入您要搜索的内容</span>
         <span class="iconfont icon-sousuo"></span>
     </header>
-    <header class="order_index oders" v-else-if="index==1" style="border-bottom: 1px solid #F9F9FA">
-        <span></span>
-        <span>订单中心</span>
-        <span class="iconfont icon-fenxiangfeiji"></span>
+    <header class="order_header" v-else-if="index==1">
+        <div class="order_index">
+            <span></span>
+            <span>订单中心</span>
+            <span class="iconfont icon-fenxiangfeiji"></span>
+        </div>
+        <div class="order_head" @click="openSearch">
+            <span class="input">请输入您要搜索的内容</span>
+            <span class="iconfont icon-sousuo"></span>
+        </div>
+        <div class="examination_swiper">
+            <div class="swiper-container">
+                <div class="swiper-wrapper">
+                    <div class="swiper-slide" @click="changeSwiper(index)" v-for="(item,index) in navs">
+                        <span :class="{'examination_active':ind==index}">{{item.name}}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
     </header>
-    <header class="index_header height0" v-else-if="index==2">
-    </header>
+    <header class="index_header height0" v-else-if="index==2"></header>
     <footer id="footer">
         <div class="footer_item" :class="{footer_item_active:index==0}" @click="changeTab(0)">
             <i :class="['iconfont' ,index==0?'icon-shouye1':'icon-shouye']"></i>
-            <span>首页1</span>
+            <span>首页</span>
         </div>
         <div class="footer_item" :class="{footer_item_active:index==1}" @click="changeTab(1)">
             <i :class="['iconfont' ,index==1?'icon-dingdanzhongxin1':'icon-dingdanzhongxin']"></i>
@@ -49,6 +64,7 @@
 </script>
 <script type="text/javascript" src="../../assets/js/vue.min.js"></script>
 <script type="text/javascript" src="../../assets/js/index.js"></script>
+<script type="text/javascript" src="../../assets/js/swiper-3.4.2.min.js"></script>
 <script>
     var app = new Vue({
         el: '#app',
@@ -56,32 +72,49 @@
             index: 0,
             headerH: '',
             footerH: '',
-
-
-            active: false,
-            position: '',
-            width: undefined,
-            height: undefined,
-            isSticky: false
-        },
-        destroyed() {
-            window.removeEventListener('scroll', this.handleScroll)
-            window.removeEventListener('resize', this.handleReize)
-        },
-        activated() {
-            this.handleScroll()
-        },
-        mounted: function () {
-            this.height = this.$el.getBoundingClientRect().height
-            window.addEventListener('scroll', this.handleScroll)
-            window.addEventListener('resize', this.handleReize)
+            mySwiper: {},
+            ind: 0,
+            navs: [
+                {
+                    id: 1,
+                    name: '全部'
+                },
+                {
+                    id: 2,
+                    name: '机加工'
+                },
+                {
+                    id: 3,
+                    name: 'CNS'
+                },
+                {
+                    id: 3,
+                    name: '焊接'
+                },
+                {
+                    id: 3,
+                    name: '焊接'
+                },
+                {
+                    id: 3,
+                    name: '焊接'
+                }
+                , {
+                    id: 3,
+                    name: '焊接'
+                }, {
+                    id: 3,
+                    name: 'CNS'
+                },
+                {
+                    id: 3,
+                    name: 'CNS'
+                },
+            ],
         },
         created: function () {
             apiready = function () {
-                $api.fixStatusBar($api.dom('header'));
-                $api.fixTabBar($api.byId('footer'));
-                app.headerH = $api.offset($api.dom('header')).h;
-                app.footerH = $api.offset($api.dom('footer')).h;
+                //导航轮播
                 api.openFrameGroup({
                     name: 'index',
                     rect: {
@@ -108,7 +141,7 @@
                     }, {
                         name: 'my_f',
                         url: '../my/my_f.html',
-                        bounces: true,
+                        bounces: false,
                         reload: true,
                     }
                     ]
@@ -125,7 +158,14 @@
                                 h: api.winHeight - app.footerH
                             },
                         });
+                        api.setStatusBarStyle({
+                            style: 'light',
+                        });
                     } else {
+                        app.headerH = $api.offset($api.dom('header')).h;
+                        api.setStatusBarStyle({
+                            style: 'dark',
+                        });
                         api.setFrameGroupAttr({
                             name: 'index',
                             rect: {
@@ -135,9 +175,20 @@
                                 h: api.winHeight - app.headerH - app.footerH
                             },
                         });
+                        app.mySwiper = new Swiper('.examination_swiper .swiper-container', {
+                            slidesPerView: 'auto',
+                            slideToClickedSlide: true,
+                            observer: true,
+                            observeParents: true,
+                            freeMode: true
+                        });
                     }
                     // alert(index)
                 });
+                $api.fixStatusBar($api.dom('header'));
+                $api.fixTabBar($api.byId('footer'));
+                app.headerH = $api.offset($api.dom('header')).h;
+                app.footerH = $api.offset($api.dom('footer')).h;
                 api.setWinAttr({
                     slidBackEnabled: false
                 });
@@ -158,6 +209,10 @@
                     name: 'search_w',
                     url: '../index/search_w.html',
                 });
+            },
+            // 改变滑块
+            changeSwiper: function (index) {
+                app.ind = index
             },
         }
     })

@@ -4,18 +4,31 @@
     <meta charset="UTF-8">
     <meta name="viewport"
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">     <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
-    <title>登录</title>
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title></title>
     <script src="../../assets/js/fontsize.js"></script>
     <link rel="stylesheet" href="../../assets/css/api.css">
     <link rel="stylesheet" href="http://at.alicdn.com/t/font_1220513_5oiu4zhxvgd.css">
+    <style>
+        .set .login_btn {
+            width: 45%;
+        }
+    </style>
 </head>
-<body>
-<div id="app">
-    <header class="index_header">
-        <span class="title" @click="closeWindow('login_agree')"><span class="iconfont icon-fanhui"></span>加工宝用户协议</span>
-    </header>
-    <div class="agree">协议</div>
+<body class="my_body">
+<!--<div id="loadStart"></div>-->
+<div id="app" v-chock class="set">
+    <div class="input_box box">
+        <span class="iconfont icon-shouji"></span>
+        <input type="number" placeholder="请输入您的手机号" v-model="phone">
+    </div>
+    <div class="input_box">
+        <span class="iconfont icon-yanzhengma"></span>
+        <input type="number" placeholder="请输入您的验证码" v-model="code">
+        <span class="code_btn">获取验证码</span>
+    </div>
+    <div class="login_btn" @click="set_save">保存</div>
 </div>
 </body>
 </html>
@@ -30,13 +43,18 @@
 <script>
     var app = new Vue({
         el: '#app',
-        data: {},
+        data: {
+            phone: '',
+            code: '',
+        },
         created: function () {
             apiready = function () {
-                $api.fixStatusBar($api.dom('header'));
-                app.headerH = $api.offset($api.dom('header')).h;
             }
         },
-        methods: {}
+        methods: {
+            set_save: function () {
+
+            }
+        }
     })
 </script>

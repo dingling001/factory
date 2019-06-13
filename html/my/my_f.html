@@ -5,17 +5,232 @@
     <meta name="viewport"
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
     <title></title>
     <script src="../../assets/js/fontsize.js"></script>
     <link rel="stylesheet" href="../../assets/css/api.css">
+    <link rel="stylesheet" href="http://at.alicdn.com/t/font_1220513_5oiu4zhxvgd.css">
     <style type="text/css">
+        .my_body {
+            background-color: #F9F9FA;
+            min-height: 100vh;
+        }
 
+        .my_head {
+            background: linear-gradient(-90deg, #F11C15, #F17977);
+            height: 2.37rem;
+            position: relative;
+            box-shadow: 0 4px 7px 2px rgba(246, 122, 118, 0.33);
+        }
 
+        .company_name {
+            font-size: 17px;
+            color: #333;
+            padding: .5rem .33rem;
+            background-color: #fff;
+            position: absolute;
+            bottom: -.6rem;
+            left: 0;
+            right: 0;
+            z-index: 10;
+            margin: 0 auto;
+            width: 93.6%;
+            border-radius: 5px;
+            box-shadow: -1px 3px 2px 0px rgba(0, 0, 0, 0.08);
+        }
+
+        .company .icon-vip {
+            color: #FFD200;
+        }
+
+        .company .company_name .novip {
+            color: #ccc;
+        }
+
+        .my_btn {
+            width: 30%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #F11C15;
+            color: #fff;
+            border-radius: 5px;
+            font-size: 18px;
+            text-align: center;
+            padding: .05rem 0;
+            margin: 0 auto;
+        }
+
+        .my_btn:active {
+            opacity: .7;
+        }
+
+        .my_item_box {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            margin: 1rem 0 0 0;
+            background-color: #fff;
+            box-shadow: -2px 0 13px 1px rgba(0, 0, 0, 0.08);
+        }
+
+        .my_item {
+            width: 33.3%;
+            border-bottom: 1px solid #f2f2f2;
+            border-right: 1px solid #f2f2f2;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            font-size: 16px;
+            color: #333;
+            padding: .5rem 0;
+            text-align: center;
+            position: relative;
+            height: 2rem;
+        }
+
+        .my_item:active {
+            background-color: #F9F9FA;
+        }
+
+        .my_item .iconfont {
+            /*width: 0.76rem;*/
+            /*height: 0.76rem;*/
+            /*border-radius: 50%;*/
+            font-size: 30px;
+            margin-bottom: 0.13rem;
+        }
+
+        .icon-gerenxinxi {
+            background-image: -webkit-linear-gradient(left, #F17977, #F11C15);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            color: #F11C15;
+            text-shadow: 2px 1px 0 rgba(246, 122, 118, 0.2);
+        }
+
+        .icon-waifadingdan {
+            background-image: -webkit-linear-gradient(left, #F19777, #F17715);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 2px 1px 0 rgba(246, 122, 118, 0.2);
+        }
+
+        .icon-wodebaojia {
+            background-image: -webkit-linear-gradient(left, #F1DB77, #FAAF0D);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 2px 1px 0 rgba(241, 181, 21, 0.2);
+        }
+
+        .icon-huiyuanzhongxin {
+            background-image: -webkit-linear-gradient(left, #F1DB77, #FAAF0D);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 2px 1px 0 rgba(241, 181, 21, 0.2);
+        }
+
+        .icon-shoucang_ {
+            background-image: -webkit-linear-gradient(left, #F19777, #F17715);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 2px 1px 0 rgba(246, 122, 118, 0.2);
+        }
+
+        .icon-guanyuwomen {
+            background-image: -webkit-linear-gradient(left, #F17977, #F11C15);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            color: #F11C15;
+            text-shadow: 2px 1px 0 rgba(246, 122, 118, 0.2);
+        }
+
+        .icon-lianxiwomen {
+            background-image: -webkit-linear-gradient(left, #F17977, #F11C15);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            color: #F11C15;
+            text-shadow: 2px 1px 0 rgba(246, 122, 118, 0.2);
+        }
+
+        .border_1 {
+            border-bottom: 0;
+        }
+
+        .border_2 {
+            border-right: 0;
+        }
+
+        .noactive:active {
+            background-color: #fff;
+        }
+
+        .icon-shezhi {
+            color: #fff;
+            font-size: 20px;
+            font-weight: normal;
+        }
+
+        .order_index {
+            padding: .5rem;
+            border: 0;
+            color: #fff;
+            font-size: 20px;
+        }
     </style>
 </head>
-<body>
-<div id="app">
-    我的1111
+<body class="my_body">
+<!--<div id="loadStart"></div>-->
+<div id="app" v-chock>
+    <div class="my_head">
+        <div class="order_index">
+            <span></span>
+            <span>个人中心</span>
+            <span class="iconfont icon-shezhi" @click="go_item('my_set')"></span>
+        </div>
+        <div class="company" v-if="fac_token">
+            <div class="company_name">天津市你人在哪端科技有限公司 <span class="iconfont icon-vip novip"></span></div>
+        </div>
+        <div class="company" v-else>
+            <div class="company_name">
+                <div class="my_btn">登录</div>
+            </div>
+        </div>
+    </div>
+    <div class="my_item_box">
+        <div class="my_item" @click="go_item('my_info_w')">
+            <span class="iconfont icon-gerenxinxi"></span>
+            <span>个人信息</span>
+        </div>
+        <div class="my_item" @click="go_item('outorder')">
+            <span class="iconfont icon-waifadingdan"></span>
+            <span>外发订单</span>
+        </div>
+        <div class="my_item border_2" @click="go_item('my_price')">
+            <span class="iconfont icon-wodebaojia"></span>
+            <span>我的报价</span>
+        </div>
+        <div class="my_item" @click="go_item('my_vip')">
+            <span class="iconfont icon-huiyuanzhongxin"></span>
+            <span>会员中心</span>
+        </div>
+        <div class="my_item " @click="go_item('my_collection')">
+            <span class="iconfont icon-shoucang_"></span>
+            <span>我的收藏</span>
+        </div>
+        <div class="my_item border_2" @click="go_item('my_ours')">
+            <span class="iconfont icon-guanyuwomen"></span>
+            <span>关于我们</span>
+        </div>
+        <div class="my_item border_1" @click="go_item('my_contact')">
+            <span class="iconfont icon-lianxiwomen"></span>
+            <span>联系我们</span>
+        </div>
+        <div class="my_item border_1 noactive"></div>
+        <div class="my_item border_1 border_2 noactive"></div>
+    </div>
 </div>
 </body>
 </html>
@@ -30,14 +245,54 @@
 <script>
     var app = new Vue({
         el: '#app',
-        data: {},
+        data: {
+            fac_token: localStorage.getItem('fac_token') || ''
+        },
         created: function () {
             apiready = function () {
 
             }
         },
         methods: {
+            go_item: function (name) {
+                api.openWin({
+                    name: name,
+                    url: './' + name + '.html',
+                    slidBackEnabled:false
+                });
+            },
+            // 个人信息
+            go_info: function () {
+                openView('my_info', 'my/my_info', '个人信息')
+            },
+            //外发订单
+            go_outorder: function () {
 
+            },
+            // 我的报价
+            go_price: function () {
+
+            },
+            // 外发订单
+            my_price: function () {
+
+            },
+            // 会员中心
+            go_vip: function () {
+
+            },
+            // 个人收藏
+            go_collection: function () {
+
+            },
+            // 关于我们
+            go_ours: function () {
+
+            },
+            // 联系我们
+            go_contact: function () {
+
+            }
         }
     })
 </script>

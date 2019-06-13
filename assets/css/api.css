@@ -17,7 +17,6 @@ html, body {
     -webkit-text-size-adjust: none;
     -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
     -webkit-user-select: none;
-    height: 100%;
 }
 
 nav, article, aside, details, main, header, footer, section, fieldset, figcaption, figure {
@@ -172,6 +171,7 @@ td, th {
     padding: 0 0.45rem;
     height: 88px;
 }
+
 #loadStart {
     position: fixed;
     left: 0;
@@ -187,21 +187,62 @@ td, th {
     height: 100%;
 }
 
+.order_header {
+    height: 160px;
+}
+
 .order_index {
-    padding: 0 0.45rem;
-    height: 88px;
+    padding: 0.25rem 0.45rem;
     display: flex;
     align-items: center;
     justify-content: space-between;
     color: #333333;
     font-size: 17px;
     font-weight: bold;
+    border-bottom: 1px solid #F9F9FA
 }
 
 .order_index .icon-fenxiangfeiji {
     font-size: 20px;
     font-weight: bold;
     color: #333;
+}
+
+.order_head {
+    background-color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: .1rem 0.45rem;
+}
+
+.order_head .icon-sousuo {
+    font-size: 20px;
+    color: #BBBBBB;
+}
+
+.examination_swiper {
+    background-color: #fff;
+    margin: 0.2rem 0;
+}
+
+.examination_swiper .swiper-slide {
+    width: auto;
+    font-size: 15px;
+    color: #2222;
+    text-align: center;
+    margin: 0 0.25rem;
+}
+
+.examination_swiper .swiper-slide span {
+    /*padding: 0.1rem 0;*/
+    color: #424242;
+    border-bottom: 2px solid #fff;
+}
+
+.examination_swiper .swiper-slide .examination_active {
+    color: #E72424;
+    border-bottom: 2px solid #E72424;
 }
 
 .input {
@@ -266,7 +307,9 @@ footer {
 
 /*头部--底部*/
 /*订单列表*/
-
+.new_list{
+    padding-bottom: .5rem;
+}
 .new_title {
     color: #333;
     font-size: 15px;
