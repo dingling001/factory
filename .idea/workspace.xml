@@ -3,7 +3,6 @@
   <component name="ChangeListManager">
     <list default="true" id="6e3f121d-82ec-488a-a733-ad1df084e993" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/html/order/order_f.html" beforeDir="false" afterPath="$PROJECT_DIR$/html/order/order_f.html" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
     <ignored path="$PROJECT_DIR$/temp/" />
@@ -41,8 +40,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/html/order/order_f.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="498">
-              <caret line="142" column="18" selection-start-line="142" selection-start-column="18" selection-end-line="142" selection-end-column="18" />
+            <state relative-caret-position="123">
+              <caret line="117" column="26" lean-forward="true" selection-start-line="117" selection-start-column="26" selection-end-line="117" selection-end-column="26" />
             </state>
           </provider>
         </entry>
@@ -332,11 +331,11 @@
       <method v="2" />
     </configuration>
     <list>
-      <item itemvalue="npm.wifiAllSync" />
-      <item itemvalue="npm.wifiLog" />
       <item itemvalue="npm.wifiStart" />
+      <item itemvalue="npm.wifiAllSync" />
       <item itemvalue="npm.wifiSync" />
       <item itemvalue="npm.wifistop" />
+      <item itemvalue="npm.wifiLog" />
     </list>
     <recent_temporary>
       <list>
@@ -408,11 +407,18 @@
       <option name="project" value="LOCAL" />
       <updated>1560325822488</updated>
     </task>
-    <option name="localTasksCounter" value="7" />
+    <task id="LOCAL-00007" summary="6.12">
+      <created>1560393322952</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1560393322953</updated>
+    </task>
+    <option name="localTasksCounter" value="8" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="38098000" />
+    <option name="totallyTimeSpent" value="38190000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="0" width="1440" height="900" extended-state="0" />
@@ -610,8 +616,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/html/order/order_f.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="498">
-          <caret line="142" column="18" selection-start-line="142" selection-start-column="18" selection-end-line="142" selection-end-column="18" />
+        <state relative-caret-position="123">
+          <caret line="117" column="26" lean-forward="true" selection-start-line="117" selection-start-column="26" selection-end-line="117" selection-end-column="26" />
         </state>
       </provider>
     </entry>
