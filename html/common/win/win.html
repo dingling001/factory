@@ -35,15 +35,8 @@
 
         .win_mid {
             padding-right: 0.5rem;
-            color: #424242;
-        }
-
-        .center {
-            line-height: 0.44rem;
-            color: #424242;
-            text-align: center;
-            /*padding: 0.2rem 0.4rem;*/
-            border-bottom: 1px solid #ececec;
+            color: #333;
+            font-weight: bold;
         }
 
         .close_left {
@@ -58,14 +51,13 @@
             bottom: -0.1rem;
             content: '';
         }
-
     </style>
 </head>
 <body>
 <div id='app' v-cloak>
     <header id="header">
         <div class="index_headers">
-            <div class="close_left" @click="closeWindow()"><span class="iconfont icon-fanhui"></span></div>
+            <div class="close_left" @click="closeWin"><span class="iconfont icon-fanhui"></span></div>
             <div class="win_mid">{{winTitle}}</div>
             <div></div>
         </div>
@@ -113,7 +105,7 @@
                             h: 'auto'
                         },
                         pageParam: api.pageParam.fm,
-                        bounces: false,
+                        bounces: true,
                         reload: true,
                         vScrollBarEnabled: false,
                         hScrollBarEnabled: false,
@@ -147,10 +139,7 @@
                 }
             },
             methods: {
-                closeWindow: function () {
-                    api.sendEvent({
-                        name: 'go_back',
-                    });
+                closeWin: function () {
                     closeWindow();
                 }
             }

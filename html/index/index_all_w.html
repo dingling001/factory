@@ -1,0 +1,157 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title></title>
+    <script src="../../assets/js/fontsize.js"></script>
+    <link rel="stylesheet" href="../../assets/css/swiper-3.4.2.min.css">
+    <link rel="stylesheet" href="../../assets/css/api.css">
+    <link rel="stylesheet" href="http://at.alicdn.com/t/font_1220513_5oiu4zhxvgd.css">
+    <style>
+        .examination_swiper {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin: .2rem 0 0 0;
+        }
+        .icon_box {
+            text-align: center;
+            flex-shrink: 0;
+            width: .8rem;
+            box-shadow: -4px 2px 8px 0 rgba(163, 163, 163, 0.25);
+            padding: .1rem 0;
+        }
+        .icon_box .iconfont {
+            color: #BBBBBB;
+            font-size: 18px;
+        }
+        .swiper-container {
+            flex: 1;
+        }
+        .order_header {
+            height: 120px;
+        }
+    </style>
+</head>
+<body>
+<div id="app" v-cloak>
+    <header class="order_header">
+        <div class="order_head" >
+            <div class="close_left" @click="closeWindow"><span class="iconfont icon-fanhui"></span></div>
+            <span class="input" @click="openSearch">请输入您要搜索的内容</span>
+            <span class="iconfont icon-sousuo" @click="openSearch"></span>
+        </div>
+        <div class="examination_swiper">
+            <div class="swiper-container">
+                <div class="swiper-wrapper">
+                    <div class="swiper-slide" @click="changeSwiper(index)" v-for="(item,index) in navs">
+                        <span :class="{'examination_active':ind==index}">{{item.name}}</span>
+                    </div>
+                </div>
+            </div>
+            <div class="icon_box"><span class="iconfont icon-arrow-right"></span></div>
+        </div>
+    </header>
+</div>
+</body>
+</html>
+<script type="text/javascript" src="../../assets/js/api.js"></script>
+<script type="text/javascript" src="../../assets/js/public.js"></script>
+<script type="text/javascript" src="../../assets/js/fastclick.js"></script>
+<script>
+    new FastClick(document.body);
+</script>
+<script type="text/javascript" src="../../assets/js/vue.min.js"></script>
+<script type="text/javascript" src="../../assets/js/index.js"></script>
+<script type="text/javascript" src="../../assets/js/swiper-3.4.2.min.js"></script>
+<script>
+    var app = new Vue({
+        el: '#app',
+        data: {
+            index: 0,
+            headerH: '',
+            footerH: '',
+            mySwiper: {},
+            ind: 0,
+            navs: [
+                {
+                    id: 1,
+                    name: '全部'
+                },
+                {
+                    id: 2,
+                    name: '机加工'
+                },
+                {
+                    id: 3,
+                    name: 'CNS'
+                },
+                {
+                    id: 3,
+                    name: '焊接'
+                },
+                {
+                    id: 3,
+                    name: '焊接'
+                },
+                {
+                    id: 3,
+                    name: '焊接'
+                }
+                , {
+                    id: 3,
+                    name: '焊接'
+                }, {
+                    id: 3,
+                    name: 'CNS'
+                },
+                {
+                    id: 3,
+                    name: 'CNS'
+                },
+            ],
+        },
+        created: function () {
+            apiready = function () {
+                $api.fixStatusBar($api.dom('header'));
+                app.headerH = $api.offset($api.dom('header')).h;
+                api.openFrame({
+                    name: 'index_all',
+                    url: './index_all.html',
+                    rect: {
+                        x: 0,
+                        y: app.headerH,
+                        w: 'auto',
+                        h: 'auto'
+                    },
+                    bounces: true
+                });
+            }
+        },
+        methods: {
+            // 切换底部导航
+            changeTab: function (res) {
+                app.index = res;
+                api.setFrameGroupIndex({
+                    name: 'index',
+                    index: res
+                })
+            },
+            // 搜索页
+            openSearch: function () {
+                api.openWin({
+                    name: 'search_w',
+                    url: '../index/search_w.html',
+                });
+            },
+            // 改变滑块
+            changeSwiper: function (index) {
+                app.ind = index
+            },
+        }
+    })
+</script>

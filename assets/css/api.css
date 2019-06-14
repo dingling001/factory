@@ -41,14 +41,34 @@ input, button, textarea {
     padding: 0;
     font-size: 1em;
     line-height: 1em;
-    /*-webkit-appearance:none;*/
+    -webkit-appearance: none;
     background-color: rgba(0, 0, 0, 0);
+    outline: none;
 }
-
 input:focus {
     border: 0;
     outline: none;
 
+}
+input[type="text"],
+input[type="date"],
+input[type="tel"],
+input[type="email"],
+input[type="number"],
+input[type="password"],
+input[type="checkbox"] {
+    -webkit-appearance: none;
+    display: block;
+    line-height: normal; /*手机上的line-height不能写成和height的值一样，会出现再次输入光标靠上的现象*/
+    background: none;
+    border-radius: 0;
+    -webkit-border-radius: 0;
+    outline: none;
+    -webkit-transform: translateZ(0);
+    -moz-transform: translateZ(0);
+    -ms-transform: translateZ(0);
+    -o-transform: translateZ(0);
+    transform: translateZ(0); /*解决加入js后input框输入瞬间变白的现象*/
 }
 
 span {
@@ -143,6 +163,23 @@ td, th {
     background-color: #FF3B3B;
 }
 
+.close_left {
+    position: relative;
+}
+
+.close_left::before {
+    position: absolute;
+    left: -0.1rem;
+    right: -0.1rem;
+    top: -0.1rem;
+    bottom: -0.1rem;
+    content: '';
+}
+.el1{
+    overflow: hidden;/*超出部分隐藏*/
+    text-overflow:ellipsis;/* 超出部分显示省略号 */
+    white-space: nowrap;/*规定段落中的文本不进行换行 */
+}
 /*启动页点*/
 /*启动按钮*/
 .start {
@@ -170,6 +207,7 @@ td, th {
     justify-content: space-between;
     padding: 0 0.45rem;
     height: 88px;
+    font-size: 17px;
 }
 
 #loadStart {
@@ -189,6 +227,7 @@ td, th {
 
 .order_header {
     height: 160px;
+    font-size: 17px;
 }
 
 .order_index {
@@ -224,6 +263,7 @@ td, th {
 .examination_swiper {
     background-color: #fff;
     margin: 0.2rem 0;
+    position: relative;
 }
 
 .examination_swiper .swiper-slide {
@@ -307,9 +347,10 @@ footer {
 
 /*头部--底部*/
 /*订单列表*/
-.new_list{
+.new_list {
     padding-bottom: .5rem;
 }
+
 .new_title {
     color: #333;
     font-size: 15px;
@@ -329,8 +370,11 @@ footer {
     border-bottom: 1px solid #F3F5F7;
     /*height: 1.73rem;*/
     height: 2.34rem;
+    background-color: #fff;
 }
-
+.new_item:active{
+    background-color: #F9F9FA;
+}
 .new_item .new_img {
     flex-shrink: 0;
     width: 2.3rem;

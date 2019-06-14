@@ -5,7 +5,8 @@
     <meta charset="UTF-8">
     <meta name="viewport"
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">     <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
     <title></title>
     <script src="../../assets/js/fontsize.js"></script>
     <link rel="stylesheet" href="../../assets/css/api.css">
@@ -101,8 +102,8 @@
     </style>
 </head>
 
-<body>
-<div id="loadStart"></div>
+<body ontouchstart>
+<!--<div id="loadStart"></div>-->
 <div id="app" class="index">
     <div class="swiper-container banner">
         <div class="swiper-wrapper">
@@ -134,7 +135,7 @@
     </div>
     <div class="new_title">最新订单</div>
     <div class="new_list">
-        <div class="new_item" v-for="item in 5">
+        <div class="new_item" v-for="item in 5" @click="go_detail(item)">
             <div class="new_img"><img src="../../assets/image/test/b1.png" alt=""></div>
             <div class="new_right">
                 <div>
@@ -210,10 +211,27 @@
                     observeParents: true
                 })
             },
+            // 更多
             more_fn() {
-
-            }
-
+                api.openWin({
+                    name: 'index_all_w',
+                    url: './index_all_w.html',
+                    bgColor: '#fff',
+                    slidBackEnabled: false
+                });
+            },
+            // 订单详情
+            go_detail(id) {
+                api.openWin({
+                    name: 'index_detail_w',
+                    url: './index_detail_w.html',
+                    bgColor: '#fff',
+                    slidBackEnabled: false,
+                    pageParam: {
+                        id: id
+                    }
+                });
+            },
         }
     })
 </script>

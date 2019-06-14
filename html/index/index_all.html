@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">     <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title></title>
+    <script src="../../assets/js/fontsize.js"></script>
+    <link rel="stylesheet" href="http://at.alicdn.com/t/font_1220513_5oiu4zhxvgd.css">
+    <link rel="stylesheet" href="../../assets/css/api.css">
+
+    <style type="text/css">
+        .hr {
+            height: .32rem;
+            background-color: #F9F9FA;
+        }
+    </style>
+</head>
+<body>
+<div id='loadStart'></div>
+<div id="app" v-cloak>
+    <div class="hr"></div>
+    <div class="new_list">
+        <div class="new_item" v-for="item in 10">
+            <div class="new_img"><img src="../../assets/image/test/b1.png" alt=""></div>
+            <div class="new_right">
+                <div>
+                    <div class="new_name"><span>寻找封头厂家</span><span class="new_num">50000件</span></div>
+                    <div class="new_city">河北省-唐山市</div>
+                </div>
+                <div class="new_date">发布日期：2019年5月20日</div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
+<script type="text/javascript"
+        src="https://res.wx.qq.com/mmbizwap/zh_CN/htmledition/js/vconsole/3.0.0/vconsole.min.js"></script>
+<script>
+    new VConsole();
+</script>
+<script type="text/javascript" src="../../assets/js/api.js"></script>
+<script type="text/javascript" src="../../assets/js/public.js"></script>
+<script type="text/javascript" src="../../assets/js/fastclick.js"></script>
+<script>
+    new FastClick(document.body);
+</script>
+<script type="text/javascript" src="../../assets/js/vue.min.js"></script>
+<script type="text/javascript" src="../../assets/js/index.js"></script>
+
+<script>
+    var app = new Vue({
+        el: '#app',
+        data: {
+
+        },
+        created: function () {
+            apiready = function () {
+                setTimeout(function () {
+                    loadEnd('order_f')
+                }, 1500)
+            }
+        },
+        methods: {
+            // 搜索页
+            openSearch: function () {
+                api.openWin({
+                    name: 'search_w',
+                    url: '../index/search_w.html',
+                });
+            },
+
+        }
+    })
+</script>

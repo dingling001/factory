@@ -1,11 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="6e3f121d-82ec-488a-a733-ad1df084e993" name="Default Changelist" comment="6.12">
+    <list default="true" id="6e3f121d-82ec-488a-a733-ad1df084e993" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/assets/js/city.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/html/common/index_win.html" beforeDir="false" afterPath="$PROJECT_DIR$/html/common/index_win.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/html/my/my_f.html" beforeDir="false" afterPath="$PROJECT_DIR$/html/my/my_f.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/html/order/order_f.html" beforeDir="false" afterPath="$PROJECT_DIR$/html/order/order_f.html" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
     <ignored path="$PROJECT_DIR$/temp/" />
@@ -26,7 +24,8 @@
           <entry key="project.open.time.2" value="1" />
           <entry key="project.open.time.25" value="1" />
           <entry key="project.open.time.4" value="1" />
-          <entry key="project.opened" value="8" />
+          <entry key="project.open.time.5" value="1" />
+          <entry key="project.opened" value="9" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.open">
@@ -36,7 +35,7 @@
           <entry key="gitignore" value="1" />
           <entry key="html" value="41" />
           <entry key="js" value="13" />
-          <entry key="json" value="4" />
+          <entry key="json" value="5" />
           <entry key="syncignore" value="1" />
           <entry key="xml" value="5" />
         </counts>
@@ -46,7 +45,7 @@
           <entry key="CSS" value="11" />
           <entry key="HTML" value="41" />
           <entry key="Image" value="1" />
-          <entry key="JSON" value="4" />
+          <entry key="JSON" value="5" />
           <entry key="JavaScript" value="13" />
           <entry key="PLAIN_TEXT" value="2" />
           <entry key="XML" value="5" />
@@ -58,7 +57,7 @@
           <entry key="html" value="1752" />
           <entry key="js" value="78" />
           <entry key="json" value="38" />
-          <entry key="txt" value="6" />
+          <entry key="txt" value="7" />
           <entry key="xml" value="18" />
         </counts>
       </usages-collector>
@@ -68,7 +67,7 @@
           <entry key="HTML" value="1752" />
           <entry key="JSON" value="38" />
           <entry key="JavaScript" value="78" />
-          <entry key="PLAIN_TEXT" value="6" />
+          <entry key="PLAIN_TEXT" value="7" />
           <entry key="XML" value="18" />
         </counts>
       </usages-collector>
@@ -79,8 +78,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/html/index/index_f.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="260">
-              <caret line="151" selection-start-line="152" selection-start-column="6" selection-end-line="152" selection-end-column="7" />
+            <state relative-caret-position="3775">
+              <caret line="151" selection-start-line="151" selection-end-line="151" />
             </state>
           </provider>
         </entry>
@@ -88,8 +87,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/html/login/login_agree.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="537">
-              <caret line="26" column="9" lean-forward="true" selection-start-line="26" selection-start-column="9" selection-end-line="26" selection-end-column="9" />
+            <state relative-caret-position="650">
+              <caret line="26" column="9" selection-start-line="26" selection-start-column="9" selection-end-line="26" selection-end-column="9" />
             </state>
           </provider>
         </entry>
@@ -124,20 +123,40 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/html/common/index_win.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="413">
-              <caret line="58" selection-start-line="58" selection-end-line="58" />
-              <folding>
-                <element signature="n#style#0;n#header#1;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
-              </folding>
+            <state relative-caret-position="2825">
+              <caret line="113" selection-start-line="113" selection-end-line="113" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/html/my/my_f.html">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="511">
+              <caret line="254" column="10" lean-forward="true" selection-start-line="254" selection-start-column="10" selection-end-line="254" selection-end-column="10" />
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/html/my/my_f.html">
+        <entry file="file://$PROJECT_DIR$/assets/js/city.json">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-100">
-              <caret line="17" column="6" lean-forward="true" selection-start-line="17" selection-start-column="6" selection-end-line="17" selection-end-column="6" />
+            <state relative-caret-position="250">
+              <caret line="3715" selection-start-line="3715" selection-end-line="3715" />
+              <folding>
+                <element signature="e#6#2400#0" />
+                <element signature="e#70#2394#0" />
+                <element signature="e#2406#4966#0" />
+                <element signature="e#4972#29074#0" />
+                <element signature="e#29080#46627#0" />
+                <element signature="e#46633#61873#0" />
+                <element signature="e#61879#77910#0" />
+                <element signature="e#77916#87592#0" />
+                <element signature="e#87598#106926#0" />
+                <element signature="e#106932#109616#0" />
+                <element signature="e#109622#126085#0" />
+                <element signature="e#126091#140072#0" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -154,11 +173,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/html/order/order_f.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="439">
-              <caret line="174" column="13" lean-forward="true" selection-start-line="174" selection-start-column="13" selection-end-line="174" selection-end-column="13" />
-              <folding>
-                <element signature="e#4146#4293#0" />
-              </folding>
+            <state relative-caret-position="1600">
+              <caret line="64" column="13" selection-start-line="64" selection-start-column="13" selection-end-line="64" selection-end-column="13" />
             </state>
           </provider>
         </entry>
@@ -269,13 +285,18 @@
             <path>
               <item name="factory" type="b2602c69:ProjectViewProjectNode" />
               <item name="factory" type="462c0819:PsiDirectoryNode" />
-              <item name="html" type="462c0819:PsiDirectoryNode" />
+              <item name="assets" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="factory" type="b2602c69:ProjectViewProjectNode" />
+              <item name="factory" type="462c0819:PsiDirectoryNode" />
+              <item name="assets" type="462c0819:PsiDirectoryNode" />
+              <item name="js" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="factory" type="b2602c69:ProjectViewProjectNode" />
               <item name="factory" type="462c0819:PsiDirectoryNode" />
               <item name="html" type="462c0819:PsiDirectoryNode" />
-              <item name="common" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="factory" type="b2602c69:ProjectViewProjectNode" />
@@ -299,23 +320,23 @@
   <component name="PropertiesComponent">
     <property name="DefaultHtmlFileTemplate" value="HTML File" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../card" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
     <property name="nodejs_package_manager_path" value="npm" />
     <property name="settings.editor.selected.configurable" value="preferences.fileTypes" />
   </component>
   <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="E:\project\factory\assets\js" />
+      <recent name="E:\project\factory\assets\image" />
+      <recent name="E:\project\factory\html\login" />
+      <recent name="E:\project\factory\assets" />
+    </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="E:\project\factory\html\my" />
       <recent name="E:\project\factory\html\common" />
       <recent name="E:\project\factory\html\order" />
-    </key>
-    <key name="CopyFile.RECENT_KEYS">
-      <recent name="E:\project\factory\assets\image" />
-      <recent name="E:\project\factory\html\login" />
-      <recent name="E:\project\factory\assets\js" />
-      <recent name="E:\project\factory\assets" />
     </key>
   </component>
   <component name="RunDashboard">
@@ -416,6 +437,7 @@
       <workItem from="1560319521381" duration="2935000" />
       <workItem from="1560325659124" duration="2538000" />
       <workItem from="1560393631440" duration="79000" />
+      <workItem from="1560473021453" duration="2477000" />
     </task>
     <task id="LOCAL-00001" summary="6.5">
       <created>1559727630823</created>
@@ -473,21 +495,27 @@
       <option name="project" value="LOCAL" />
       <updated>1560332186890</updated>
     </task>
-    <option name="localTasksCounter" value="9" />
+    <task id="LOCAL-00009" summary="6.13">
+      <created>1560418782358</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1560418782358</updated>
+    </task>
+    <option name="localTasksCounter" value="10" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="40258000" />
+    <option name="totallyTimeSpent" value="43083000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="-6" y="1" width="1932" height="1045" extended-state="0" />
+    <frame x="-6" y="1" width="1932" height="1045" extended-state="1" />
     <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" sideWeight="0.7330317" visible="true" weight="0.24973601" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" sideWeight="0.7311475" visible="true" weight="0.24973601" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
-      <window_info id="npm" order="2" sideWeight="0.26696834" side_tool="true" visible="true" weight="0.24973601" />
+      <window_info id="npm" order="2" sideWeight="0.26885247" side_tool="true" visible="true" weight="0.24973601" />
       <window_info id="Favorites" order="3" side_tool="true" />
-      <window_info anchor="bottom" id="Messages" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" weight="0.32967034" />
       <window_info anchor="bottom" id="Run" order="2" sideWeight="0.49894404" weight="0.27142859" />
@@ -500,6 +528,7 @@
       <window_info anchor="bottom" id="RNConsole" order="9" />
       <window_info anchor="bottom" id="Event Log" order="10" sideWeight="0.50105596" side_tool="true" weight="0.22967033" />
       <window_info anchor="bottom" id="Terminal" order="11" visible="true" weight="0.32967034" />
+      <window_info anchor="bottom" id="Messages" order="12" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
@@ -515,7 +544,8 @@
     <MESSAGE value="6.5" />
     <MESSAGE value="6.11" />
     <MESSAGE value="6.12" />
-    <option name="LAST_COMMIT_MESSAGE" value="6.12" />
+    <MESSAGE value="6.13" />
+    <option name="LAST_COMMIT_MESSAGE" value="6.13" />
   </component>
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/assets/image/loading_more.gif" />
@@ -552,13 +582,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="900">
           <caret line="36" column="17" lean-forward="true" selection-start-line="36" selection-start-column="17" selection-end-line="36" selection-end-column="17" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/html/login/login_agree.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="537">
-          <caret line="26" column="9" lean-forward="true" selection-start-line="26" selection-start-column="9" selection-end-line="26" selection-end-column="9" />
         </state>
       </provider>
     </entry>
@@ -635,6 +658,20 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/html/index/index_f.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="3775">
+          <caret line="151" selection-start-line="151" selection-end-line="151" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/html/login/login_agree.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="650">
+          <caret line="26" column="9" selection-start-line="26" selection-start-column="9" selection-end-line="26" selection-end-column="9" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/index.html">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="550">
@@ -656,6 +693,13 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/html/common/index_win.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="2825">
+          <caret line="113" selection-start-line="113" selection-end-line="113" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/assets/css/api.css">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="4650">
@@ -663,37 +707,38 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/html/index/index_f.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="260">
-          <caret line="151" selection-start-line="152" selection-start-column="6" selection-end-line="152" selection-end-column="7" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/html/common/index_win.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="413">
-          <caret line="58" selection-start-line="58" selection-end-line="58" />
-          <folding>
-            <element signature="n#style#0;n#header#1;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/html/order/order_f.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="439">
-          <caret line="174" column="13" lean-forward="true" selection-start-line="174" selection-start-column="13" selection-end-line="174" selection-end-column="13" />
-          <folding>
-            <element signature="e#4146#4293#0" />
-          </folding>
+        <state relative-caret-position="1600">
+          <caret line="64" column="13" selection-start-line="64" selection-start-column="13" selection-end-line="64" selection-end-column="13" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/html/my/my_f.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-100">
-          <caret line="17" column="6" lean-forward="true" selection-start-line="17" selection-start-column="6" selection-end-line="17" selection-end-column="6" />
+        <state relative-caret-position="511">
+          <caret line="254" column="10" lean-forward="true" selection-start-line="254" selection-start-column="10" selection-end-line="254" selection-end-column="10" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/assets/js/city.json">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="250">
+          <caret line="3715" selection-start-line="3715" selection-end-line="3715" />
+          <folding>
+            <element signature="e#6#2400#0" />
+            <element signature="e#70#2394#0" />
+            <element signature="e#2406#4966#0" />
+            <element signature="e#4972#29074#0" />
+            <element signature="e#29080#46627#0" />
+            <element signature="e#46633#61873#0" />
+            <element signature="e#61879#77910#0" />
+            <element signature="e#77916#87592#0" />
+            <element signature="e#87598#106926#0" />
+            <element signature="e#106932#109616#0" />
+            <element signature="e#109622#126085#0" />
+            <element signature="e#126091#140072#0" />
+          </folding>
         </state>
       </provider>
     </entry>

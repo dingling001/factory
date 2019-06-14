@@ -29,15 +29,31 @@
             padding: 0.2rem 0.4rem;
             border-bottom: 1px solid #ececec;
         }
+
+        .order_detail {
+            flex: 1;
+            text-align: center;
+            font-weight: bold;
+            padding: 0 0 0 .44rem;
+        }
+
+        .icon-fenxiang {
+            margin-right: .3rem;
+        }
+
+        .share_box .iconfont {
+            color: #BBBBBB;
+        }
     </style>
 </head>
 <body>
 <div id="app" v-cloak class="company">
     <header>
         <div class="my_info">
-            <div class="close_left" @click="closeWindow('my_info_w')"><span class="iconfont icon-fanhui" ></span></div>
-            <span>个人信息</span>
-            <span class="iconfont icon-xiugai" @click="go_infochange"></span>
+            <div class="close_left" @click="close_detail"><span class="iconfont icon-fanhui"></span></div>
+            <span class="order_detail el1">{{order_title}}</span>
+            <div class="share_box"><span class="iconfont icon-fenxiang"></span><span class="iconfont icon-shoucang"
+                                                                                     @click="collect_fn"></span></div>
         </div>
     </header>
 </div>
@@ -55,9 +71,7 @@
     var app = new Vue({
         el: '#app',
         data: {
-            name: '',
-            code: '',
-            tel: ''
+            order_title: '订单详情'
         },
         created: function () {
             apiready = function () {
@@ -67,22 +81,29 @@
                     style: 'dark',
                 });
                 api.openFrame({
-                    name: 'my_info',
-                    url: './my_info.html',
+                    name: 'index_detail',
+                    url: './index_detail.html',
                     rect: {
                         x: 0,
                         y: app.headerH,
                         w: 'auto',
                         h: 'auto'
                     },
+                    reload: true,
                     bounces: true
                 });
             }
         },
         methods: {
-            // 跳过去首页
-            go_infochange: function () {
-                openView('my_infocahnge', 'my/my_infocahnge', '修改个人信息')
+            close_detail: function () {
+                api.closeFrame({
+                    name: 'index_detail'
+                });
+                api.closeWin();
+            },
+            // 收藏
+            collect_fn: function () {
+
             },
         }
     })

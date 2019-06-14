@@ -1,0 +1,339 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>订单详情</title>
+    <script src="../../assets/js/fontsize.js"></script>
+    <link rel="stylesheet" href="../../assets/css/api.css">
+    <link rel="stylesheet" href="../../assets/css/style.css">
+    <!--<link rel="stylesheet" href="https://unpkg.com/mint-ui@1/lib/style.css">-->
+    <link rel="stylesheet" href="http://at.alicdn.com/t/font_1220513_5oiu4zhxvgd.css">
+    <style>
+        body {
+            background-color: #F9F9FA;
+        }
+
+        .input_box {
+            margin: 0;
+            padding: .3rem .25rem .3rem .4rem;
+            background-color: #fff;
+        }
+
+        .label {
+            font-size: 16px;
+            position: relative;
+            color: #333;
+        }
+
+        .need::before {
+            position: absolute;
+            right: -7px;
+            top: 2px;
+            text-align: center;
+            transform: translateY(-50%);
+            content: '*';
+            padding-top: 5px;
+            color: #E32A2A;
+            font-weight: bold;
+            font-size: 15px;
+            /*px*/
+        }
+
+        .company .infoinput {
+            text-align: right;
+            font-size: 13px;
+            flex: 1;
+            padding: 0 .25rem;
+            color: #666;
+        }
+
+        .type .infoinput {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+        }
+
+        .type .infoinput span {
+            padding: .1rem .24rem;
+            background-color: #E72424;
+            border-radius: 5px;
+            color: #ffff;
+            margin-left: .2rem;
+        }
+
+        .infoinput .num {
+            color: #E51F1F;
+        }
+
+        .company .border-t {
+            border-top: 1px solid #EEEEEE;
+        }
+
+        .company .border-0 {
+            border: 0;
+        }
+
+        .area_box {
+            font-size: 14px;
+            padding: 0 .4rem .6rem .4rem;
+            text-align: justify;
+            background-color: #fff;
+        }
+
+        .title {
+            margin-bottom: .22rem;
+            border: 0;
+        }
+
+        .title .label {
+            font-weight: bold;
+        }
+
+        .detail_title {
+            background-color: #fff;
+            padding: .3rem .45rem;
+            font-size: 15px;
+            font-weight: bold;
+            margin-top: .36rem;
+        }
+
+        .pic_list {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            padding: 0 .24rem;
+            background-color: #fff;
+        }
+
+        .pic_item {
+            width: 31.5%;
+            margin: 0 2.6% .2rem 0;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 1.65rem;
+            border-radius: 3px;
+        }
+
+        .pic_item:nth-child(3n) {
+            margin: 0 0 .2rem 0;
+        }
+
+        .pic_item img {
+            width: 100%;
+        }
+
+        .d_file {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 .4rem .6rem .6rem;
+            background-color: #fff;
+            margin-bottom: .36rem;
+        }
+
+        .d_left {
+            font-size: 15px;
+            color: #333;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            font-weight: bold;
+        }
+
+        .d_left .size {
+            font-size: 10px;
+        }
+
+        .d_rbtn {
+            text-align: center;
+            padding: .1rem 0.3rem;
+            color: #fff;
+            border-radius: 5px;
+            box-shadow: 0 5px 6px 0px rgba(231, 36, 36, 0.13);
+            font-size: 14px;
+            background-color: #E72424;
+        }
+
+        .d_img {
+            width: .7rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: .22rem;
+        }
+
+        .d_img img {
+            width: 100%;
+        }
+
+        .input_box .notice {
+            font-size: 10px;
+            color: #999;
+        }
+
+        .tips {
+            font-size: 11px;
+            color: #999;
+            padding: 0 .4rem;
+            background-color: #fff;
+        }
+
+        .tips span {
+            color: #E51F1F;
+            font-size: 14px;
+        }
+
+        .vip_box {
+            padding: 1rem 0 2rem 0;
+            background-color: #fff;
+        }
+
+        .vip_box .vip_btn {
+            width: 45%;
+            text-align: center;
+            padding: .26rem 0;
+            font-size: 15px;
+            color: #fff;
+            background-color: #E72424;
+            box-shadow: 0 6px 7px 0 rgba(231, 36, 36, 0.13);
+            border-radius: 5px;
+            margin: 0 auto;
+        }
+
+        .price_btn {
+            background-color: #E72424;
+            text-align: center;
+            padding: .25rem 0;
+            color: #fff;
+            font-size: 18px;
+            /*position: fixed;*/
+            /*bottom: 0;*/
+            /*left: 0;*/
+            /*z-index: 100;*/
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+<div id="app" v-cloak class="company">
+    <div class="input_box title">
+        <span class="label ">订单详情</span>
+        <div class="infoinput">发布日期：2019年5月20日</div>
+    </div>
+    <div class="input_box">
+        <span class="label">标题</span>
+        <div class="infoinput">寻找封头厂家</div>
+    </div>
+    <div class="input_box">
+        <span class="label">地区</span>
+        <div class="infoinput">天津市-北辰区-双街镇</div>
+    </div>
+    <div class="input_box type">
+        <span class="label">类型</span>
+        <div class="infoinput"><span>CNS</span><span>机加工</span></div>
+    </div>
+    <div class="input_box ">
+        <span class="label">材质</span>
+        <div class="infoinput">其他</div>
+    </div>
+    <div class="input_box">
+        <span class="label">数量</span>
+        <div class="infoinput"><span class="num">50个</span></div>
+    </div>
+    <div class="input_box ">
+        <span class="label">订单截止日期</span>
+        <div class="infoinput">2019年5月30日</div>
+    </div>
+    <div class="input_box border-0">
+        <span class="label">订单备注：</span>
+    </div>
+    <div class="area_box">
+        <div>软件开发管理软件 聚合多种功能,从产品到测试,全流程支持,无需切换软件.ONES.AI 助力企业创新协作,从而缩短研发周期,提高产品质量.点击免费注册使用!</div>
+    </div>
+    <div class="detail_title">相关图片</div>
+    <div class="pic_list">
+        <div class="pic_item" v-for="(item,index) in 8" @click="browserImg(index)"><img
+                src="../../assets/image/test/b1.png" alt=""></div>
+    </div>
+    <div class="detail_title">订单附件</div>
+    <div class="d_file">
+        <div class="d_left">
+            <span class="d_img"><img src="../../assets/image/pdf.png" alt=""></span>
+            <span>资料.pdf<span class="size">(80k)</span></span>
+        </div>
+        <div class="d_rbtn">下载附件</div>
+    </div>
+    <div class="input_box">
+        <span class="label">会员信息 <span class="notice">注：此处信息需开通会员后可查看</span></span>
+    </div>
+    <div class="input_box">
+        <span class="label">发单企业</span>
+        <div class="infoinput">南京*******公司</div>
+    </div>
+    <div class="input_box">
+        <span class="label">联系方式</span>
+        <div class="infoinput">185****8524</div>
+    </div>
+    <div class="input_box">
+        <span class="label">负责人</span>
+        <div class="infoinput">王**</div>
+    </div>
+    <div class="tips">注：您的剩余报价次数 <span>5</span>次</div>
+    <div class="vip_box">
+        <div class="vip_btn">会员查看信息</div>
+    </div>
+    <div class="price_btn">立即报价</div>
+</div>
+</body>
+</html>
+<script type="text/javascript" src="../../assets/js/api.js"></script>
+<script type="text/javascript" src="../../assets/js/public.js"></script>
+<script type="text/javascript" src="../../assets/js/fastclick.js"></script>
+<script>
+    new FastClick(document.body);
+</script>
+<script type="text/javascript" src="../../assets/js/vue.min.js"></script>
+<script type="text/javascript" src="../../assets/js/index.js"></script>
+<script type="text/javascript"
+        src="https://res.wx.qq.com/mmbizwap/zh_CN/htmledition/js/vconsole/3.0.0/vconsole.min.js"></script>
+<script>
+    new VConsole();
+</script>
+<script>
+    var app = new Vue({
+        el: '#app',
+        data: {},
+        created: function () {
+            apiready = function () {
+            }
+        },
+        methods: {
+            // 图片预览
+            browserImg: function (index) {
+                var photoBrowser = api.require('photoBrowser');
+                photoBrowser.open({
+                    images: [
+                        '../../assets/image/test/b1.png',
+                        '../../assets/image/test/b1.png'
+                    ],
+                    activeIndex: index,
+                    placeholderImg: 'widget://assets/image/loading3.gif',
+                    bgColor: '#000'
+                }, function (ret, err) {
+                    if (ret) {
+                        alert(JSON.stringify(ret));
+                    } else {
+                        alert(JSON.stringify(err));
+                    }
+                });
+            }
+
+        }
+    })
+</script>

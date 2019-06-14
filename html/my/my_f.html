@@ -177,12 +177,11 @@
             padding: .5rem;
             border: 0;
             color: #fff;
-            font-size: 20px;
         }
     </style>
 </head>
 <body class="my_body">
-<!--<div id="loadStart"></div>-->
+<div id="loadStart"></div>
 <div id="app" v-chock>
     <div class="my_head">
         <div class="order_index">
@@ -194,7 +193,7 @@
             <div class="company_name">天津市你人在哪端科技有限公司 <span class="iconfont icon-vip novip"></span></div>
         </div>
         <div class="company" v-else>
-            <div class="company_name">
+            <div class="company_name" @click="login">
                 <div class="my_btn">登录</div>
             </div>
         </div>
@@ -204,27 +203,27 @@
             <span class="iconfont icon-gerenxinxi"></span>
             <span>个人信息</span>
         </div>
-        <div class="my_item" @click="go_item('outorder')">
+        <div class="my_item" @click="go_view('my_outorder','外发订单')">
             <span class="iconfont icon-waifadingdan"></span>
             <span>外发订单</span>
         </div>
-        <div class="my_item border_2" @click="go_item('my_price')">
+        <div class="my_item border_2" @click="go_view('my_price','我的报价')">
             <span class="iconfont icon-wodebaojia"></span>
             <span>我的报价</span>
         </div>
-        <div class="my_item" @click="go_item('my_vip')">
+        <div class="my_item" @click="go_item('my_vip_w')">
             <span class="iconfont icon-huiyuanzhongxin"></span>
             <span>会员中心</span>
         </div>
-        <div class="my_item " @click="go_item('my_collection')">
+        <div class="my_item " @click="go_view('my_collection','我的收藏')">
             <span class="iconfont icon-shoucang_"></span>
             <span>我的收藏</span>
         </div>
-        <div class="my_item border_2" @click="go_item('my_ours')">
+        <div class="my_item border_2" @click="go_view('my_about','关于我们')">
             <span class="iconfont icon-guanyuwomen"></span>
             <span>关于我们</span>
         </div>
-        <div class="my_item border_1" @click="go_item('my_contact')">
+        <div class="my_item border_1" @click="go_view('my_contact','联系我们')">
             <span class="iconfont icon-lianxiwomen"></span>
             <span>联系我们</span>
         </div>
@@ -250,48 +249,29 @@
         },
         created: function () {
             apiready = function () {
-
+                setTimeout(function () {
+                    loadEnd('my_outorder')
+                }, 1500)
             }
         },
         methods: {
+            // 特殊头
             go_item: function (name) {
                 api.openWin({
                     name: name,
                     url: './' + name + '.html',
-                    slidBackEnabled:false
+                    slidBackEnabled: false
                 });
             },
-            // 个人信息
-            go_info: function () {
-                openView('my_info', 'my/my_info', '个人信息')
+            // 公共头
+            go_view: function (url, name) {
+                openView(url, 'my/' + url, name)
             },
-            //外发订单
-            go_outorder: function () {
-
-            },
-            // 我的报价
-            go_price: function () {
-
-            },
-            // 外发订单
-            my_price: function () {
-
-            },
-            // 会员中心
-            go_vip: function () {
-
-            },
-            // 个人收藏
-            go_collection: function () {
-
-            },
-            // 关于我们
-            go_ours: function () {
-
-            },
-            // 联系我们
-            go_contact: function () {
-
+            login: function () {
+                api.openWin({
+                    name: 'login',
+                    url: '../login/login.html',
+                });
             }
         }
     })
