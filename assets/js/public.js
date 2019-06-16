@@ -1,8 +1,6 @@
-// var baseurl = 'http://kindapp.w.bronet.cn/api/';//测试地址
-
-var baseurl = 'http://wx.cijievip.com/api/';//正式地址
-// var baseurl = http://192.168.1.3/api/+'';//本地测试
-var mobileReg = /^1(3[0-9]|4[57]|5[0-35-9]|7[0135678]|8[0-9])\d{8}$/; //手机正则
+// var baseurl = 'http://wx.cijievip.com/api/';//正式地址
+var baseurl = 'http://j.jianghairui.com/api/'; //加工宝
+var mobileReg = /^1\d{10}$/gi; //手机正则
 var id_card = /^[1-9]\d{5}(18|19|([23]\d))\d{2}((0[1-9])|(10|11|12))(([0-2][1-9])|10|20|30|31)\d{3}[0-9Xx]$/;//身份证正则
 // var goodUrl = 'http://localhost:8080/A6079080424317/html/';//公众号域名
 var puplic_url = 'http://kindapp.w.bronet.cn/A6079080424317/web_adapter/adapter.html';
@@ -86,7 +84,7 @@ function openFm(fmName, url) {
 }
 
 function toastMsg(msg) {
-  api.toast({
+    api.toast({
         msg: msg,
         duration: 2000,
         location: "middle"
@@ -173,13 +171,13 @@ function isLogin(_this, callback) {
 
 function loadEnd() {
     var ele = document.getElementById('loadStart');
-    var app=document.getElementById('app');
+    var app = document.getElementById('app');
     if (ele) {
         ele.style.opacity = 0;
-        app.style.overflow='hidden';
+        app.style.overflow = 'hidden';
         setTimeout(function () {
             ele.style.display = "none";
-            app.style.overflow='auto';
+            app.style.overflow = 'auto';
         }, 1000);
 
     }
@@ -264,8 +262,7 @@ function add0(num) {
         num = parseInt(num);
         if (num >= 10) {
             return num
-        }
-        else {
+        } else {
             return '0' + num
         }
     } else {
@@ -312,8 +309,7 @@ function checkDate(date, type) {
             } else {
                 return true;
             }
-        }
-        else {
+        } else {
             if (startDate < endDate) {
                 return false;
             } else {
@@ -367,16 +363,21 @@ function toWan(str) {
     }
 }
 
-function getRequest(type, url, params, header) {
+function getRequest(type, url, params) {
     var promise = new Promise(function (resolve, reject) {
         axios({
             url: baseurl + url,
             method: type,
             params: params,
-            headers: header
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+            }
         }).then(function (res) {
             if (res.data.code == 502) {
-                openView('login_index', 'login/login_index', '登录')
+                api.openWin({
+                    name: 'login',
+                    url: 'widget://html/login/login.html',
+                });
             } else {
                 resolve(res);
                 // loadEnd();

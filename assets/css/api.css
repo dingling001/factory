@@ -513,9 +513,9 @@ footer {
     color: #fff;
     font-size: 12px;
     background-color: #E72424;
-    width: 1.64rem;
+    /*width: 1.64rem;*/
     text-align: center;
-    padding: .19rem 0;
+    padding: .19rem .2rem;
     border-radius: 5px;
     flex-shrink: 0;
 }
