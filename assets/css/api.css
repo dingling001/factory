@@ -45,11 +45,13 @@ input, button, textarea {
     background-color: rgba(0, 0, 0, 0);
     outline: none;
 }
+
 input:focus {
     border: 0;
     outline: none;
 
 }
+
 input[type="text"],
 input[type="date"],
 input[type="tel"],
@@ -175,11 +177,13 @@ td, th {
     bottom: -0.1rem;
     content: '';
 }
-.el1{
-    overflow: hidden;/*超出部分隐藏*/
-    text-overflow:ellipsis;/* 超出部分显示省略号 */
-    white-space: nowrap;/*规定段落中的文本不进行换行 */
+
+.el1 {
+    overflow: hidden; /*超出部分隐藏*/
+    text-overflow: ellipsis; /* 超出部分显示省略号 */
+    white-space: nowrap; /*规定段落中的文本不进行换行 */
 }
+
 /*启动页点*/
 /*启动按钮*/
 .start {
@@ -322,6 +326,7 @@ footer {
     color: #969696;
     bottom: 0;
     background-color: #fff;
+    border-bottom: 1px solid #F9F9FA;
     -webkit-box-shadow: 0 -1px 0 0 rgba(240, 240, 240, 0.82);
     -moz-box-shadow: 0 -1px 0 0 rgba(240, 240, 240, 0.82);
     box-shadow: 0 -1px 0 0 rgba(240, 240, 240, 0.82);
@@ -358,9 +363,9 @@ footer {
     padding: 0 .25rem;
 }
 
-.new_list .new_item:last-child {
-    border: 0;
-}
+/*.new_list .new_item:last-child {*/
+/*border: 0;*/
+/*}*/
 
 .new_item {
     display: flex;
@@ -372,9 +377,11 @@ footer {
     height: 2.34rem;
     background-color: #fff;
 }
-.new_item:active{
+
+.new_item:active {
     background-color: #F9F9FA;
 }
+
 .new_item .new_img {
     flex-shrink: 0;
     width: 2.3rem;
@@ -383,10 +390,11 @@ footer {
     align-items: center;
     justify-content: center;
     margin-right: .2rem;
+    overflow: hidden;
 }
 
 .new_img img {
-    width: 100%;
+    height: 100%;
 }
 
 .new_right {

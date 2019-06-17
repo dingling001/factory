@@ -6,6 +6,8 @@ var id_card = /^[1-9]\d{5}(18|19|([23]\d))\d{2}((0[1-9])|(10|11|12))(([0-2][1-9]
 var puplic_url = 'http://kindapp.w.bronet.cn/A6079080424317/web_adapter/adapter.html';
 // var goodUrl = 'http://kindapp.w.bronet.cn/A6079080424317/'; //测试域名
 var goodUrl = 'http://wx.cijievip.com/A6079080424317/';//正式域名
+var imgUrl = 'http://j.jianghairui.com/';
+
 function openWin(winName, url) {
     api.openWin({
         name: winName,
@@ -216,6 +218,21 @@ refresh = function (callback) {
     });
 };
 
+function getapi(type = 'post', url = '', values = {}, file = '', calback,) {
+    api.ajax({
+        url: baseurl + url,
+        method: type,
+        data: {
+            values: values,
+            files: {
+                file: file
+            }
+        }
+    }, function (ret, err) {
+        calback(ret, err);
+    });
+}
+
 refreshDone = function (mess) {
     if (mess) {
         toastMsg(mess);
@@ -363,14 +380,14 @@ function toWan(str) {
     }
 }
 
-function getRequest(type, url, params) {
+function getRequest(type = 'post', url, params) {
     var promise = new Promise(function (resolve, reject) {
         axios({
             url: baseurl + url,
             method: type,
-            params: params,
+            data: params,
             headers: {
-                'Content-Type': 'application/x-www-form-urlencoded'
+                // 'Content-Type': 'application/x-www-form-urlencoded'
             }
         }).then(function (res) {
             if (res.data.code == 502) {
@@ -385,8 +402,6 @@ function getRequest(type, url, params) {
             // resolve(res)
         }).catch(function (err) {
             toastMsg('网络错误');
-            openView('wrong', 'common/wrong', '网络错误');
-            // alert(JSON.stringify(err))
             reject(err)
         })
     });

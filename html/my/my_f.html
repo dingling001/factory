@@ -46,6 +46,7 @@
 
         .company .company_name .novip {
             color: #ccc;
+            margin-left: .1rem;
         }
 
         .my_btn {
@@ -190,7 +191,8 @@
             <span class="iconfont icon-shezhi" @click="go_item('my_set')"></span>
         </div>
         <div class="company" v-if="fac_token">
-            <div class="company_name">天津市你人在哪端科技有限公司 <span class="iconfont icon-vip novip"></span></div>
+            <div class="company_name">{{my_info.tel}}<span
+                    :class="['iconfont icon-vip', my_info.vip==1?'':'novip']"></span></div>
         </div>
         <div class="company" v-else>
             <div class="company_name" @click="login">
@@ -241,20 +243,42 @@
 </script>
 <script type="text/javascript" src="../../assets/js/vue.min.js"></script>
 <script type="text/javascript" src="../../assets/js/index.js"></script>
+<script type="text/javascript"
+        src="https://res.wx.qq.com/mmbizwap/zh_CN/htmledition/js/vconsole/3.0.0/vconsole.min.js"></script>
+<script>
+    new VConsole();
+</script>
 <script>
     var app = new Vue({
         el: '#app',
         data: {
-            fac_token: localStorage.getItem('fac_token') || ''
+            fac_token: $api.getStorage('fac_token') || '',
+            my_info: {}
         },
         created: function () {
             apiready = function () {
-                setTimeout(function () {
-                    loadEnd('my_outorder')
-                }, 1500)
+                app._getMyinfo();
             }
         },
         methods: {
+            _getMyinfo: function () {
+                api.ajax({
+                    url: baseurl + 'my/getMyinfo',
+                    method: 'post',
+                    data: {
+                        values: {
+                            token: app.fac_token
+                        },
+                    }
+                }, function (ret, err) {
+                    if (ret.code == 1) {
+                        // alert(JSON.stringify(ret));
+                        loadEnd('my_outorder')
+                        app.my_info = ret.data;
+                    }
+                });
+            },
+
             // 特殊头
             go_item: function (name) {
                 api.openWin({
