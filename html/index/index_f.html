@@ -98,35 +98,28 @@
 
         .nav_item .icon_name {
             padding: .1rem;
+            color: #454545;
+            font-weight: 500;
         }
     </style>
 </head>
 
 <body ontouchstart>
-<!--<div id="loadStart"></div>-->
+<div id="loadStart"></div>
 <div id="app" class="index">
     <div class="swiper-container banner">
         <div class="swiper-wrapper">
-            <div class="swiper-slide">
-                <img src="../../assets/image/test/b1.png" alt>
-            </div>
-            <div class="swiper-slide">
-                <img src="../../assets/image/test/b1.png" alt>
-            </div>
-            <div class="swiper-slide">
-                <img src="../../assets/image/test/b1.png" alt>
-            </div>
-            <div class="swiper-slide">
-                <img src="../../assets/image/test/b1.png" alt>
+            <div class="swiper-slide" v-for="(item,index) in slide_list" :key="item.id">
+                <img :src="imgUrl+item.pic" alt>
             </div>
         </div>
         <!-- 如果需要分页器 -->
         <div class="swiper-pagination"></div>
     </div>
     <div class="nav_box">
-        <div class="nav_item" v-for="item in 9">
-            <span class="icon_box"><img src="../../assets/image/test/n1.png" alt=""></span>
-            <span class="icon_name">机加工</span>
+        <div class="nav_item" v-for="(item,index) in cate_list">
+            <span class="icon_box"><img :src="imgUrl+item.pic" alt=""></span>
+            <span class="icon_name">{{item.cate_name}}</span>
         </div>
         <div class="nav_item" @click="more_fn">
             <span class="icon_box"><img src="../../assets/image/more.png" alt=""></span>
@@ -135,19 +128,19 @@
     </div>
     <div class="new_title">最新订单</div>
     <div class="new_list">
-        <div class="new_item" v-for="item in 5" @click="go_detail(item)">
-            <div class="new_img"><img src="../../assets/image/test/b1.png" alt=""></div>
+        <div class="new_item" v-for="(item,index) in order_list" @click="go_detail(item.id)" :key="item.id">
+            <div class="new_img"><img :src="imgUrl+item.pics" alt=""></div>
             <div class="new_right">
                 <div>
-                    <div class="new_name"><span>寻找封头厂家</span><span class="new_num">50000件</span></div>
-                    <div class="new_city">河北省-唐山市</div>
+                    <div class="new_name"><span>{{item.title}}</span><span class="new_num">{{item.num}}</span></div>
+                    <div class="new_city">{{item.address}}</div>
                 </div>
-                <div class="new_date">发布日期：2019年5月20日</div>
+                <div class="new_date">发布日期：{{item.create_time}}</div>
             </div>
         </div>
     </div>
-    <button @click='clear_fn' style="font-size: 20px;">清除缓存</button>
-    <button @click='clear_local' style="font-size: 20px;">清除首次登陆状态</button>
+    <!--<button @click='clear_fn' style="font-size: 20px;">清除缓存</button>-->
+    <!--<button @click='clear_local' style="font-size: 20px;">清除首次登陆状态</button>-->
 </div>
 </body>
 </html>
@@ -169,17 +162,74 @@
     var app = new Vue({
         el: '#app',
         data: {
-            mySwiper: {}
+            slide_list: [],
+            cate_list: [],
+            order_list: [],
+            cate_count: 0,
+            page: 1,
+            perpage: 5,
+            cate_id: '',
+            search: '',
         },
         created: function () {
             apiready = function () {
-                app.int_swiper();
+                app._getSlideList();
+                app._getCateList();
+                app._getOrderList();
                 setTimeout(function () {
-                    loadEnd('index_f')
+                    loadEnd('index_f');
                 }, 1500)
             }
         },
         methods: {
+            // 获取首页轮播图getSlideList
+            _getSlideList: function () {
+                api.ajax({
+                    url: baseurl + 'api/getSlideList',
+                    method: 'post',
+                    data: {}
+                }, function (ret, err) {
+                    if (ret.code == 1) {
+                        app.slide_list = ret.data;
+                        app.int_swiper();
+                    } else {
+
+                    }
+                });
+            },
+            // 获取分类列表getCateList
+            _getCateList: function () {
+                api.ajax({
+                    url: baseurl + 'api/getCateList',
+                    method: 'post',
+                    data: {}
+                }, function (ret, err) {
+                    if (ret.code == 1) {
+                        app.cate_list = ret.data.list;
+                        app.cate_count = ret.data.count;
+                    }
+                });
+            },
+            // 获取首页订单列表getOrderList
+            _getOrderList: function () {
+                api.ajax({
+                    url: baseurl + 'api/getOrderList',
+                    method: 'post',
+                    data: {
+                        values: {
+                            page: app.page,
+                            perpage: app.perpage,
+                            cate_id: app.cate_id,
+                            search: app.search
+                        }
+                    }
+                }, function (ret, err) {
+                    if (ret.code == 1) {
+                        app.order_list = ret.data;
+                    }
+                });
+            },
+
             clear_fn: function () {
                 api.clearCache(function () {
                     api.toast({
