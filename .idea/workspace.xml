@@ -2,12 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="6e3f121d-82ec-488a-a733-ad1df084e993" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/assets/js/http.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/css/api.css" beforeDir="false" afterPath="$PROJECT_DIR$/assets/css/api.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/js/public.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/js/public.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/html/login/login_code.html" beforeDir="false" afterPath="$PROJECT_DIR$/html/login/login_code.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/html/login/login_index.html" beforeDir="false" afterPath="$PROJECT_DIR$/html/login/login_index.html" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
     <ignored path="$PROJECT_DIR$/temp/" />
@@ -371,15 +366,21 @@
       <option name="project" value="LOCAL" />
       <updated>1560418984419</updated>
     </task>
-    <option name="localTasksCounter" value="9" />
+    <task id="LOCAL-00009" summary="6.17">
+      <created>1560718508387</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1560718508387</updated>
+    </task>
+    <option name="localTasksCounter" value="10" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="46438000" />
+    <option name="totallyTimeSpent" value="46790000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="0" width="1440" height="900" extended-state="0" />
-    <editor active="true" />
     <layout>
       <window_info active="true" content_ui="combo" id="Project" order="0" sideWeight="0.70247936" visible="true" weight="0.24947146" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
@@ -409,7 +410,8 @@
     <MESSAGE value="6.5" />
     <MESSAGE value="6.11" />
     <MESSAGE value="6.12" />
-    <option name="LAST_COMMIT_MESSAGE" value="6.12" />
+    <MESSAGE value="6.17" />
+    <option name="LAST_COMMIT_MESSAGE" value="6.17" />
   </component>
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/assets/image/loading_more.gif" />
