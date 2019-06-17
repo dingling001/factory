@@ -105,12 +105,13 @@
 </head>
 
 <body ontouchstart>
-<div id="loadStart"></div>
+<!--<div id="loadStart"></div>-->
 <div id="app" class="index">
     <div class="swiper-container banner">
         <div class="swiper-wrapper">
             <div class="swiper-slide" v-for="(item,index) in slide_list" :key="item.id">
                 <img :src="imgUrl+item.pic" alt>
+
             </div>
         </div>
         <!-- 如果需要分页器 -->
@@ -128,11 +129,11 @@
     </div>
     <div class="new_title">最新订单</div>
     <div class="new_list">
-        <div class="new_item" v-for="(item,index) in order_list" @click="go_detail(item.id)" :key="item.id">
+        <div class="new_item" v-for="(item,index) in order_list" @click="go_detail(item.id,item.title)" :key="item.id">
             <div class="new_img"><img :src="imgUrl+item.pics" alt=""></div>
             <div class="new_right">
                 <div>
-                    <div class="new_name"><span>{{item.title}}</span><span class="new_num">{{item.num}}</span></div>
+                    <div class="new_name"><span>{{item.title}}</span><span class="new_num">{{item.num}}件</span></div>
                     <div class="new_city">{{item.address}}</div>
                 </div>
                 <div class="new_date">发布日期：{{item.create_time}}</div>
@@ -153,11 +154,6 @@
 <script type="text/javascript" src="../../assets/js/vue.min.js"></script>
 <script type="text/javascript" src="../../assets/js/index.js"></script>
 <script type="text/javascript" src="../../assets/js/swiper-3.4.2.min.js"></script>
-<script type="text/javascript"
-        src="https://res.wx.qq.com/mmbizwap/zh_CN/htmledition/js/vconsole/3.0.0/vconsole.min.js"></script>
-<script>
-    new VConsole();
-</script>
 <script>
     var app = new Vue({
         el: '#app',
@@ -229,17 +225,6 @@
                     }
                 });
             },
-
-            clear_fn: function () {
-                api.clearCache(function () {
-                    api.toast({
-                        msg: '清除完成'
-                    });
-                });
-            },
-            clear_local: function () {
-                localStorage.clear()
-            },
             int_swiper: function () {
                 var mySwiper = new Swiper('.swiper-container', {
                     slidesPerView: 'auto', //重要 可以去swiper搜索
@@ -271,14 +256,14 @@
                 });
             },
             // 订单详情
-            go_detail(id) {
+            go_detail(id,title) {
                 api.openWin({
                     name: 'index_detail_w',
                     url: './index_detail_w.html',
                     bgColor: '#fff',
-                    slidBackEnabled: false,
                     pageParam: {
-                        id: id
+                        id: id,
+                        title:title
                     }
                 });
             },

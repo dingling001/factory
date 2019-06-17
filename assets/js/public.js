@@ -137,8 +137,8 @@ function fixIos7Bar(t) {
 }
 
 function getToken() {
-    if ($api.getStorage('token')) {
-        return $api.getStorage('token')
+    if ($api.getStorage('fac_token')) {
+        return $api.getStorage('fac_token')
     } else {
         return null;
     }
