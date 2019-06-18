@@ -14,85 +14,72 @@
             height: auto;
             background-color: #fff;
         }
-
-        body {
-            background-color: transparent !important;
-        }
     </style>
 </head>
 <body>
 <div id="app">
-    <header id="header">
-        <div style="height: 44px"></div>
-    </header>
 </div>
 </body>
 </html>
 <script type="text/javascript" src="assets/js/api.js"></script>
-<script type="text/javascript" src="./assets/js/public.js"></script>
-<script type="text/javascript" src="./assets/js/fastclick.js"></script>
-<script>
-    new FastClick(document.body);
-</script>
-<script type="text/javascript" src="./assets/js/vue.min.js"></script>
 <script type="text/javascript">
     apiready = function () {
         var firstStart = $api.getStorage('firstStart');
-        var fac_token = $api.getStorage('fac_token')
-        api.setWinAttr({
-            slidBackEnabled: false
+        var fac_token = $api.getStorage('fac_token');
+        api.setStatusBarStyle({
+            style: 'dark',
         });
         //判断条件 
         if (!firstStart) {
-            app.openGuide();//首次下载安装操作 
+            openGuide();//首次下载安装操作 
         } else {
             if (fac_token) {
-                app.openIndex()
-            } else
-                app.openLogin();//不是首次未登录
+                openIndex()
+            } else {
+                openLogin();//不是首次未登录
+            }
         }
-    }
-        // 跳转启动页
-        function openGuide () {
-            $api.fixStatusBar($api.dom('header'));
-            api.setStatusBarStyle({
-                style: 'dark',
-            });
-            var headerH = $api.offset($api.dom('header')).h;
-            api.openFrameGroup({
-                name: 'welcome',
+        // openGuide()
+        // openIndex()
+    };
+
+    // 跳转启动页
+    function openGuide() {
+        //
+        // var headerH = $api.offset($api.dom('header')).h;
+        // $api.fixStatusBar($api.dom('header'));
+        api.openFrameGroup({
+            name: 'welcome',
+            bounces: false,
+            index: 0,
+            rect: {
+                x: 0,
+                y: 0,
+                w: 'auto',
+                h: 'auto'
+            },
+            scrollEnabled: true,
+            frames: [{
+                name: 'welcome_1',
+                url: './html/welcome/welcome_frame_1.html',
                 bounces: false,
-                index: 0,
-                rect: {
-                    x: 0,
-                    y: headerH,
-                    w: 'auto',
-                    h: 'auto'
-                },
-                scrollEnabled: true,
-                frames: [{
-                    name: 'welcome_1',
-                    url: './html/welcome/welcome_frame_1.html',
-                    bounces: false,
-                    bgColor: 'widget://assets/image/welcome/1.jpg'
-                }, {
-                    name: 'welcome_2',
-                    url: './html/welcome/welcome_frame_2.html',
-                    bounces: false,
-                    bgColor: 'widget://assets/image/welcome/2.jpg'
-                }]
-            }, function (ret, err) {
-                var index = ret.index;
-                if (index == 0) {
-                    $api.setStorage('firstStart', '1');
-                }
-            });
-        },
-    // 跳转到登录
-     function openLogin() {
-        api.closeFrameGroup({
-            name: 'welcome'
+                bgColor: 'widget://assets/image/welcome/1.jpg'
+            }, {
+                name: 'welcome_2',
+                url: './html/welcome/welcome_frame_2.html',
+                bounces: false,
+                bgColor: 'widget://assets/image/welcome/2.jpg'
+            }]
+        }, function (ret, err) {
+            var index = ret.index;
+            if (index === 1) {
+                $api.setStorage('firstStart', '1');
+            }
         });
+    }
+
+    // 跳转到登录
+    function openLogin() {
         api.openFrame({
             name: 'login_index',
             url: './html/login/login_index.html',
@@ -104,77 +91,17 @@
             },
             bgColor: '#fff',
         });
-    },
-
-    window.apiready = function () {
-        var app = new Vue({
-            el: '#app',
-            data: {
-                pageload: 0
-            },
-            created: function () {
-
-
-                }
-            },
-            mounted: function () {
-                $api.fixStatusBar($api.dom('header'));
-                api.setStatusBarStyle({
-                    style: 'dark'
-                });
-                if (api.systemType == "ios") {
-                    api.openFrame({
-                        name: api.pageParam.fmName,
-                        url: api.pageParam.fmUrl,
-                        rect: {
-                            x: 0,
-                            y: getHeight('header'),
-                            w: 'auto',
-                            h: 'auto'
-                        },
-                        pageParam: api.pageParam.fm,
-                        bounces: true,
-                        reload: true,
-                        vScrollBarEnabled: false,
-                        hScrollBarEnabled: false,
-                        softInputBarEnabled: false
-                    });
-                } else {
-                    //viewappear事件在ios中首次打开不会调用，在安卓使用以避免切换时加载frame造成卡顿。
-                    api.addEventListener({
-                        name: 'viewappear'
-                    }, function (ret, err) {
-                        if (app.pageload < 1) {
-                            api.openFrame({
-                                name: api.pageParam.fmName,
-                                url: api.pageParam.fmUrl,
-                                reload: true,
-                                rect: {
-                                    x: 0,
-                                    y: getHeight('header'),
-                                    w: 'auto',
-                                    h: 'auto'
-                                },
-                                pageParam: api.pageParam.fm,
-                                bounces: false,
-                                vScrollBarEnabled: false,
-                                hScrollBarEnabled: false,
-                                softInputBarEnabled: false
-                            });
-                        }
-                        app.pageload++;
-                    });
-                }
-            },
-            methods: {
-
-
-
-
-            }
-        })
-
-        // openGuide()
-        // openIndex()
     }
+    // 跳转到首页
+    function openIndex() {
+        api.openWin({
+            name: 'index_win',
+            url: './html/common/index_win.html',
+            slidBackEnabled: false,
+            vScrollBarEnabled: false,
+            hScrollBarEnabled: false,
+        });
+    }
+
+
 </script>

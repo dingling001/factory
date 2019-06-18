@@ -271,9 +271,9 @@
                         },
                     }
                 }, function (ret, err) {
+                    loadEnd('my_f')
                     if (ret.code == 1) {
                         // alert(JSON.stringify(ret));
-                        loadEnd('my_outorder')
                         app.my_info = ret.data;
                     }
                 });
@@ -292,10 +292,11 @@
                 openView(url, 'my/' + url, name)
             },
             login: function () {
-                api.openWin({
-                    name: 'login',
-                    url: '../login/login.html',
-                });
+                openView('login', 'login/login', '账号登录')
+                // api.openWin({
+                //     name: 'login',
+                //     url: '../login/login.html',
+                // });
             }
         }
     })

@@ -15,6 +15,39 @@ function openWin(winName, url) {
     });
 }
 
+function ApiAjax(url, subDatas, callbackfun) {
+    // console.log(url);
+    // console.log(JSON.stringify(subDatas));
+    // console.log(callbackfun);
+    api.ajax({
+        url: baseurl + url,
+        method: 'post',
+        timeout: 5,
+        data: {
+            values: subDatas
+        }
+    }, function (ret, err) {
+        if (ret.code == 1) {
+            callbackfun(ret, err);
+        } else if (ret.code == -3) {
+            alert(JSON.stringify(ret))
+            // openView('login', 'login/login', '账号登录')
+            api.openFrame({
+                name: 'login',
+                url: 'widget://html/login/login.html',
+                rect: {
+                    x: 0,
+                    y: 0,
+                    w: 'auto',
+                    h: 'auto'
+                },
+                bgColor: '#fff',
+            });
+        }
+
+    });
+}
+
 function openView(fmName, fmUrl, winTitle, winName, winUrl, fmParams, winParams) {
     var options = {
         name: '',
