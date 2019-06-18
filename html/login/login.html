@@ -15,11 +15,11 @@
 </head>
 <body>
 <div id="app" v-cloak>
-    <header class="index_header">
-        <div class="close_left" @click="closeWindow('login')"><span class="iconfont icon-fanhui"></span></div>
-        <span class="title">账号登录</span>
-        <span></span>
-    </header>
+    <!--<header class="index_header">-->
+        <!--<div class="close_left" @click="closeF"><span class="iconfont icon-fanhui"></span></div>-->
+        <!--<span class="title">账号登录</span>-->
+        <!--<span></span>-->
+    <!--</header>-->
     <div class="input_box box"><span class="iconfont icon-zhanghao"></span> <input type="text" placeholder="请输入您的账号"
                                                                                    v-model="user_name"></div>
     <div class="input_box"><span class="iconfont icon-mima"></span> <input type="password" placeholder="请输入您的密码"
@@ -32,13 +32,13 @@
 </body>
 </html>
 <script type="text/javascript" src="../../assets/js/api.js"></script>
-<script type="text/javascript" src="../../assets/js/public.js"></script>
 <script type="text/javascript" src="../../assets/js/fastclick.js"></script>
 <script>
     new FastClick(document.body);
 </script>
 <script type="text/javascript" src="../../assets/js/vue.min.js"></script>
 <script type="text/javascript" src="../../assets/js/index.js"></script>
+<script type="text/javascript" src="../../assets/js/public.js"></script>
 <!--<script src="https://unpkg.com/mint-ui@1/lib/index.js"></script>-->
 
 <script>
@@ -50,28 +50,27 @@
         },
         created: function () {
             apiready = function () {
-                $api.fixStatusBar($api.dom('header'));
-                app.headerH = $api.offset($api.dom('header')).h;
-                api.setStatusBarStyle({
-                    style: 'dark',
-                });
+                // $api.fixStatusBar($api.dom('header'));
+                // app.headerH = $api.offset($api.dom('header')).h;
+                // api.setStatusBarStyle({
+                //     style: 'dark',
+                // });
             }
         },
         methods: {
             // 登录
             login: function () {
-                // if (app.user_name == '') {
-                //     toastMsg('请输入您的账号')
-                // } else if (app.password == '') {
-                //     toastMsg('请输入您的密码')
-                // } else {
-                //
-                // }
-                api.openWin({
-                    name: 'login_info',
-                    url: './login_info.html',
-                    slidBackEnabled: false
-                });
+                if (app.user_name == '') {
+                    toastMsg('请输入您的账号')
+                } else if (app.password == '') {
+                    toastMsg('请输入您的密码')
+                } else {
+                    api.openWin({
+                        name: 'login_info',
+                        url: './login_info.html',
+                        slidBackEnabled: false
+                    });
+                }
             },
             // 去验证码登录
             code_fn: function () {
@@ -87,25 +86,19 @@
                     url: './login_forgot.html',
                 });
             },
-            // 跳过去首页
-            go_index: function () {
-                api.openWin({
-                    name: 'index_win',
-                    url: '../common/index_win.html',
-                    slidBackEnabled: false,
-                    animation: {
-                        type: "fade",                //动画类型（详见动画类型常量）
-                        duration: 300
-                    }
-                });
-            },
             // 查看协议
             go_agree: function () {
                 api.openWin({
                     name: 'login_agree',
                     url: './login_agree.html',
                 });
-            }
+            },
+            // 关闭登录
+            // closeF: function () {
+            //     api.closeFrame({
+            //         name: 'login'
+            //     });
+            // }
         }
     })
 </script>

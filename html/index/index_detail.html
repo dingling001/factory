@@ -198,7 +198,7 @@
         .vip_box .vip_btn {
             width: 45%;
             text-align: center;
-            padding: .26rem 0;
+            padding: .2rem 0;
             font-size: 15px;
             color: #fff;
             background-color: #E72424;
@@ -211,6 +211,7 @@
     </style>
 </head>
 <body>
+<div id="loadStart"></div>
 <div id="app" v-cloak class="company">
     <div class="input_box title">
         <span class="label ">订单详情</span>
@@ -297,30 +298,23 @@
     var app = new Vue({
         el: '#app',
         data: {
-            id:'',
-            d_info:{}
+            id: '',
+            d_info: {}
         },
         created: function () {
             apiready = function () {
-                app.id=api.pageParam.id;
+                app.id = api.pageParam.id;
                 app._getOrderDetail();
             }
         },
         methods: {
+            // 获取订单详情
             _getOrderDetail: function () {
-                api.ajax({
-                    url: baseurl + 'api/getOrderDetail',
-                    method: 'post',
-                    data: {
-                        values:{
-                            token:getToken(),
-                            order_id:app.id
-                        }
-                    }
+                ApiAjax('api/getOrderDetail', {
+                    token: getToken(), order_id: app.id
                 }, function (ret, err) {
-                    alert(JSON.stringify(ret))
                     if (ret.code == 1) {
-                        app.d_info=ret.data;
+                        app.d_info = ret.data;
                     }
                 });
             },

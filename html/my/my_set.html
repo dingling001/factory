@@ -90,6 +90,7 @@
         <div class="set_item" @click="openPass"><span>修改账号密码</span> <span class="iconfont icon-arrow-right"></span>
         </div>
     </div>
+    <div class="login_btn" @click="loginOut">退出登录</div>
 </div>
 </body>
 </html>
@@ -113,15 +114,22 @@
             }
         },
         methods: {
+            // 关闭窗口
             close_set: function () {
                 api.closeWin();
             },
+            // 修改手机号
             openTel: function () {
                 openView('my_setTel', 'my/my_setTel', '修改手机号')
             },
+            // 设置密码
             openPass: function () {
                 var title = localStorage.mypasstitle || '设置密码';
                 openView('my_pass', 'my/my_pass', title)
+            },
+            loginOut: function () {
+                localStorage.clear();
+                app.close_set();
             }
         }
     })

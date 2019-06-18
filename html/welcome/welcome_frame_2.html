@@ -4,7 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport"
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">     <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
     <title></title>
     <script src="../../assets/js/fontsize.js"></script>
     <link rel="stylesheet" href="../../assets/css/api.css">
@@ -12,19 +13,22 @@
 <body>
 <div id="app">
     <!--<div class="dot_box">-->
-        <!--<span></span>-->
-        <!--<span class="active"></span>-->
+    <!--<span></span>-->
+    <!--<span class="active"></span>-->
     <!--</div>-->
     <div class="start" @click="start_fn">立即开启</div>
 </div>
 </body>
 </html>
+<script type="text/javascript" src="../../assets/js/api.js"></script>
+
 <script type="text/javascript" src="../../assets/js/vue.min.js"></script>
 <script type="text/javascript" src="../../assets/js/public.js"></script>
 <script type="text/javascript" src="../../assets/js/fastclick.js"></script>
 <script>
     new FastClick(document.body);
 </script>
+
 <script>
     var app = new Vue({
         el: '#app',
@@ -39,10 +43,26 @@
                 // api.closeFrameGroup({
                 //     name: 'welcome'
                 // });
-                api.openWin({
-                    name: 'index_win',
-                    url: '../common/index_win.html',
-                });
+                var fac_token = $api.getStorage('fac_token');
+                if (fac_token) {
+                    api.openWin({
+                        name: 'index_win',
+                        url: '../common/index_win.html',
+                    });
+                } else {
+                    api.openFrame({
+                        name: 'login_index',
+                        url: '../login/login_index.html',
+                        rect: {
+                            x: 0,
+                            y: 0,
+                            w: 'auto',
+                            h: 'auto'
+                        },
+                        bgColor: '#fff',
+                    });
+                }
+
             }
         }
     })

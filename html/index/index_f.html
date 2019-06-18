@@ -101,6 +101,14 @@
             color: #454545;
             font-weight: 500;
         }
+
+        .fixed {
+            position: fixed;
+            z-index: 100;
+            top: 0;
+            left: 0;
+            width: 100%;
+        }
     </style>
 </head>
 
@@ -146,7 +154,6 @@
 </body>
 </html>
 <script type="text/javascript" src="../../assets/js/api.js"></script>
-<script type="text/javascript" src="../../assets/js/public.js"></script>
 <script type="text/javascript" src="../../assets/js/fastclick.js"></script>
 <script>
     new FastClick(document.body);
@@ -154,6 +161,7 @@
 <script type="text/javascript" src="../../assets/js/vue.min.js"></script>
 <script type="text/javascript" src="../../assets/js/index.js"></script>
 <script type="text/javascript" src="../../assets/js/swiper-3.4.2.min.js"></script>
+<script type="text/javascript" src="../../assets/js/public.js"></script>
 <script>
     var app = new Vue({
         el: '#app',
@@ -166,15 +174,18 @@
             perpage: 5,
             cate_id: '',
             search: '',
+            isFixed: false,
+            offsetTop: 0
+
         },
         created: function () {
             apiready = function () {
                 app._getSlideList();
                 app._getCateList();
                 app._getOrderList();
-                setTimeout(function () {
-                    loadEnd('index_f');
-                }, 1500)
+                // setTimeout(function () {
+                //     loadEnd('index_f');
+                // }, 1500)
             }
         },
         methods: {
@@ -185,6 +196,7 @@
                     method: 'post',
                     data: {}
                 }, function (ret, err) {
+                    loadEnd('index_f');
                     if (ret.code == 1) {
                         app.slide_list = ret.data;
                         app.int_swiper();
@@ -200,6 +212,7 @@
                     method: 'post',
                     data: {}
                 }, function (ret, err) {
+                    loadEnd('index_f');
                     if (ret.code == 1) {
                         app.cate_list = ret.data.list;
                         app.cate_count = ret.data.count;
@@ -220,11 +233,13 @@
                         }
                     }
                 }, function (ret, err) {
+                    loadEnd('index_f');
                     if (ret.code == 1) {
                         app.order_list = ret.data;
                     }
                 });
             },
+            // 初始化轮播图
             int_swiper: function () {
                 var mySwiper = new Swiper('.swiper-container', {
                     slidesPerView: 'auto', //重要 可以去swiper搜索
@@ -247,7 +262,7 @@
                 })
             },
             // 更多
-            more_fn() {
+            more_fn: function () {
                 api.openWin({
                     name: 'index_all_w',
                     url: './index_all_w.html',
@@ -256,17 +271,37 @@
                 });
             },
             // 订单详情
-            go_detail(id,title) {
-                api.openWin({
-                    name: 'index_detail_w',
-                    url: './index_detail_w.html',
-                    bgColor: '#fff',
-                    pageParam: {
-                        id: id,
-                        title:title
-                    }
-                });
+            go_detail: function (id, title) {
+                if (getToken()) {
+                    api.openWin({
+                        name: 'index_detail_w',
+                        url: './index_detail_w.html',
+                        bgColor: '#fff',
+                        pageParam: {
+                            id: id,
+                            title: title
+                        }
+                    });
+                }
+                else {
+                    openView('login', 'login/login', '账号登录')
+                }
             },
-        }
+            // 滚动事件
+            // handleScroll: function () {
+            //     var scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop;
+            //     if (scrollTop >= app.offsetTop) {
+            //         app.isFixed = true;
+            //     } else {
+            //         app.isFixed = false;
+            //     }
+            // }
+        },
+        // destroyed: function () {
+        //     window.removeEventListener('scroll', this.handleScroll); // 离开页面 关闭监听 不然会报错
+        // },
+        // mounted: function () {
+        //     window.addEventListener('scroll', this.handleScroll);
+        // }
     })
 </script>

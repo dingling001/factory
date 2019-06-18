@@ -60,27 +60,28 @@
     </style>
 </head>
 <body>
-<div id="app" v-cloak class="company">
+<div id="app" v-cloak class="company" v-chock>
     <header>
         <div class="my_info">
             <div class="close_left" @click="close_detail"><span class="iconfont icon-fanhui"></span></div>
             <span class="order_detail el1">{{order_title}}</span>
-            <div class="share_box"><span class="iconfont icon-fenxiang"></span><span class="iconfont icon-shoucang"
-                                                                                     @click="collect_fn"></span></div>
+            <div class="share_box">
+                <span class="iconfont icon-fenxiang"></span>
+                <span class="iconfont icon-shoucang" @click="collect_fn"></span></div>
         </div>
     </header>
-    <div class="price_btn" id="price_btn">立即报价</div>
+    <div class="price_btn" id="price_btn" @click="orderPrice">立即报价</div>
 </div>
 </body>
 </html>
 <script type="text/javascript" src="../../assets/js/api.js"></script>
-<script type="text/javascript" src="../../assets/js/public.js"></script>
 <script type="text/javascript" src="../../assets/js/fastclick.js"></script>
 <script>
     new FastClick(document.body);
 </script>
 <script type="text/javascript" src="../../assets/js/vue.min.js"></script>
 <script type="text/javascript" src="../../assets/js/index.js"></script>
+<script type="text/javascript" src="../../assets/js/public.js"></script>
 <script>
     var app = new Vue({
         el: '#app',
@@ -88,7 +89,8 @@
             order_title: '订单详情',
             id: '',
             footerH: '',
-            headerH: ''
+            headerH: '',
+            d_info: {}
         },
         created: function () {
             apiready = function () {
@@ -100,7 +102,6 @@
                 api.setStatusBarStyle({
                     style: 'dark',
                 });
-
                 api.openFrame({
                     name: 'index_detail',
                     url: './index_detail.html',
@@ -116,19 +117,63 @@
                         id: app.id
                     }
                 });
+                app._getOrderDetail();
             }
         },
         methods: {
+            // 报价
+            orderPrice: function () {
+                api.prompt({
+                    buttons: ['确定', '取消'],
+                    title: app.order_title,
+                    type: 'number',
+                    text: '0',
+                    msg: '请输入您的报价（元）',
+                }, function (ret, err) {
+                    var index = ret.buttonIndex;
+                    var text = ret.text;
+                    if (index == 1) {
+                        ApiAjax('api/offerPrice', {
+                            token: getToken(),
+                            order_id: app.id,
+                            price: text,
+                        }, function (res, err) {
+                            if (res.code == 1) {
+                                api.alert({
+                                    title: app.order_title,
+                                    msg: '您的报价已提交',
+                                }, function (ret, err) {
+
+                                });
+                            }
+                        })
+                    }
+                });
+
+            },
+            // 获取订单详情
+            _getOrderDetail: function () {
+                ApiAjax('api/getOrderDetail', {
+                    token: getToken(), order_id: app.id
+                }, function (ret, err) {
+                    if (ret.code == 1) {
+                        app.d_info = ret.data;
+                    }
+                });
+            },
+            // 关闭窗口
             close_detail: function () {
                 api.closeFrame({
                     name: 'index_detail'
                 });
                 api.closeWin();
-            },
+            }
+            ,
             // 收藏
             collect_fn: function () {
 
-            },
+            }
+            ,
         }
     })
 </script>
