@@ -251,7 +251,7 @@ refresh = function (callback) {
     });
 };
 
-function getapi(type = 'post', url = '', values = {}, file = '', calback,) {
+function getapi(type = 'post', url = '', values = {}, file = '', calback) {
     api.ajax({
         url: baseurl + url,
         method: type,
