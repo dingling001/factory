@@ -10,7 +10,7 @@
     <title></title>
     <script src="../../assets/js/fontsize.js"></script>
     <link rel="stylesheet" href="../../assets/css/api.css">
-    <link rel="stylesheet" href="http://at.alicdn.com/t/font_1220513_5oiu4zhxvgd.css">
+    <link rel="stylesheet" href="http://at.alicdn.com/t/font_1220513_2ea6fr0vbal.css">
     <style type="text/css">
         .my_body {
             background-color: #F9F9FA;
@@ -262,21 +262,10 @@
         },
         methods: {
             _getMyinfo: function () {
-                api.ajax({
-                    url: baseurl + 'my/getMyinfo',
-                    method: 'post',
-                    data: {
-                        values: {
-                            token: app.fac_token
-                        },
-                    }
-                }, function (ret, err) {
+                ApiAjax('my/getMyinfo', {token: getToken()}, function (ret, err) {
                     loadEnd('my_f')
-                    if (ret.code == 1) {
-                        // alert(JSON.stringify(ret));
-                        app.my_info = ret.data;
-                    }
-                });
+                    app.my_info = ret.data;
+                })
             },
 
             // 特殊头

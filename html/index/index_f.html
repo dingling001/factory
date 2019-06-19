@@ -10,9 +10,13 @@
     <title></title>
     <script src="../../assets/js/fontsize.js"></script>
     <link rel="stylesheet" href="../../assets/css/api.css">
-    <link rel="stylesheet" href="http://at.alicdn.com/t/font_1220513_5oiu4zhxvgd.css">
+    <link rel="stylesheet" href="http://at.alicdn.com/t/font_1220513_2ea6fr0vbal.css">
     <link rel="stylesheet" href="../../assets/css/swiper-3.4.2.min.css">
     <style type="text/css">
+        body {
+            background-color: #F9F9FA;
+        }
+
         .banner {
             height: 3rem;
             margin: .3rem 0;
@@ -67,10 +71,11 @@
         .nav_box {
             display: flex;
             align-items: center;
-            justify-content: space-between;
+            /*justify-content: space-between;*/
             /*padding: 0 .45rem;*/
             flex-wrap: wrap;
             margin: .3rem 0;
+            background-color: #fff;
         }
 
         .nav_item {
@@ -109,11 +114,13 @@
             left: 0;
             width: 100%;
         }
+
+
     </style>
 </head>
 
 <body ontouchstart>
-<!--<div id="loadStart"></div>-->
+<div id="loadStart"></div>
 <div id="app" class="index">
     <div class="swiper-container banner">
         <div class="swiper-wrapper">
@@ -126,17 +133,17 @@
         <div class="swiper-pagination"></div>
     </div>
     <div class="nav_box">
-        <div class="nav_item" v-for="(item,index) in cate_list">
-            <span class="icon_box"><img :src="imgUrl+item.pic" alt=""></span>
+        <div class="nav_item" v-for="(item,index) in cate_list" @click="more_fn(index,item.id)">
+            <span class="icon_box"><img :src="index==cate_list.length-1?item.pic:imgUrl+item.pic" alt=""></span>
             <span class="icon_name">{{item.cate_name}}</span>
         </div>
-        <div class="nav_item" @click="more_fn">
-            <span class="icon_box"><img src="../../assets/image/more.png" alt=""></span>
-            <span class="icon_name">更多</span>
-        </div>
+        <!--<div class="nav_item" @click="more_fn(0,'')" v-if="cate_list.length>=9">-->
+        <!--<span class="icon_box"><img src="../../assets/image/more.png" alt=""></span>-->
+        <!--<span class="icon_name">更多</span>-->
+        <!--</div>-->
     </div>
     <div class="new_title">最新订单</div>
-    <div class="new_list">
+    <div class="new_list" v-if="order_list.length>0">
         <div class="new_item" v-for="(item,index) in order_list" @click="go_detail(item.id,item.title)" :key="item.id">
             <div class="new_img"><img :src="imgUrl+item.pics" alt=""></div>
             <div class="new_right">
@@ -147,6 +154,14 @@
                 <div class="new_date">发布日期：{{item.create_time}}</div>
             </div>
         </div>
+        <div v-if='showmore&&order_list.length>=perpage' class="enddata">{{showtext}}</div>
+
+    </div>
+    <div v-else class="nodata">暂无订单</div>
+    <div v-if="offline" class="nodata">
+        <div class="nodataimg"><img src="../../assets/image/loading3.gif" alt=""></div>
+        <div>你的网络好像不太给力，请稍后再试</div>
+        <div class="nodatabtn" @click="_getOrderList"><span class="iconfont icon-shuaxin"></span><span>重新加载</span></div>
     </div>
     <!--<button @click='clear_fn' style="font-size: 20px;">清除缓存</button>-->
     <!--<button @click='clear_local' style="font-size: 20px;">清除首次登陆状态</button>-->
@@ -162,30 +177,72 @@
 <script type="text/javascript" src="../../assets/js/index.js"></script>
 <script type="text/javascript" src="../../assets/js/swiper-3.4.2.min.js"></script>
 <script type="text/javascript" src="../../assets/js/public.js"></script>
+<script type="text/javascript"
+        src="https://res.wx.qq.com/mmbizwap/zh_CN/htmledition/js/vconsole/3.0.0/vconsole.min.js"></script>
+<script>
+    new VConsole();
+</script>
 <script>
     var app = new Vue({
         el: '#app',
         data: {
             slide_list: [],
-            cate_list: [],
+            cate_list: [
+                {
+                    "id": '',
+                    "cate_name": "更多",
+                    "pic": "../../assets/image/more.png"
+                },
+            ],
             order_list: [],
             cate_count: 0,
             page: 1,
-            perpage: 5,
+            perpage: 3,
             cate_id: '',
             search: '',
             isFixed: false,
-            offsetTop: 0
-
+            offsetTop: 0,
+            showmore: false,
+            showtext: '加载中...',
+            offline: false
         },
         created: function () {
             apiready = function () {
                 app._getSlideList();
                 app._getCateList();
                 app._getOrderList();
-                // setTimeout(function () {
-                //     loadEnd('index_f');
-                // }, 1500)
+                // 监听断网
+                api.addEventListener({
+                    name: 'offline'
+                }, function (ret, err) {
+                    app.offline = true;
+                });
+                // 下拉刷新
+                api.setRefreshHeaderInfo({
+                    // loadingImg: 'widget://assets/image/head.png',
+                    // loadingImg: 'widget://assets/image/loading.gif',
+                    bgColor: '#fff',
+                    textColor: '#F11C15',
+                    textDown: '下拉刷新...',
+                    textUp: '释放更新...',
+                    showTime: true
+                }, function (ret, err) {
+                    app.order_list = [];
+                    app.page = 1;
+                    app.showtext = '加载中...';
+                    app._getOrderList();
+                    api.refreshHeaderLoadDone()
+                });
+                // 上拉加载
+                api.addEventListener({
+                    name: 'scrolltobottom',
+                    extra: {
+                        threshold: 50            //设置距离底部多少距离时触发，默认值为0，数字类型
+                    }
+                }, function (ret, err) {
+                    app.page++;
+                    app._getOrderList();
+                });
             }
         },
         methods: {
@@ -197,46 +254,35 @@
                     data: {}
                 }, function (ret, err) {
                     loadEnd('index_f');
-                    if (ret.code == 1) {
-                        app.slide_list = ret.data;
-                        app.int_swiper();
-                    } else {
-
-                    }
+                    app.slide_list = ret.data;
+                    app.int_swiper();
                 });
             },
             // 获取分类列表getCateList
             _getCateList: function () {
-                api.ajax({
-                    url: baseurl + 'api/getCateList',
-                    method: 'post',
-                    data: {}
-                }, function (ret, err) {
+                ApiAjax('api/getCateList', {}, function (ret, err) {
                     loadEnd('index_f');
-                    if (ret.code == 1) {
-                        app.cate_list = ret.data.list;
-                        app.cate_count = ret.data.count;
-                    }
-                });
+                    app.cate_list = ret.data.list.concat(app.cate_list);
+                    app.cate_count = ret.data.count;
+                })
             },
             // 获取首页订单列表getOrderList
             _getOrderList: function () {
-                api.ajax({
-                    url: baseurl + 'api/getOrderList',
-                    method: 'post',
-                    data: {
-                        values: {
-                            page: app.page,
-                            perpage: app.perpage,
-                            cate_id: app.cate_id,
-                            search: app.search
-                        }
-                    }
+                ApiAjax('api/getOrderList', {
+                    page: app.page,
+                    perpage: app.perpage,
+                    cate_id: app.cate_id,
+                    search: app.search
                 }, function (ret, err) {
                     loadEnd('index_f');
-                    if (ret.code == 1) {
-                        app.order_list = ret.data;
+                    var order_list = ret.data;
+                    if (ret.data.length > 0) {
+                        app.order_list = app.order_list.concat(order_list);
+                        app.showmore = true;
+                    } else {
+                        app.showtext = '到底了';
                     }
+                    // app.order_list = ret.data;
                 });
             },
             // 初始化轮播图
@@ -246,6 +292,8 @@
                     centeredSlides: true, //重要
                     paginationClickable: true,
                     effect: 'left',
+                    autoplay: 2000,
+                    speed: 500,
                     // loop: true,
                     coverflowEffect: {
                         rotate: 20,
@@ -258,16 +306,32 @@
                         loadPrevNext: true,
                     },
                     observer: true,
-                    observeParents: true
+                    observeParents: true,
+                    onTouchMove: function (swiper) {
+                        api.setFrameAttr({
+                            name: api.frameName,
+                            bounces: false
+                        });
+                    },
+                    onTouchEnd: function (swiper) {
+                        api.setFrameAttr({
+                            name: api.frameName,
+                            bounces: true
+                        });
+                    }
                 })
             },
             // 更多
-            more_fn: function () {
+            more_fn: function (index, cate_id) {
                 api.openWin({
                     name: 'index_all_w',
                     url: './index_all_w.html',
                     bgColor: '#fff',
-                    slidBackEnabled: false
+                    slidBackEnabled: false,
+                    pageParam: {
+                        cate_id: cate_id,
+                        index: index == app.cate_list.length - 1 ? 0 : index + 1
+                    }
                 });
             },
             // 订单详情

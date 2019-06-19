@@ -184,6 +184,50 @@ td, th {
     white-space: nowrap; /*规定段落中的文本不进行换行 */
 }
 
+/*无数据处理/网络差*/
+.nodata {
+    text-align: center;
+    color: #ccc;
+    font-size: 15px;
+    padding: 0.5rem 0;
+}
+
+.enddata {
+    text-align: center;
+    font-size: 12px;
+    color: #666;
+    padding: .25rem 0;
+}
+
+.nodata .icon-shuaxin {
+    font-size: 20px;
+}
+
+.nodata .nodataimg {
+    width: 2rem;
+    height: 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto;
+}
+
+.nodata .nodataimg img {
+    width: 100%;
+}
+
+.nodatabtn {
+    width: 30%;
+    background-color: #F11C15;
+    color: #fff;
+    padding: .1rem 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0.05rem auto;
+    border-radius: 5px;
+}
+
 /*启动页点*/
 /*启动按钮*/
 .start {
@@ -244,7 +288,15 @@ td, th {
     font-weight: bold;
     border-bottom: 1px solid #F9F9FA
 }
+.order_index span{
+    font-size: 17px;
+    font-weight: bold;
+}
 
+.hr {
+    height: .32rem;
+    background-color: #F9F9FA;
+}
 .order_index .icon-fenxiangfeiji {
     font-size: 20px;
     font-weight: bold;
@@ -275,7 +327,7 @@ td, th {
     font-size: 15px;
     color: #2222;
     text-align: center;
-    margin: 0 0.25rem;
+    padding: 0 0.25rem;
 }
 
 .examination_swiper .swiper-slide span {
@@ -326,7 +378,7 @@ footer {
     color: #969696;
     bottom: 0;
     background-color: #fff;
-    border-bottom: 1px solid #F9F9FA;
+    border-top: 1px solid #F9F9FA;
     -webkit-box-shadow: 0 -1px 0 0 rgba(240, 240, 240, 0.82);
     -moz-box-shadow: 0 -1px 0 0 rgba(240, 240, 240, 0.82);
     box-shadow: 0 -1px 0 0 rgba(240, 240, 240, 0.82);
@@ -354,6 +406,8 @@ footer {
 /*订单列表*/
 .new_list {
     padding-bottom: .5rem;
+    min-height: 2.34rem;
+    transition: all .3s;
 }
 
 .new_title {
@@ -361,6 +415,7 @@ footer {
     font-size: 15px;
     font-weight: bold;
     padding: 0 .25rem;
+    background-color: #fff;
 }
 
 /*.new_list .new_item:last-child {*/
@@ -391,6 +446,7 @@ footer {
     justify-content: center;
     margin-right: .2rem;
     overflow: hidden;
+    background-color: #F9F9FA;
 }
 
 .new_img img {
