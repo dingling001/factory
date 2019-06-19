@@ -19,14 +19,14 @@
     <!--</header>-->
     <div class="input_box box">
         <span class="iconfont icon-shouji"></span>
-        <input type="number" placeholder="请输入您的手机号" v-model="phone">
+        <input type="number" placeholder="请输入您的新密码（6-12位）" v-model="phone">
     </div>
     <div class="input_box">
         <span class="iconfont icon-yanzhengma"></span>
-        <input type="number" placeholder="请输入验证码" v-model="code">
+        <input type="number" placeholder="请再次输入您的密码（6-12位）" v-model="code">
         <span class="code_btn">获取验证码</span>
     </div>
-    <div class="login_btn" @click="reset">重置密码</div>
+    <div class="login_btn" @click="login">前往登录</div>
 </div>
 </body>
 </html>
@@ -53,15 +53,25 @@
             }
         },
         methods: {
-            // 重置
-            reset: function () {
-                openView('login_reset', 'login/login_reset', '重置密码')
-                // if (app.phone == '') {
-                //     toastMsg('请输入您手机号')
-                // } else if (app.code == '') {
-                //     toastMsg('请输入验证码')
+            // 登录
+            login: function () {
+                api.openFrame({
+                    name: 'login_index',
+                    url: './login_index.html',
+                    rect: {
+                        x: 0,
+                        y: 0,
+                        w: 'auto',
+                        h: 'auto'
+                    },
+                    bgColor: '#fff',
+                });
+                // if (app.user_name == '') {
+                //     toastMsg('请输入您的账号')
+                // } else if (app.password == '') {
+                //     toastMsg('请输入您的密码')
                 // } else {
-                //     openView('login_reset', 'login/login_reset', '重置密码')
+                //
                 // }
             },
         }

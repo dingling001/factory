@@ -10,7 +10,7 @@
     <script src="../../assets/js/fontsize.js"></script>
     <link rel="stylesheet" href="../../assets/css/swiper-3.4.2.min.css">
     <link rel="stylesheet" href="../../assets/css/api.css">
-    <link rel="stylesheet" href="http://at.alicdn.com/t/font_1220513_5oiu4zhxvgd.css">
+    <link rel="stylesheet" href="http://at.alicdn.com/t/font_1220513_2ea6fr0vbal.css">
     <style>
         .examination_swiper {
             display: flex;
@@ -18,6 +18,7 @@
             justify-content: space-between;
             margin: .2rem 0 0 0;
         }
+
         .icon_box {
             text-align: center;
             flex-shrink: 0;
@@ -25,13 +26,16 @@
             box-shadow: -4px 2px 8px 0 rgba(163, 163, 163, 0.25);
             padding: .1rem 0;
         }
+
         .icon_box .iconfont {
             color: #BBBBBB;
             font-size: 18px;
         }
+
         .swiper-container {
             flex: 1;
         }
+
         .order_header {
             height: 120px;
         }
@@ -40,20 +44,20 @@
 <body>
 <div id="app" v-cloak>
     <header class="order_header">
-        <div class="order_head" >
-            <div class="close_left" @click="closeWindow"><span class="iconfont icon-fanhui"></span></div>
+        <div class="order_head">
+            <div class="close_left" @click="closeall"><span class="iconfont icon-fanhui"></span></div>
             <span class="input" @click="openSearch">请输入您要搜索的内容</span>
             <span class="iconfont icon-sousuo" @click="openSearch"></span>
         </div>
         <div class="examination_swiper">
             <div class="swiper-container">
                 <div class="swiper-wrapper">
-                    <div class="swiper-slide" @click="changeSwiper(index)" v-for="(item,index) in navs">
-                        <span :class="{'examination_active':ind==index}">{{item.name}}</span>
+                    <div class="swiper-slide" @click="changeSwiper(index,item.id)" v-for="(item,index) in cate_list">
+                        <span :class="{'examination_active':ind==index}">{{item.cate_name}}</span>
                     </div>
                 </div>
             </div>
-            <div class="icon_box"><span class="iconfont icon-arrow-right"></span></div>
+            <div class="icon_box" v-if="cate_list.length>7"><span class="iconfont icon-arrow-right"></span></div>
         </div>
     </header>
 </div>
@@ -114,31 +118,55 @@
                     name: 'CNS'
                 },
             ],
+            cate_list: [
+                {
+                    "id": '',
+                    "cate_name": "全部",
+                    "pic": ""
+                },
+            ],
+            cate_count: 0
         },
         created: function () {
             apiready = function () {
+                app.ind = api.pageParam.index;
+                app._getCateList();
                 $api.fixStatusBar($api.dom('header'));
                 app.headerH = $api.offset($api.dom('header')).h;
                 api.openFrame({
-                    name: 'index_all',
-                    url: './index_all.html',
+                    name: 'order_f',
+                    url: '../order/order_f.html',
                     rect: {
                         x: 0,
                         y: app.headerH,
                         w: 'auto',
                         h: 'auto'
                     },
+                    pageParam: {
+                        cate_id: api.pageParam.cate_id,
+                        index: api.pageParam.index
+                    },
                     bounces: true
                 });
+                app.mySwiper = new Swiper('.examination_swiper .swiper-container', {
+                    slidesPerView: 'auto',
+                    slideToClickedSlide: true,
+                    observer: true,
+                    observeParents: true,
+                    // freeMode: true,
+                    nextButton: '.icon_box',
+                });
+                setTimeout(function () {
+                    app.mySwiper.slideTo(app.ind, 500, false);
+                }, 500)
             }
         },
         methods: {
-            // 切换底部导航
-            changeTab: function (res) {
-                app.index = res;
-                api.setFrameGroupIndex({
-                    name: 'index',
-                    index: res
+            // 获取分类列表getCateList
+            _getCateList: function () {
+                ApiAjax('api/getCateList', {}, function (ret, err) {
+                    app.cate_list = app.cate_list.concat(ret.data.list);
+                    app.cate_count = ret.data.count;
                 })
             },
             // 搜索页
@@ -149,9 +177,18 @@
                 });
             },
             // 改变滑块
-            changeSwiper: function (index) {
-                app.ind = index
+            changeSwiper: function (index, cate_id) {
+                app.ind = index;
+                api.sendEvent({
+                    name: 'cateChange',
+                    extra: {
+                        cate_id: cate_id
+                    }
+                });
             },
+            closeall:function () {
+                closeWindow('index_all_w')
+            }
         }
     })
 </script>

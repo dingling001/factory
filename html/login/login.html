@@ -11,7 +11,7 @@
     <link rel="stylesheet" href="../../assets/css/api.css">
     <link rel="stylesheet" href="../../assets/css/style.css">
     <!--<link rel="stylesheet" href="https://unpkg.com/mint-ui@1/lib/style.css">-->
-    <link rel="stylesheet" href="http://at.alicdn.com/t/font_1220513_5oiu4zhxvgd.css">
+    <link rel="stylesheet" href="http://at.alicdn.com/t/font_1220513_2ea6fr0vbal.css">
 </head>
 <body>
 <div id="app" v-cloak>
@@ -74,17 +74,20 @@
             },
             // 去验证码登录
             code_fn: function () {
-                api.openWin({
-                    name: 'login_code',
-                    url: './login_code.html',
-                });
+                // api.openWin({
+                //     name: 'login_code',
+                //     url: './login_code.html',
+                // });
+                openView('login_code', 'login/login_code', '验证码登录')
+
             },
             // 去忘记密码
             forgot_fn: function () {
-                api.openWin({
-                    name: 'login_forgot',
-                    url: './login_forgot.html',
-                });
+                // api.openWin({
+                //     name: 'login_forgot',
+                //     url: './login_forgot.html',
+                // });
+                openView('login_forgot', 'login/login_forgot', '忘记密码')
             },
             // 查看协议
             go_agree: function () {

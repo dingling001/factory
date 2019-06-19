@@ -29,22 +29,31 @@ function ApiAjax(url, subDatas, callbackfun) {
     }, function (ret, err) {
         if (ret.code == 1) {
             callbackfun(ret, err);
-        } else if (ret.code == -3) {
-            alert(JSON.stringify(ret))
-            // openView('login', 'login/login', '账号登录')
-            api.openFrame({
-                name: 'login',
-                url: 'widget://html/login/login.html',
-                rect: {
-                    x: 0,
-                    y: 0,
-                    w: 'auto',
-                    h: 'auto'
-                },
-                bgColor: '#fff',
-            });
+        } else if (ret.code == -3 || ret.code == 5) {
+            openView('login', 'login/login', '账号登录')
+            // api.openFrame({
+            //     name: 'login',
+            //     url: 'widget://html/login/login.html',
+            //     rect: {
+            //         x: 0,
+            //         y: 0,
+            //         w: 'auto',
+            //         h: 'auto'
+            //     },
+            //     bgColor: '#fff',
+            // });
+        } else {
+            toastMsg(res.message||'出错了')
         }
 
+    });
+}
+
+function offline() {
+    api.addEventListener({
+        name: 'offline'
+    }, function (ret, err) {
+        return true
     });
 }
 

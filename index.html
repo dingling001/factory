@@ -23,24 +23,26 @@
 </html>
 <script type="text/javascript" src="assets/js/api.js"></script>
 <script type="text/javascript">
-    apiready = function () {
-        var firstStart = $api.getStorage('firstStart');
-        var fac_token = $api.getStorage('fac_token');
-        api.setStatusBarStyle({
-            style: 'dark',
-        });
-        //判断条件 
-        if (!firstStart) {
-            openGuide();//首次下载安装操作 
-        } else {
-            if (fac_token) {
-                openIndex()
+    window.onload = function () {
+        apiready = function () {
+            var firstStart = $api.getStorage('firstStart');
+            var fac_token = $api.getStorage('fac_token');
+            api.setStatusBarStyle({
+                style: 'dark',
+            });
+            //判断条件 
+            if (!firstStart) {
+                openGuide();//首次下载安装操作 
             } else {
-                openLogin();//不是首次未登录
+                if (fac_token) {
+                    openIndex()
+                } else {
+                    openLogin();//不是首次未登录
+                }
             }
-        }
-        // openGuide()
-        // openIndex()
+            // openGuide()
+            // openIndex()
+        };
     };
 
     // 跳转启动页
@@ -92,12 +94,14 @@
             bgColor: '#fff',
         });
     }
+
     // 跳转到首页
     function openIndex() {
         api.openWin({
             name: 'index_win',
             url: './html/common/index_win.html',
             slidBackEnabled: false,
+            reload:true,
             vScrollBarEnabled: false,
             hScrollBarEnabled: false,
         });
