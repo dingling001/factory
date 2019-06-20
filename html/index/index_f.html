@@ -121,7 +121,7 @@
 
 <body ontouchstart>
 <div id="loadStart"></div>
-<div id="app" class="index">
+<div id="app" class="index" v-chock>
     <div class="swiper-container banner">
         <div class="swiper-wrapper">
             <div class="swiper-slide" v-for="(item,index) in slide_list" :key="item.id">
@@ -155,7 +155,6 @@
             </div>
         </div>
         <div v-if='showmore&&order_list.length>=perpage' class="enddata">{{showtext}}</div>
-
     </div>
     <div v-else class="nodata">暂无订单</div>
     <div v-if="offline" class="nodata">
@@ -343,7 +342,8 @@
                         bgColor: '#fff',
                         pageParam: {
                             id: id,
-                            title: title
+                            title: title,
+                            type: 0
                         }
                     });
                 }

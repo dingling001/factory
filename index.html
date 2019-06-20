@@ -7,58 +7,53 @@
     <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
     <title>加工宝</title>
     <link rel="stylesheet" type="text/css" href="assets/css/api.css"/>
-    <link rel="stylesheet" type="text/css" href="assets/css/style.css"/>
-    <style>
-        header {
-            width: 100%;
-            height: auto;
-            background-color: #fff;
-        }
-    </style>
 </head>
 <body>
-<div id="app">
-</div>
+<header style="height: 44px"></header>
 </body>
 </html>
 <script type="text/javascript" src="assets/js/api.js"></script>
+<script type="text/javascript"
+        src="https://res.wx.qq.com/mmbizwap/zh_CN/htmledition/js/vconsole/3.0.0/vconsole.min.js"></script>
+<script>
+    new VConsole();
+</script>
 <script type="text/javascript">
-    window.onload = function () {
-        apiready = function () {
-            var firstStart = $api.getStorage('firstStart');
-            var fac_token = $api.getStorage('fac_token');
-            api.setStatusBarStyle({
-                style: 'dark',
-            });
-            //判断条件 
-            if (!firstStart) {
-                openGuide();//首次下载安装操作 
-            } else {
-                if (fac_token) {
-                    openIndex()
-                } else {
-                    openLogin();//不是首次未登录
-                }
-            }
-            // openGuide()
-            // openIndex()
-        };
+    apiready = function () {
+        var firstStart = $api.getStorage('firstStart');
+        var fac_token = $api.getStorage('fac_token');
+        api.setStatusBarStyle({
+            style: 'dark',
+        });
+        //判断条件 
+        if (!firstStart) {
+            openGuide();//首次下载安装操作 
+        } else if (firstStart && fac_token) {
+            openIndex()
+        } else if (firstStart && !fac_token) {
+            openLogin();//不是首次未登录
+        } else {
+            // alert('error')
+        }
+        api.removeLaunchView();
+        // openGuide()
+        // openIndex()
     };
+
 
     // 跳转启动页
     function openGuide() {
-        //
-        // var headerH = $api.offset($api.dom('header')).h;
-        // $api.fixStatusBar($api.dom('header'));
+        var headerH = $api.offset($api.dom('header')).h;
+        $api.fixStatusBar($api.dom('header'));
         api.openFrameGroup({
             name: 'welcome',
             bounces: false,
             index: 0,
             rect: {
                 x: 0,
-                y: 0,
+                y: headerH,
                 w: 'auto',
-                h: 'auto'
+                h: api.winHeight - app.headerH
             },
             scrollEnabled: true,
             frames: [{
@@ -101,11 +96,9 @@
             name: 'index_win',
             url: './html/common/index_win.html',
             slidBackEnabled: false,
-            reload:true,
+            reload: true,
             vScrollBarEnabled: false,
             hScrollBarEnabled: false,
         });
     }
-
-
 </script>

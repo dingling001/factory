@@ -81,43 +81,6 @@
             footerH: '',
             mySwiper: {},
             ind: 0,
-            navs: [
-                {
-                    id: 1,
-                    name: '全部'
-                },
-                {
-                    id: 2,
-                    name: '机加工'
-                },
-                {
-                    id: 3,
-                    name: 'CNS'
-                },
-                {
-                    id: 3,
-                    name: '焊接'
-                },
-                {
-                    id: 3,
-                    name: '焊接'
-                },
-                {
-                    id: 3,
-                    name: '焊接'
-                }
-                , {
-                    id: 3,
-                    name: '焊接'
-                }, {
-                    id: 3,
-                    name: 'CNS'
-                },
-                {
-                    id: 3,
-                    name: 'CNS'
-                },
-            ],
             cate_list: [
                 {
                     "id": '',
@@ -125,6 +88,7 @@
                     "pic": ""
                 },
             ],
+            type: 0,
             cate_count: 0
         },
         created: function () {
@@ -186,7 +150,7 @@
                     }
                 });
             },
-            closeall:function () {
+            closeall: function () {
                 closeWindow('index_all_w')
             }
         }

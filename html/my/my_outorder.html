@@ -12,9 +12,10 @@
     <link rel="stylesheet" href="../../assets/css/api.css">
 
     <style type="text/css">
-        body{
+        body {
             background-color: #F9F9FA;
         }
+
         .hr {
             height: .32rem;
             background-color: #F9F9FA;
@@ -25,21 +26,23 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 0.1rem  0.25rem;
+            padding: 0.1rem 0;
             position: fixed;
             top: 0;
             left: 0;
-            z-index: 2;
+            z-index: 101;
             width: 100%;
             background-color: #fff;
         }
 
         .out_head span {
             text-align: center;
-            padding: .15rem 0;
+            padding: .1rem 0;
             border-bottom: 1.5px solid #fff;
             color: #222222;
             font-size: 14px;
+            flex: 1;
+            flex-shrink: 0;
             -webkit-transition: 0.1s ease-in-out;
             transition: 0.1s ease-in-out;
         }
@@ -78,7 +81,7 @@
         }
 
         .new_list .new_item {
-            height: auto;
+            height: 2.6rem;
         }
     </style>
 </head>
@@ -86,14 +89,14 @@
 <!--<div id='loadStart'></div>-->
 <div id="app" v-cloak>
     <div class="out_head">
-        <span :class="{activespan:ind==0}" @click="oder_tab(0)">全部</span>
-        <span :class="{activespan:ind==1}" @click="oder_tab(1)">审核中订单</span>
-        <span :class="{activespan:ind==2}" @click="oder_tab(2)">已发布订单</span>
-        <span :class="{activespan:ind==3}" @click="oder_tab(3)">审核失败订单</span>
+        <span :class="{activespan:ind==99}" @click="oder_tab(99)">全部</span>
+        <span :class="{activespan:ind==0}" @click="oder_tab(0)">审核中订单</span>
+        <span :class="{activespan:ind==1}" @click="oder_tab(1)">已发布订单</span>
+        <span :class="{activespan:ind==2}" @click="oder_tab(2)">审核失败订单</span>
     </div>
     <div class="hr"></div>
-    <div class="new_list">
-        <div class="new_item" v-for="item in 10">
+    <div class="new_list" v-if="order_list.length>0">
+        <div class="new_item" v-for="item in order_list">
             <div class="new_img"><img src="../../assets/image/test/b1.png" alt=""></div>
             <div class="new_right">
                 <div class="new_name"><span>寻找封头厂家</span><span class="new_num">50000件</span></div>
@@ -102,6 +105,11 @@
                 <div class="status_box"><span class="success_order">已发布</span><span class="detail_btn">查看详情</span></div>
             </div>
         </div>
+        <div v-if='showmore&&order_list.length>=perpage' class="enddata">{{showtext}}</div>
+    </div>
+    <div v-else class="nodata_box">
+        <div class="nodata_box_img"><img src="../../assets/image" alt=""></div>
+        <div class="nodata_box_text">暂无外发订单</div>
     </div>
 </div>
 </body>
@@ -119,12 +127,17 @@
 </script>
 <script type="text/javascript" src="../../assets/js/vue.min.js"></script>
 <script type="text/javascript" src="../../assets/js/index.js"></script>
-
-<script>
+<script type="text/javascript">
     var app = new Vue({
         el: '#app',
         data: {
-            ind: 0
+            ind: 99,
+            order_list: [],
+            showtext: '加载中…',
+            page: 1,
+            perpage: 10,
+            status: '',
+            showmore: false
         },
         created: function () {
             apiready = function () {
@@ -132,15 +145,90 @@
                     name: 'my_outorder',
                     bounces: true
                 });
-                setTimeout(function () {
-                    loadEnd('my_outorder')
-                }, 1500)
+                app._myOrderList();
+                // 下拉刷新
+                api.setRefreshHeaderInfo({
+                    // loadingImg: 'widget://assets/image/head.png',
+                    // loadingImg: 'widget://assets/image/loading.gif',
+                    bgColor: '#fff',
+                    textColor: '#F11C15',
+                    textDown: '下拉刷新...',
+                    textUp: '释放更新...',
+                    showTime: true
+                }, function (ret, err) {
+                    app.order_list = [];
+                    app.page = 1;
+                    app.showtext = '加载中...';
+                    app._myOrderList();
+                    api.refreshHeaderLoadDone()
+                });
+                // 上拉加载
+                api.addEventListener({
+                    name: 'scrolltobottom',
+                    extra: {
+                        threshold: 50            //设置距离底部多少距离时触发，默认值为0，数字类型
+                    }
+                }, function (ret, err) {
+                    app.page++;
+                    app._myOrderList();
+                });
             }
         },
         methods: {
+            // 订单状态切换
             oder_tab: function (index) {
-                this.ind = index;
-            }
+                app.ind = index;
+                app.order_list = [];
+                app.page = 1;
+                app.showtext = '加载中...';
+                app.status = index == 99 ? '' : index;
+                app._myOrderList();
+            },
+            // 获取订单列表getOrderList
+            _myOrderList: function () {
+                ApiAjax('my/myOrderList', {
+                    token: getToken(),
+                    page: app.page,
+                    perpage: app.perpage,
+                    status: app.status
+                }, function (ret, err) {
+                    loadEnd('my_outorder');
+                    var order_list = ret.data;
+                    if (ret.data.length > 0) {
+                        app.order_list = app.order_list.concat(order_list);
+                        app.showmore = true;
+                        api.setFrameAttr({
+                            name: 'my_outorder',
+                            bounces: true
+                        });
+                    } else {
+                        app.showtext = '到底了';
+                        api.setFrameAttr({
+                            name: 'my_outorder',
+                            bounces: false
+                        });
+                    }
+                    // app.order_list = ret.data;
+                });
+            },
+            // 订单详情
+            go_detail: function (id, title) {
+                if (getToken()) {
+                    api.openWin({
+                        name: 'index_detail_w',
+                        url: './index_detail_w.html',
+                        bgColor: '#fff',
+                        pageParam: {
+                            id: id,
+                            title: title,
+                            type: 2
+                        }
+                    });
+                }
+                else {
+                    openView('login', 'login/login', '账号登录')
+                }
+            },
         }
     })
 </script>
