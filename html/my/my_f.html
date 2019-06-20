@@ -263,11 +263,10 @@
         methods: {
             _getMyinfo: function () {
                 ApiAjax('my/getMyinfo', {token: getToken()}, function (ret, err) {
-                    loadEnd('my_f')
+                    loadEnd('my_f');
                     app.my_info = ret.data;
                 })
             },
-
             // 特殊头
             go_item: function (name) {
                 api.openWin({

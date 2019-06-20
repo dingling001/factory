@@ -147,6 +147,9 @@
                     app.index = ret.index;
                     var index = ret.index;
                     if (app.index == 2) {
+                        api.setStatusBarStyle({
+                            style: 'light',
+                        });
                         api.setFrameGroupAttr({
                             name: 'index',
                             rect: {

@@ -109,7 +109,7 @@
         methods: {
             _getMyinfo: function () {
                 ApiAjax('my/getMyinfo', {token: getToken()}, function (ret, err) {
-                    alert(JSON.stringify(ret));
+                    // alert(JSON.stringify(ret));
                     app.my_info = ret.data;
                 })
             }

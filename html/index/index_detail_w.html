@@ -96,6 +96,7 @@
             apiready = function () {
                 app.id = api.pageParam.id;
                 app.order_title = api.pageParam.title;
+                app.type = api.pageParam.type || 0;// 0 首页订单，1订单中心， 2外发订单 ,3 我的报价订单，4我的收藏订单
                 $api.fixStatusBar($api.dom('header'));
                 app.headerH = $api.offset($api.dom('header')).h;
                 app.footerH = $api.offset($api.byId('price_btn')).h;
@@ -114,7 +115,8 @@
                     reload: true,
                     bounces: true,
                     pageParam: {
-                        id: app.id
+                        id: app.id,
+                        type: app.type
                     }
                 });
                 app._getOrderDetail();

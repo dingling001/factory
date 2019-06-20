@@ -7,6 +7,7 @@ var puplic_url = 'http://kindapp.w.bronet.cn/A6079080424317/web_adapter/adapter.
 // var goodUrl = 'http://kindapp.w.bronet.cn/A6079080424317/'; //测试域名
 var goodUrl = 'http://wx.cijievip.com/A6079080424317/';//正式域名
 var imgUrl = 'http://j.jianghairui.com/';
+var ERROR = '';
 
 function openWin(winName, url) {
     api.openWin({
@@ -22,7 +23,7 @@ function ApiAjax(url, subDatas, callbackfun) {
     api.ajax({
         url: baseurl + url,
         method: 'post',
-        timeout: 5,
+        timeout: 1000,
         data: {
             values: subDatas
         }
@@ -43,9 +44,9 @@ function ApiAjax(url, subDatas, callbackfun) {
             //     bgColor: '#fff',
             // });
         } else {
-            toastMsg(res.message||'出错了')
+            toastMsg(res.message || '出错了')
+            ERROR = res.message || '网络问题'
         }
-
     });
 }
 
@@ -212,21 +213,18 @@ function isLogin(_this, callback) {
     });
 }
 
-
 function loadEnd() {
     var ele = document.getElementById('loadStart');
     var app = document.getElementById('app');
-    if (ele) {
+    if (ele && app) {
         ele.style.opacity = 0;
         app.style.overflow = 'hidden';
         setTimeout(function () {
             ele.style.display = "none";
             app.style.overflow = 'auto';
         }, 1000);
-
     }
 }
-
 
 function getcity() {
     if ($api.getStorage('city')) {
@@ -260,19 +258,22 @@ refresh = function (callback) {
     });
 };
 
-function getapi(type = 'post', url = '', values = {}, file = '', calback) {
-    api.ajax({
-        url: baseurl + url,
-        method: type,
-        data: {
-            values: values,
-            files: {
-                file: file
-            }
-        }
-    }, function (ret, err) {
-        calback(ret, err);
-    });
+function getFileType(filePath) {
+    var startIndex = filePath.lastIndexOf(".");
+    if (startIndex != -1)
+        return filePath.substring(startIndex + 1, filePath.length).toLowerCase();
+    else return "";
+}
+
+function getImageSizeInBytes(imgURL) {
+    console.log("getImageSizeInBytes imgURL： " + imgURL);
+    var request = new XMLHttpRequest();
+    request.open("HEAD", imgURL, false);
+    request.send(null);
+    var headerText = request.getAllResponseHeaders();
+    var re = /Content\-Length\s*:\s*(\d+)/i;
+    re.exec(headerText);
+    return parseInt(RegExp.$1);
 }
 
 refreshDone = function (mess) {

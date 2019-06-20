@@ -67,7 +67,24 @@
             }
         },
         methods: {
-
+            // 订单详情
+            go_detail: function (id, title) {
+                if (getToken()) {
+                    api.openWin({
+                        name: 'index_detail_w',
+                        url: '../index/index_detail_w.html',
+                        bgColor: '#fff',
+                        pageParam: {
+                            id: id,
+                            title: title,
+                            type:3
+                        }
+                    });
+                }
+                else {
+                    openView('login', 'login/login', '账号登录')
+                }
+            },
         }
     })
 </script>
