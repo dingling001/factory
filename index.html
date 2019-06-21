@@ -8,7 +8,7 @@
     <title>加工宝</title>
     <link rel="stylesheet" type="text/css" href="assets/css/api.css"/>
 </head>
-<body>
+<body style="background: transparent">
 <header style="height: 44px"></header>
 </body>
 </html>
@@ -25,6 +25,7 @@
         api.setStatusBarStyle({
             style: 'dark',
         });
+        // api.removeLaunchView();
         //判断条件 
         if (!firstStart) {
             openGuide();//首次下载安装操作 
@@ -35,7 +36,6 @@
         } else {
             // alert('error')
         }
-        api.removeLaunchView();
         // openGuide()
         // openIndex()
     };

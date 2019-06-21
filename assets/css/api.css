@@ -438,7 +438,7 @@ footer {
 /*头部--底部*/
 /*订单列表*/
 .new_list {
-    padding-bottom: .5rem;
+    padding-bottom: .2rem;
     min-height: 2.34rem;
     transition: all .3s;
 }
@@ -618,3 +618,11 @@ footer {
 }
 
 /*登录部分*/
+.mint-popup{
+    width: 100%;
+}
+.picker-item{
+    font-size: 12px;
+    color: #666;
+    text-align: center;
+}

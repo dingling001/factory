@@ -71,7 +71,7 @@
         },
         created: function () {
             apiready = function () {
-                app.cate_id=api.pageParam.cate_id;
+                app.cate_id = api.pageParam.cate_id;
                 app._getOrderList();
                 // 监听切换分类
                 api.addEventListener({
@@ -117,6 +117,16 @@
                     app.page++;
                     app._getOrderList();
                 });
+                api.addEventListener({
+                    name: 'changtab'
+                }, function (ret, err) {
+                    if (ret.value.tabindex == 1) {
+                        app.order_list = [];
+                        app.page = 1;
+                        app.flg = false;
+                        app._getOrderList();
+                    }
+                });
             }
         },
         methods: {
@@ -149,7 +159,7 @@
                         pageParam: {
                             id: id,
                             title: title,
-                            type:1
+                            type: 1
                         }
                     });
                 }
