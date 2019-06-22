@@ -356,7 +356,6 @@ function checkDate(date, type) {
         var endDate = da.getTime();
         var ms = endDate - startDate
         var dates = Math.floor(ms / 1000 / 60 / 60);
-        // alert(dates)
         if (type == 1) {
             if (dates < 3 || dates > 171) {
                 return false;
@@ -530,4 +529,61 @@ function escape2Html(str) {
     return str.replace(/&(lt|gt|nbsp|amp|quot);/ig, function (all, t) {
         return arrEntities[t];
     });
+}
+
+// 获取省列表getProvinceList
+function _getProvinceList() {
+    var provinceArr = [];
+    ApiAjax('api/getProvinceList', {}, function (ret) {
+        var data = ret.data;
+        data.forEach(function (item) {
+            var obj = {};
+            obj.name = item.name;
+            obj.code = item.code;
+            provinceArr.push(obj);
+        });
+    });
+    // $api.setStorage('provinceArr', provinceArr);
+    return provinceArr;
+}
+
+// 获取市列表getCityList
+function _getCityList(province_code) {
+    var cityArr = [];
+    ApiAjax('api/getCityList', {
+        province_code: province_code
+    }, function (ret) {
+        var data = ret.data;
+        // alert(JSON.stringify(ret))
+        data.forEach(function (item) {
+            var obj = {};
+            obj.name = item.name;
+            obj.code = item.code;
+            cityArr.push(obj);
+        });
+        // app.slots[2].values = cityArr;
+        // alert(JSON.stringify(cityArr))
+    });
+    // $api.setStorage('cityArr', cityArr);
+    // alert(province_code)
+    return cityArr
+}
+
+// 获取区列表getRegionList
+function _getRegionList(city_code = '1101') {
+    var countyArr = [];
+    ApiAjax('api/getRegionList', {
+        city_code: city_code
+    }, function (ret) {
+        var data = ret.data;
+        data.forEach(function (item) {
+            var obj = {};
+            obj.name = item.name;
+            obj.code = item.code;
+            countyArr.push(obj);
+        });
+        // app.slots[5].values = countyArr;
+    });
+    // $api.setStorage('countyArr', countyArr);
+    return countyArr
 }
