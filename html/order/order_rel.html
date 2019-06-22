@@ -252,7 +252,14 @@
         <div class="input_box" @click="openCity">
             <span class="label">地区</span>
             <div class="infoinput">
-                <div class="infoselect">请完善地区 <span class="iconfont icon-arrow-right"></span></div>
+                <div class="infoselect">
+                    <!--<select v-if="provinceArr.length>0">-->
+                        <!--&lt;!&ndash;<option value="" disabled selected>请完善地区</option>&ndash;&gt;-->
+                        <!--<option value="item.code" v-for="item in provinceArr">{{item.name}}</option>-->
+                    <!--</select>-->
+                    请完善地区
+                    <span class="iconfont icon-arrow-right"></span>
+                </div>
             </div>
         </div>
         <div class="input_box type">
@@ -328,10 +335,12 @@
 <script>
     var app = new Vue({
         el: '#app',
-        data: {},
+        data: {
+            provinceArr: []
+        },
         created: function () {
             apiready = function () {
-
+                app._getProvinceList()
             }
         },
         methods: {
@@ -345,7 +354,38 @@
                     }
                 });
             },
-            openCity:function () {
+            // 获取省列表getProvinceList
+            _getProvinceList: function () {
+                ApiAjax('api/getProvinceList', {}, function (ret) {
+                    var provinceArr = [];
+                    var data = ret.data;
+                    data.forEach(function (item) {
+                        var obj = {};
+                        obj.name = item.name;
+                        obj.code = item.code;
+                        provinceArr.push(obj);
+                    });
+                    app.provinceArr = provinceArr;
+                });
+                // $api.setStorage('provinceArr', provinceArr);
+            },
+            _getCityList: function (province_code = '11') {
+                var cityArr = [];
+                ApiAjax('api/getCityList', {
+                    province_code: province_code
+                }, function (ret) {
+                    var data = ret.data;
+                    data.forEach(function (item) {
+                        var obj = {};
+                        obj.name = item.name;
+                        obj.code = item.code;
+                        cityArr.push(obj);
+                    });
+                    // app.slots[2].values = cityArr;
+                });
+                // $api.setStorage('cityArr', cityArr);
+            },
+            openCity: function () {
                 api.openFrame({
                     name: 'city',
                     url: '../common/city.html',
@@ -355,9 +395,9 @@
                         w: 'auto',
                         h: 'auto'
                     },
-                    reload:true,
-                    bounces:false,
-                    bgColor:'rgba(0,0,0,0.6)',
+                    reload: true,
+                    bounces: false,
+                    bgColor: 'rgba(0,0,0,0.6)',
                 });
             }
         }
