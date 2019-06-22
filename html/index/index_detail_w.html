@@ -57,6 +57,12 @@
             z-index: 100;
             width: 100%;
         }
+
+        .price_btn span {
+            display: block;
+            width: 100%;
+            height: 100%;
+        }
     </style>
 </head>
 <body>
@@ -70,7 +76,10 @@
                 <span class="iconfont icon-shoucang" @click="collect_fn"></span></div>
         </div>
     </header>
-    <div class="price_btn" id="price_btn" @click="orderPrice">立即报价</div>
+    <div class="price_btn" id="price_btn" @click="orderPrice" v-show="type!=2">
+        <span v-if="type==3">修改报价</span>
+        <span v-else>立即报价</span>
+    </div>
 </div>
 </body>
 </html>
@@ -90,7 +99,10 @@
             id: '',
             footerH: '',
             headerH: '',
-            d_info: {}
+            d_info: {},
+            type: 0,
+            price: 0,
+            showbtn: true
         },
         created: function () {
             apiready = function () {
@@ -98,69 +110,78 @@
                 app.order_title = api.pageParam.title;
                 app.type = api.pageParam.type || 0;// 0 首页订单，1订单中心， 2外发订单 ,3 我的报价订单，4我的收藏订单
                 $api.fixStatusBar($api.dom('header'));
-                app.headerH = $api.offset($api.dom('header')).h;
-                app.footerH = $api.offset($api.byId('price_btn')).h;
                 api.setStatusBarStyle({
                     style: 'dark',
                 });
-                api.openFrame({
-                    name: 'index_detail',
-                    url: './index_detail.html',
-                    rect: {
-                        x: 0,
-                        y: app.headerH,
-                        w: 'auto',
-                        h: api.winHeight - app.headerH - app.footerH
-                    },
-                    reload: true,
-                    bounces: true,
-                    pageParam: {
-                        id: app.id,
-                        type: app.type
-                    }
-                });
-                app._getOrderDetail();
+                app._offerDetail();
             }
         },
         methods: {
-            // 报价
+            // 报价/修改报价
             orderPrice: function () {
                 api.prompt({
                     buttons: ['确定', '取消'],
                     title: app.order_title,
                     type: 'number',
-                    text: '0',
+                    text: app.price || 0,
                     msg: '请输入您的报价（元）',
                 }, function (ret, err) {
                     var index = ret.buttonIndex;
-                    var text = ret.text;
+                    var price = ret.text;
                     if (index == 1) {
-                        ApiAjax('api/offerPrice', {
-                            token: getToken(),
-                            order_id: app.id,
-                            price: text,
-                        }, function (res, err) {
-                            if (res.code == 1) {
-                                api.alert({
-                                    title: app.order_title,
-                                    msg: '您的报价已提交',
-                                }, function (ret, err) {
-
-                                });
-                            }
-                        })
+                        if (parseFloat(price) > 0) {
+                            ApiAjax('api/offerPrice', {
+                                token: getToken(),
+                                order_id: app.id,
+                                price: price,
+                            }, function (res, err) {
+                                if (res.code == 1) {
+                                    api.alert({
+                                        title: app.order_title,
+                                        msg: '您的报价已提交',
+                                    }, function (ret, err) {
+                                    });
+                                }
+                            })
+                        }
+                        else {
+                            api.alert({
+                                title: '报价有误！',
+                                msg: '您的报价不能低于0元',
+                            }, function (ret, err) {
+                            });
+                        }
                     }
                 });
-
             },
-            // 获取订单详情
-            _getOrderDetail: function () {
-                ApiAjax('api/getOrderDetail', {
-                    token: getToken(), order_id: app.id
+            // 我的报价详情
+            _offerDetail: function () {
+                ApiAjax('my/offerDetail', {
+                    token: getToken(),
+                    order_id: app.id
                 }, function (ret, err) {
-                    if (ret.code == 1) {
-                        app.d_info = ret.data;
-                    }
+                    app.d_info = ret.data;
+                    app.price = ret.data.price;
+                    app.type = parseFloat(app.price) > 0 ? 3 : app.type;
+                    app.headerH = $api.offset($api.dom('header')).h;
+                    app.footerH = $api.offset($api.byId('price_btn')).h;
+                    api.openFrame({
+                        name: 'index_detail',
+                        url: './index_detail.html',
+                        rect: {
+                            x: 0,
+                            y: app.headerH,
+                            w: 'auto',
+                            h: api.winHeight - app.headerH - app.footerH
+                            // h: api.winHeight - app.headerH
+                        },
+                        reload: true,
+                        bounces: true,
+                        pageParam: {
+                            id: app.id,
+                            type: parseFloat(app.price) > 0 ? 3 : app.type
+                        }
+                    });
                 });
             },
             // 关闭窗口
@@ -169,13 +190,11 @@
                     name: 'index_detail'
                 });
                 api.closeWin();
-            }
-            ,
+            },
             // 收藏
             collect_fn: function () {
 
-            }
-            ,
+            },
         }
     })
 </script>

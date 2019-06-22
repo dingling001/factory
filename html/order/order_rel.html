@@ -223,6 +223,18 @@
             padding: 0;
         }
 
+        .infoselect {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            font-size: 16px;
+            color: #999;
+        }
+
+        .infoselect .iconfont {
+            font-size: 18px;
+            color: #CECED1;
+        }
     </style>
 </head>
 <body>
@@ -232,69 +244,71 @@
         <!--<div class="infoinput">发布日期：{{d_info.create_time}}</div>-->
     </div>
     <div class="hr"></div>
-    <div class="input_box">
-        <span class="label">标题</span>
-        <div class="infoinput"><input type="text" placeholder="请输入订单标题"></div>
-    </div>
-    <div class="input_box">
-        <span class="label">地区</span>
-        <div class="infoinput">
-            <div> 请完善地区 <span class="iconfont icon-arrow-right"></span></div>
+    <form>
+        <div class="input_box">
+            <span class="label">标题</span>
+            <div class="infoinput"><input type="text" placeholder="请输入订单标题"></div>
         </div>
-    </div>
-    <div class="input_box type">
-        <span class="label">类型</span>
-        <div class="infoinput">类型</div>
-    </div>
-    <div class="input_box ">
-        <span class="label">材质</span>
-        <div class="infoinput"><input type="text" placeholder="请输入商品材质信息"></div>
-    </div>
-    <div class="input_box">
-        <span class="label">数量</span>
-        <div class="infoinput"><input type="text" placeholder="请输入数量"></div>
-    </div>
-    <div class="input_box ">
-        <span class="label">订单截止日期</span>
-        <div class="infoinput"> 请输入订单失效时间 <span class="iconfont icon-arrow-right"></span></div>
-    </div>
-    <div class="input_box border-0">
-        <span class="label">订单备注：</span>
-    </div>
-    <div class="area_box">
-        <textarea name="" id="" cols="30" rows="10" placeholder="请输入订单备注（不超过200字）"></textarea>
-    </div>
-    <div class="detail_title">相关图片</div>
-    <div class="pic_list">
-        <div class="pic_item"><img src="" alt=""></div>
-    </div>
-    <div class="detail_title">订单附件</div>
-    <div class="d_file">
-        <a href="tel:400-820-888">如需上传附件，请联系平台管理员：400-820-888</a>
-        <!--<div class="d_left">-->
-        <!--<span class="d_img"><img src="../../assets/image/pdf.png" alt=""></span>-->
-        <!--<span>资料.pdf<span class="size">(80k)</span></span>-->
-        <!--</div>-->
-        <!--<div class="d_rbtn">下载附件</div>-->
-    </div>
-    <div class="input_box">
-        <span class="label">会员信息 <span class="notice">注：此处信息需开通会员后可查看</span></span>
-    </div>
-    <div class="input_box">
-        <span class="label">发单企业</span>
-        <div class="infoinput"><input type="text" placeholder="请输入公司名称"></div>
-    </div>
-    <div class="input_box">
-        <span class="label">联系方式</span>
-        <div class="infoinput"><input type="text" placeholder="请输入公司联系人电话"></div>
-    </div>
-    <div class="input_box">
-        <span class="label">负责人</span>
-        <div class="infoinput"><input type="text" placeholder="请输入公司联系人姓名"></div>
-    </div>
-    <div class="vip_box">
-        <div class="vip_btn">立即发布</div>
-    </div>
+        <div class="input_box" @click="openCity">
+            <span class="label">地区</span>
+            <div class="infoinput">
+                <div class="infoselect">请完善地区 <span class="iconfont icon-arrow-right"></span></div>
+            </div>
+        </div>
+        <div class="input_box type">
+            <span class="label">类型</span>
+            <div class="infoinput">类型</div>
+        </div>
+        <div class="input_box ">
+            <span class="label">材质</span>
+            <div class="infoinput"><input type="text" placeholder="请输入商品材质信息"></div>
+        </div>
+        <div class="input_box">
+            <span class="label">数量</span>
+            <div class="infoinput"><input type="text" placeholder="请输入数量"></div>
+        </div>
+        <div class="input_box ">
+            <span class="label">订单截止日期</span>
+            <div class="infoinput"> 请输入订单失效时间 <span class="iconfont icon-arrow-right"></span></div>
+        </div>
+        <div class="input_box border-0">
+            <span class="label">订单备注：</span>
+        </div>
+        <div class="area_box">
+            <textarea name="" id="" cols="30" rows="10" placeholder="请输入订单备注（不超过200字）"></textarea>
+        </div>
+        <div class="detail_title">相关图片</div>
+        <div class="pic_list">
+            <div class="pic_item"><img src="" alt=""></div>
+        </div>
+        <div class="detail_title">订单附件</div>
+        <div class="d_file">
+            <a href="tel:400-820-888">如需上传附件，请联系平台管理员：400-820-888</a>
+            <!--<div class="d_left">-->
+            <!--<span class="d_img"><img src="../../assets/image/pdf.png" alt=""></span>-->
+            <!--<span>资料.pdf<span class="size">(80k)</span></span>-->
+            <!--</div>-->
+            <!--<div class="d_rbtn">下载附件</div>-->
+        </div>
+        <div class="input_box">
+            <span class="label">会员信息 <span class="notice">注：此处信息需开通会员后可查看</span></span>
+        </div>
+        <div class="input_box">
+            <span class="label">发单企业</span>
+            <div class="infoinput"><input type="text" placeholder="请输入公司名称"></div>
+        </div>
+        <div class="input_box">
+            <span class="label">联系方式</span>
+            <div class="infoinput"><input type="text" placeholder="请输入公司联系人电话"></div>
+        </div>
+        <div class="input_box">
+            <span class="label">负责人</span>
+            <div class="infoinput"><input type="text" placeholder="请输入公司联系人姓名"></div>
+        </div>
+        <div class="vip_box">
+            <div class="vip_btn">立即发布</div>
+        </div>
+    </form>
 </div>
 </body>
 </html>
@@ -331,6 +345,21 @@
                     }
                 });
             },
+            openCity:function () {
+                api.openFrame({
+                    name: 'city',
+                    url: '../common/city.html',
+                    rect: {
+                        x: 0,
+                        y: 0,
+                        w: 'auto',
+                        h: 'auto'
+                    },
+                    reload:true,
+                    bounces:false,
+                    bgColor:'rgba(0,0,0,0.6)',
+                });
+            }
         }
     })
 </script>

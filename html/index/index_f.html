@@ -19,7 +19,8 @@
 
         .banner {
             height: 3rem;
-            margin: .3rem 0;
+            padding: .3rem 0;
+            background-color: #fff;
         }
 
         .banner .swiper-slide {
@@ -65,7 +66,7 @@
         }
 
         .index {
-            padding: 0 0 .7rem 0;
+            /*padding: 0 0 .1rem 0;*/
         }
 
         .nav_box {
@@ -74,7 +75,7 @@
             /*justify-content: space-between;*/
             /*padding: 0 .45rem;*/
             flex-wrap: wrap;
-            margin: .3rem 0;
+            padding: .3rem 0;
             background-color: #fff;
         }
 
@@ -114,7 +115,6 @@
             left: 0;
             width: 100%;
         }
-
 
     </style>
 </head>
@@ -242,6 +242,15 @@
                     app.page++;
                     app._getOrderList();
                 });
+                // api.addEventListener({
+                //     name: 'changtab'
+                // }, function (ret, err) {
+                //     if(ret.value.tabindex==0){
+                //         app.order_list = [];
+                //         app.page = 1;
+                //         app.showtext = '加载中...';
+                //     }
+                // });
             }
         },
         methods: {

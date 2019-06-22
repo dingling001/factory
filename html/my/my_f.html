@@ -258,6 +258,13 @@
         created: function () {
             apiready = function () {
                 app._getMyinfo();
+                api.addEventListener({
+                    name: 'changtab'
+                }, function (ret, err) {
+                    if (ret.value.tabindex == 2) {
+                        app._getMyinfo();
+                    }
+                });
             }
         },
         methods: {
@@ -265,6 +272,7 @@
                 loadEnd('my_f')
                 ApiAjax('my/getMyinfo', {token: getToken()}, function (ret, err) {
                     loadEnd('my_f');
+                    // alert(JSON.stringify(ret))
                     app.my_info = ret.data;
                 })
             },

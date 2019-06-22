@@ -44,8 +44,8 @@ function ApiAjax(url, subDatas, callbackfun) {
             //     bgColor: '#fff',
             // });
         } else {
-            toastMsg(res.message || '出错了')
-            ERROR = res.message || '网络问题'
+            toastMsg(ret.message || '出错了')
+            ERROR = ret.message || '网络问题'
         }
     });
 }

@@ -1,0 +1,162 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title></title>
+    <script src="../../assets/js/fontsize.js"></script>
+    <link rel="stylesheet" href="../../assets/css/style.css">
+    <link rel="stylesheet" href="../../assets/css/api.css">
+    <link rel="stylesheet" href="http://at.alicdn.com/t/font_1220513_2ea6fr0vbal.css">
+</head>
+<body>
+<div id="app" v-chock>
+    <mt-popup
+            v-model="popupVisible"
+            position="bottom">
+        <mt-picker :slots="slots" @change="onCityValuesChange" showToolbar value-key="name">
+        </mt-picker>
+    </mt-popup>
+</div>
+</body>
+</html>
+<script type="text/javascript" src="../../assets/js/api.js"></script>
+<!-- <script type="text/javascript" src="../../assets/js/fastclick.js"></script>
+<script>
+    new FastClick(document.body);
+</script> -->
+<script type="text/javascript" src="../../assets/js/vue.min.js"></script>
+<script type="text/javascript" src="../../assets/js/index.js"></script>
+<script type="text/javascript" src="../../assets/js/public.js"></script>
+<script>
+    var province, city, area;
+    var index1 = 0;
+    var index2 = 0;
+    var app = new Vue({
+        el: '#app',
+        data: {
+            popupVisible: true,
+            slots: [{
+                flex: 1,
+                values: [],
+                className: 'slot1',
+                textAlign: 'center'
+            }, {
+                divider: true,
+                content: '-',
+                className: 'slot2'
+            }, {
+                flex: 1,
+                values: [],
+                className: 'slot3',
+                textAlign: 'center'
+            }, {
+                divider: true,
+                content: '-',
+                className: 'slot4'
+            }, {
+                flex: 1,
+                values: [],
+                className: 'slot5',
+                textAlign: 'center'
+            }],
+            regionInit: false,
+            pro_code: '',
+            city_code: '',
+            areaString: ''
+        },
+        created: function () {
+            apiready = function () {
+                app._getProvinceList();
+            }
+        },
+        methods: {
+            // 获取省列表getProvinceList
+            _getProvinceList: function () {
+                ApiAjax('api/getProvinceList', {}, function (ret) {
+                    var provinceArr = [];
+                    var data = ret.data;
+                    app.pro_code = ret.data[0].code;
+                    data.forEach(function (item) {
+                        var obj = {};
+                        obj.name = item.name;
+                        obj.code = item.code;
+                        provinceArr.push(obj);
+                    });
+                    app.slots[0].values = provinceArr;
+                });
+            },
+            // 获取市列表getCityList
+            _getCityList: function (province_code) {
+                ApiAjax('api/getCityList', {
+                    province_code: province_code
+                }, function (ret) {
+                    var cityArr = [];
+                    var data = ret.data;
+                    app.city_code = ret.data[0].code;
+                    data.forEach(function (item) {
+                        var obj = {};
+                        obj.name = item.name;
+                        obj.code = item.code;
+                        cityArr.push(obj);
+                    });
+                    app.slots[2].values = cityArr;
+                    // return cityArr
+                });
+            },
+            // 获取区列表getRegionList
+            _getRegionList: function (city_code) {
+                ApiAjax('api/getRegionList', {
+                    city_code: city_code
+                }, function (ret) {
+                    var countyArr = [];
+                    var data = ret.data;
+                    data.forEach(function (item) {
+                        var obj = {};
+                        obj.name = item.name;
+                        obj.code = item.code;
+                        countyArr.push(obj);
+                    });
+                    app.slots[5].values = countyArr;
+                });
+            },
+            // 选择地址
+            onCityValuesChange(picker, values) {
+                // alert(JSON.stringify(picker));
+                if (app.regionInit) {
+                    var one = values[0];
+                    var two = values[1];
+                    var three = values[2];
+                    alert(JSON.stringify(one))
+                    app._getCityList(one.code)
+                    //
+                    // index2 = city.indexOf(two)
+                    // if (index2 >= 0 && city.length > 0) {
+                    //     area = this.data[index1].nodes[index2].nodes.map(res => {
+                    //         return res.region_name
+                    //     })
+                    //     picker.setSlotValues(2, area)
+                    //     three = values[2]
+                    // }
+                    // if (index1 >= 0 && index2 >= 0) {
+                    //     this.data[index1].nodes[index2].nodes.forEach(res => {
+                    //         if (res && res.region_name == three) {
+                    //             this.region_id = res.region_id;
+                    //         }
+                    //     })
+                    // }
+                    app.areaString = values.join(' ');
+                } else {
+                    app.regionInit = true;
+                }
+            },
+            closeCity: function () {
+                api.closeFrame();
+            }
+        }
+    })
+</script>

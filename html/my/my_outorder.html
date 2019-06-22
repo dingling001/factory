@@ -108,7 +108,7 @@
         <div v-if='showmore&&order_list.length>=perpage' class="enddata">{{showtext}}</div>
     </div>
     <div v-else class="nodata_box">
-        <div class="nodata_box_img"><img src="../../assets/image" alt=""></div>
+        <div class="nodata_box_img"><img src="../../assets/image/noorder.png" alt=""></div>
         <div class="nodata_box_text">暂无外发订单</div>
     </div>
 </div>
@@ -181,6 +181,7 @@
                 app.order_list = [];
                 app.page = 1;
                 app.showtext = '加载中...';
+                toastMsg('数据加载中…')
                 app.status = index == 99 ? '' : index;
                 app._myOrderList();
             },

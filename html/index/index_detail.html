@@ -208,7 +208,17 @@
             margin: 0 auto;
         }
 
+        .infoinput .price {
+            color: #E72424;
+            font-size: 15px;
+            font-weight: bold;
+        }
 
+        .outordernum {
+            font-size: 12px;
+            color: #73B5FF;
+            text-decoration: underline;
+        }
     </style>
 </head>
 <body ontouchstart>
@@ -278,9 +288,17 @@
         <span class="label">负责人</span>
         <div class="infoinput">{{d_info.linkman}}</div>
     </div>
-    <div class="tips">注：您的剩余报价次数 <span>{{d_info.free_times}}</span>次</div>
-    <div class="vip_box">
-        <div class="vip_btn">会员查看信息</div>
+    <div class="input_box" v-if="type==3">
+        <span class="label">我的报价</span>
+        <div class="infoinput">单价： <span class="price">{{d_info.price}}</span>元</div>
+    </div>
+    <!--<div class="input_box" v-else-if="type==2" @click="">已有50人报价，查看报价</div>-->
+    <div class="input_box" @click="lookPrice" v-else-if="type==2"><span class="outordernum">已有50人报价，查看报价</span></div>
+    <div v-show="type!=2">
+        <div class="tips">注：您的剩余报价次数 <span>{{d_info.free_times}}</span>次</div>
+        <div class="vip_box">
+            <div class="vip_btn">会员查看信息</div>
+        </div>
     </div>
 </div>
 </body>
@@ -307,18 +325,22 @@
             filename: '',
             dot: '',
             size: 0,
-            type: 0
+            type: 0,
+            offer_list: []
         },
         created: function () {
             apiready = function () {
                 app.id = api.pageParam.id;
                 app.type = api.pageParam.type || 0;// 0 首页订单，1订单中心， 2我的报价订单 ,3外发订单，4我的收藏订单
-                // app._getOrderDetail();
-                // 我的报价
                 // alert(app.type)
-                if (app.type == 2) {
+                if (app.type == 3) {
+                    // 我的报价详情
                     app._offerDetail()
-                } else {
+                }
+                else if (app.type == 2) {
+                    app._offerList();
+                }
+                else {
                     app._getOrderDetail();
                 }
             }
@@ -355,7 +377,6 @@
                     activeIndex: index,
                 });
             },
-
             // 下载附件
             downloadFile: function () {
                 var downloadManager = api.require('downloadManager');
@@ -384,14 +405,12 @@
                 });
             },
             // 我的报价详情
-            // 获取订单详情
             _offerDetail: function () {
                 ApiAjax('my/offerDetail', {
                     token: getToken(),
                     order_id: app.id
                 }, function (ret, err) {
                     loadEnd('index_detail');
-                    alert(JSON.stringify(ret))
                     app.d_info = ret.data;
                     if (ret.data.pics) {
                         for (var i in app.d_info.pics) {
@@ -406,7 +425,21 @@
                     }
                 });
             },
+            // 查看报价offerList
+            _offerList: function () {
+                ApiAjax('my/offerList', {
+                    token: getToken(),
+                    order_id: app.id
+                }, function (ret, err) {
+                    loadEnd('index_detail');
+                    // alert(JSON.stringify(ret));
+                    app.offer_list = ret.data;
+                });
+            },
+            // 查看报价
+            lookPrice: function () {
 
+            }
         }
     })
 </script>
