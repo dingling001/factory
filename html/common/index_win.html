@@ -35,6 +35,10 @@
         .swiper-container {
             flex: 1;
         }
+
+        .iphonex {
+            height: 4rem;
+        }
     </style>
 </head>
 <body>
@@ -43,7 +47,7 @@
         <span class="input">请输入您要搜索的内容</span>
         <span class="iconfont icon-sousuo"></span>
     </header>
-    <header class="order_header" v-else-if="index==1">
+    <header :class="['order_header', iphonex?'iphonex':'']" v-else-if="index==1">
         <div class="order_index">
             <span></span>
             <span>订单中心</span>
@@ -107,10 +111,12 @@
                     "pic": ""
                 },
             ],
-            cate_count: 0
+            cate_count: 0,
+            iphonex:false
         },
         created: function () {
             apiready = function () {
+                // app.iphonex=api.decv
                 app._getCateList();
                 //导航轮播
                 api.openFrameGroup({
