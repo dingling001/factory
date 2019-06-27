@@ -12,7 +12,7 @@
     <link rel="stylesheet" href="../../assets/css/style.css">
     <!--<link rel="stylesheet" href="https://unpkg.com/mint-ui@1/lib/style.css">-->
     <link rel="stylesheet" href="http://at.alicdn.com/t/font_1220513_m9v7vwkp1pp.css">
-    <style>
+    <style type="text/css">
 
         .input_box {
             margin: 0;
@@ -253,11 +253,31 @@
 
         li {
             height: 30px;
-            display: inline-block;
             text-align: center;
             line-height: 30px;
             cursor: pointer;
+            margin-right: .2rem;
+            font-size: 13px;
+            display: flex;
+            align-items: center;
+            -webkit-transition: ease-in-out .3s;
+            -moz-transition: ease-in-out .3s;
+            -ms-transition: ease-in-out .3s;
+            -o-transition: ease-in-out .3s;
+            transition: ease-in-out .3s;
+        }
+
+        li.typeactive {
+            color: #E72424;
+        }
+
+        li .iconfont {
             margin-right: .1rem;
+            font-size: 13px;
+        }
+
+        li.icon-xuzhong1 {
+            color: #E72424;
         }
     </style>
 </head>
@@ -268,7 +288,7 @@
         <!--<div class="infoinput">发布日期：{{d_info.create_time}}</div>-->
     </div>
     <div class="hr"></div>
-      <form>
+    <form>
         <div class="input_box">
             <span class="label">标题</span>
             <div class="infoinput"><input type="text" placeholder="请输入订单标题"></div>
@@ -287,8 +307,9 @@
             <span class="label">类型</span>
             <div class="infoinput">
                 <ul>
-                    <li v-for="c,index of cities"   @click="checkedBox(index)">
-                        <span :class="['iconfont',arr.includes(index)?'icon-xuanzhong':'icon-xuanzhong1']" ></span>{{c}}
+                    <li v-for="(c,index) of cate_list" @click="checkedBox(c.id)"
+                        :class="{'typeactive':arr.includes(c.id)}">
+                        <span :class="['iconfont',arr.includes(c.id)?'icon-xuanzhong':'icon-xuanzhong1']"></span>{{c.cate_name}}
                     </li>
                 </ul>
             </div>
@@ -299,11 +320,17 @@
         </div>
         <div class="input_box">
             <span class="label">数量</span>
-            <div class="infoinput"><input type="text" placeholder="请输入数量"></div>
+            <div class="infoinput"><input type="number" placeholder="请输入数量"></div>
         </div>
-        <div class="input_box ">
+        <div class="input_box " @click="openDate">
             <span class="label">订单截止日期</span>
-            <div class="infoinput"> 请输入订单失效时间 <span class="iconfont icon-arrow-right"></span></div>
+            <div class="infoinput">
+                <div class="infoselect">
+                    <span v-if="end_time" class="is-selected">{{end_time}}</span>
+                    <span v-else>请选择订单失效时间</span>
+                    <span class="iconfont icon-arrow-right"></span>
+                </div>
+            </div>
         </div>
         <div class="input_box border-0">
             <span class="label">订单备注：</span>
@@ -370,11 +397,12 @@
             city_code: '',
             region_code: '',
             cate_list: [],
-            cities: ["上海", "北北京北京京", "广州", "重庆", "西安","北京", "广州"],
-            arr: []
+            arr: [],
+            end_time: ""
         },
         created: function () {
             apiready = function () {
+                app._getCateList()
                 api.addEventListener({
                     name: 'city_event'
                 }, function (ret, err) {
@@ -406,7 +434,7 @@
                     //this.arr=this.arr.filter((ele)=>ele!=i);
                     //filter()为假时删除
                 } else {
-                    this.arr.push(i);
+                    app.arr.push(i);
                 }
             },
             openCity: function () {
@@ -427,6 +455,28 @@
                     reload: true,
                     bounces: false,
                     bgColor: 'rgba(0,0,0,0.6)',
+                });
+            },
+            // 获取分类列表getCateList
+            _getCateList: function () {
+                ApiAjax('api/getCateList', {}, function (ret, err) {
+                    app.cate_list = ret.data.list;
+                })
+            },
+            // 订单最终时间
+            openDate: function () {
+                api.openPicker({
+                    type: 'date',
+                    title: '订单截止日期',
+                    minDate: new Date()
+                }, function (ret, err) {
+                    if (ret) {
+                        var year = ret.year;
+                        var month = ret.month;
+                        var day = ret.day;
+                        app.end_time = year + '-' + month + '-' + day;
+                    } else {
+                    }
                 });
             }
         }

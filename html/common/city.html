@@ -139,18 +139,22 @@
             },
 
             send_city: function () {
-                api.sendEvent({
-                    name: 'city_event',
-                    extra: {
-                        province: app.province,
-                        city: app.city,
-                        district: app.district,
-                        province_code: app.listp[app.indp].code,
-                        city_code: app.listc[app.indc].code,
-                        region_code: app.listd[app.indc].code,
-                    }
-                });
-                app.closeCity();
+                if (app.indc && app.indp && app.indd) {
+                    api.sendEvent({
+                        name: 'city_event',
+                        extra: {
+                            province: app.province,
+                            city: app.city,
+                            district: app.district,
+                            province_code: app.listp[app.indp].code,
+                            city_code: app.listc[app.indc].code,
+                            region_code: app.listd[app.indc].code,
+                        }
+                    });
+                    app.closeCity();
+                } else {
+
+                }
             },
             closeCity: function () {
                 api.closeFrame();
