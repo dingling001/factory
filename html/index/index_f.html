@@ -125,8 +125,7 @@
     <div class="swiper-container banner">
         <div class="swiper-wrapper">
             <div class="swiper-slide" v-for="(item,index) in slide_list" :key="item.id">
-                <img :src="imgUrl+item.pic" alt>
-
+                <img :src="imgUrl+item.pic?imgUrl+item.pic:'../../assets/image/load.gif'" alt>
             </div>
         </div>
         <!-- 如果需要分页器 -->
@@ -219,7 +218,7 @@
                 // 下拉刷新
                 api.setRefreshHeaderInfo({
                     // loadingImg: 'widget://assets/image/head.png',
-                    // loadingImg: 'widget://assets/image/loading.gif',
+                    loadingImg: 'widget://assets/image/logo.png',
                     bgColor: '#fff',
                     textColor: '#F11C15',
                     textDown: '下拉刷新...',

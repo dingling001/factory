@@ -35,6 +35,7 @@
         data: {},
         created: function () {
             apiready = function () {
+                app.fnInitKeyback();
 
             }
         },
@@ -63,6 +64,14 @@
                     });
                 }
 
+            },
+            // 监听到Android返回键
+            fnInitKeyback: function () {
+                api.addEventListener({
+                    name: 'keyback'
+                }, function (ret, err) {
+                    return;
+                });
             }
         }
     })

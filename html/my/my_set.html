@@ -81,7 +81,7 @@
             <span></span>
         </div>
         <div class="company">
-            <div class="company_name">账号：1354628758</div>
+            <div class="company_name">账号：{{my_info.tel}}</div>
         </div>
     </div>
     <div class="set_list">
@@ -106,14 +106,21 @@
     var app = new Vue({
         el: '#app',
         data: {
-            fac_token: localStorage.getItem('fac_token') || ''
+            my_info: {}
         },
         created: function () {
             apiready = function () {
-
+                app._getMyinfo()
             }
         },
         methods: {
+            // 获取我的个人信息
+            _getMyinfo: function () {
+                ApiAjax('my/getMyinfo', {token: getToken()}, function (ret, err) {
+                    // alert(JSON.stringify(ret))
+                    app.my_info = ret.data;
+                })
+            },
             // 关闭窗口
             close_set: function () {
                 api.closeWin();
@@ -128,7 +135,7 @@
                 openView('my_pass', 'my/my_pass', title)
             },
             loginOut: function () {
-                localStorage.clear();
+                $api.rmStorage('fac_token');
                 app.close_set();
             }
         }

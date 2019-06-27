@@ -12,15 +12,40 @@
     <link rel="stylesheet" href="../../assets/css/style.css">
     <link rel="stylesheet" href="../../assets/css/api.css">
     <link rel="stylesheet" href="http://at.alicdn.com/t/font_1220513_2ea6fr0vbal.css">
+    <link rel="stylesheet" href="../../assets/css/LArea.css">
 </head>
 <body>
 <div id="app" v-chock>
-    <mt-popup
-            v-model="popupVisible"
-            position="bottom">
-        <mt-picker :slots="myAddressSlots" @change="onCityValuesChange" showToolbar value-key="name" :itemHeight="40">
-        </mt-picker>
-    </mt-popup>
+    <div class="mod_address_slide show" @click="closeCity">
+        <div class="mod_address_slide_main type_flex" @click.stop>
+            <div class="mod_address_slide_head control_box">
+                <span class="" @click="closeCity">取消</span>
+                <span class="right" @click="send_city">确定</span>
+            </div>
+            <div class="mod_address_slide_body">
+                <ul class="mod_address_slide_tabs_1">
+                    <li :class="[showProvince?'cur':'']" @click="showp"><span>{{province?province:'请选择'}}</span></li>
+                    <li :class="[showCity?'cur':'']" @click="showc"><span>{{city?city:'请选择'}}</span></li>
+                    <li :class="[showDistrict?'cur':'']" @click="showd"><span>{{district?district:'请选择'}}</span></li>
+                </ul>
+                <ul class="mod_address_slide_list_2" v-show="showProvince">
+                    <li :class="indp==index?'on':''" v-for="(item,index) in listp" @click="chooseP(index)">
+                        {{item.name}}
+                    </li>
+                </ul>
+                <ul class="mod_address_slide_list_2" v-show="showCity">
+                    <li :class="indc==index?'on':''" v-for="(item,index) in listc" @click="chooseC(index)">
+                        {{item.name}}
+                    </li>
+                </ul>
+                <ul class="mod_address_slide_list_2" v-show="showDistrict">
+                    <li :class="indd==index?'on':''" v-for="(item,index) in listd" @click="chooseD(index)">
+                        {{item.name}}
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
 </div>
 </body>
 </html>
@@ -32,99 +57,104 @@
 <script type="text/javascript" src="../../assets/js/vue.min.js"></script>
 <script type="text/javascript" src="../../assets/js/index.js"></script>
 <script type="text/javascript" src="../../assets/js/public.js"></script>
-<script type="text/javascript"
-        src="https://res.wx.qq.com/mmbizwap/zh_CN/htmledition/js/vconsole/3.0.0/vconsole.min.js"></script>
 <script>
-    new VConsole();
-</script>
-<script>
-    window.apiready = function () {
-        var app = new Vue({
-            el: '#app',
-            data: {
-                popupVisible: true,
-                region: '',//三级地址
-                province: '',//省
-                city: '',//市
-                area: '',//县
-                provinceCode: '',//省级代码
-                cityCode: '', //市级代码
-                areaCode: '',//县级代码
-                regionInit: false,//禁止地区选择器自动初始化，picker组件会默认进行初始化，导致一进入页面就会默认选中一个初始3级地址
-                myAddressSlots: [//省
-                    {
-                        flex: 1,
-                        values: _getProvinceList(), //省份数组
-                        className: 'slot1',
-                        textAlign: 'center'
-                    },
-                    //分隔符
-                    {
-                        divider: true,
-                        content: '-',
-                        className: 'slot2'
-                    },
-                    //市
-                    {
-                        flex: 1,
-                        values: _getCityList('11'),
-                        className: 'slot3',
-                        textAlign: 'center'
-                    },
-                    {
-                        divider: true,
-                        content: '-',
-                        className: 'slot4'
-                    },
-                    //县
-                    {
-                        flex: 1,
-                        values: _getRegionList('1101'),
-                        className: 'slot5',
-                        textAlign: 'center'
-                    }
-                ],
-            },
-            created: function () {
-                apiready = function () {
-                }
-            },
-            methods: {
-                // 选择地址
-                onCityValuesChange(picker, values) {
-                    if (app.regionInit) {
-                        //取值并赋值
-                        // alert(JSON.stringify(values))
-                        if (values[0] && values[1] && values[2]) {
-                            app.region = values[0]["name"] + values[1]["name"] + values[2]["name"];
-                            app.province = values[0]["name"];
-                            app.city = values[1]["name"];
-                            app.county = values[2]["name"];
-                            app.provinceCode = values[0]["code"];
-                            app.cityCode = values[1]["code"];
-                            app.countyCode = values[2]["code"];
-                            // console.log("省:")
-                            // console.table(picker.getSlotValues(0));
-                            // console.log("省/市/区:")
-                            // console.table(picker.getValues());
-                            //给市、县赋值
-                            if (_getCityList(values[0]["code"]).indexOf(values[0]) > 0 && _getCityList(values[0]["code"]).length > 0) {
-                                picker.setSlotValues(1, _getCityList(13));
-                            } else {
-                            }
-                            // picker.setSlotValues(2, _getRegionList(values[1]["code"]));
-                        } else {
-                            console.log("数据不全");
-                            toastMsg('数据不全')
-                        }
-                    } else {
-                        app.regionInit = true;
-                    }
-                },
-                closeCity: function () {
-                    api.closeFrame();
-                }
+    var app = new Vue({
+        el: '#app',
+        data: {
+            showProvince: true,
+            showCity: false,
+            showDistrict: false,
+            province: '',
+            city: '',
+            district: '',
+            indp: '',
+            indc: '',
+            indd: '',
+            listp: [],
+            listc: [],
+            listd: []
+        },
+        created: function () {
+            apiready = function () {
+                app._getProvinceList();
             }
-        })
-    }
+        },
+        methods: {
+            // 获取省市getProvinceList
+            _getProvinceList: function () {
+                ApiAjax('api/getProvinceList', {}, function (ret) {
+                    app.listp = ret.data;
+                });
+            },
+            // 获取市列表getCityList
+            _getCityList: function (province_code) {
+                ApiAjax('api/getCityList', {province_code: province_code}, function (ret) {
+                    app.listc = ret.data;
+                })
+            },
+            // 获取区列表getRegionList
+            _getRegionList: function (city_code = '1101') {
+                ApiAjax('api/getRegionList', {
+                    city_code: city_code
+                }, function (ret) {
+                    app.listd = ret.data;
+                });
+            },
+            chooseP: function (index) {
+                app.indp = index;
+                app._getCityList(app.listp[index].code);
+                app.province = app.listp[index].name;
+                app.city = '';
+                app.district = '';
+                app.showc();
+            },
+            chooseC: function (index) {
+                app.indc = index;
+                app._getRegionList(app.listc[index].code);
+                app.city = app.listc[index].name;
+                app.district = '';
+                app.showd();
+            },
+            chooseD: function (index) {
+                app.indd = index;
+                app.district = app.listd[index].name
+            },
+            showp: function () {
+                app.showProvince = true;
+                app.showCity = false;
+                app.showDistrict = false;
+                app.listc = [];
+                app.listd = [];
+            },
+            showc: function () {
+                app.showProvince = false;
+                app.showCity = true;
+                app.showDistrict = false;
+                app.listd = [];
+            },
+            showd: function () {
+                app.showProvince = false;
+                app.showCity = false;
+                app.showDistrict = true;
+            },
+
+            send_city: function () {
+                api.sendEvent({
+                    name: 'city_event',
+                    extra: {
+                        province: app.province,
+                        city: app.city,
+                        district: app.district,
+                        province_code: app.listp[app.indp].code,
+                        city_code: app.listc[app.indc].code,
+                        region_code: app.listd[app.indc].code,
+                    }
+                });
+                app.closeCity();
+            },
+            closeCity: function () {
+                api.closeFrame();
+            }
+        }
+    })
 </script>

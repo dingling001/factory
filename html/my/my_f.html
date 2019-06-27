@@ -19,7 +19,7 @@
 
         .my_head {
             background: linear-gradient(-90deg, #F11C15, #F17977);
-            height: 2.37rem;
+            height: 2.4rem;
             position: relative;
             box-shadow: 0 4px 7px 2px rgba(246, 122, 118, 0.33);
         }
@@ -268,10 +268,10 @@
             }
         },
         methods: {
+            // 获取我的个人信息
             _getMyinfo: function () {
-                loadEnd('my_f')
+                loadEnd('my_f');
                 ApiAjax('my/getMyinfo', {token: getToken()}, function (ret, err) {
-                    loadEnd('my_f');
                     // alert(JSON.stringify(ret))
                     app.my_info = ret.data;
                 })

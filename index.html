@@ -6,99 +6,92 @@
           content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
     <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
     <title>加工宝</title>
-    <link rel="stylesheet" type="text/css" href="assets/css/api.css"/>
+    <script type="text/javascript" src="assets/js/api.js"></script>
+    <script type="text/javascript">
+        apiready = function () {
+            var firstStart = $api.getStorage('firstStart');
+            var fac_token = $api.getStorage('fac_token');
+            api.setStatusBarStyle({
+                style: 'dark',
+            });
+            // api.removeLaunchView();
+            //判断条件 
+            if (!firstStart) {
+                openGuide();//首次下载安装操作 
+            } else if (firstStart && fac_token) {
+                openIndex()
+            } else if (firstStart && !fac_token) {
+                openLogin();//不是首次未登录
+            } else {
+                // alert('error')
+            }
+            // openGuide()
+            // openIndex()
+        };
+
+        // 跳转启动页
+        function openGuide() {
+            var headerH = $api.offset($api.dom('header')).h;
+            $api.fixStatusBar($api.dom('header'));
+            api.openFrameGroup({
+                name: 'welcome',
+                bounces: false,
+                index: 0,
+                rect: {
+                    x: 0,
+                    y: headerH,
+                    w: 'auto',
+                    h: api.winHeight - headerH
+                },
+                scrollEnabled: true,
+                frames: [{
+                    name: 'welcome_1',
+                    url: './html/welcome/welcome_frame_1.html',
+                    bounces: false,
+                    bgColor: 'widget://assets/image/welcome/1.jpg'
+                }, {
+                    name: 'welcome_2',
+                    url: './html/welcome/welcome_frame_2.html',
+                    bounces: false,
+                    bgColor: 'widget://assets/image/welcome/2.jpg'
+                }]
+            }, function (ret, err) {
+                var index = ret.index;
+                if (index === 1) {
+                    $api.setStorage('firstStart', '1');
+                }
+            });
+        }
+
+        // 跳转到登录
+        function openLogin() {
+            api.openFrame({
+                name: 'login_index',
+                url: './html/login/login_index.html',
+                rect: {
+                    x: 0,
+                    y: 0,
+                    w: 'auto',
+                    h: 'auto'
+                },
+                bgColor: '#fff',
+            });
+        }
+
+        // 跳转到首页
+        function openIndex() {
+            api.openWin({
+                name: 'index_win',
+                url: './html/common/index_win.html',
+                slidBackEnabled: false,
+                reload: true,
+                vScrollBarEnabled: false,
+                hScrollBarEnabled: false,
+            });
+        }
+    </script>
 </head>
 <body style="background: transparent">
 <header style="height: 44px"></header>
 </body>
 </html>
-<script type="text/javascript" src="assets/js/api.js"></script>
-<script type="text/javascript"
-        src="https://res.wx.qq.com/mmbizwap/zh_CN/htmledition/js/vconsole/3.0.0/vconsole.min.js"></script>
-<script>
-    new VConsole();
-</script>
-<script type="text/javascript">
-    apiready = function () {
-        var firstStart = $api.getStorage('firstStart');
-        var fac_token = $api.getStorage('fac_token');
-        api.setStatusBarStyle({
-            style: 'dark',
-        });
-        // api.removeLaunchView();
-        //判断条件 
-        if (!firstStart) {
-            openGuide();//首次下载安装操作 
-        } else if (firstStart && fac_token) {
-            openIndex()
-        } else if (firstStart && !fac_token) {
-            openLogin();//不是首次未登录
-        } else {
-            // alert('error')
-        }
-        // openGuide()
-        // openIndex()
-    };
-
-
-    // 跳转启动页
-    function openGuide() {
-        var headerH = $api.offset($api.dom('header')).h;
-        $api.fixStatusBar($api.dom('header'));
-        api.openFrameGroup({
-            name: 'welcome',
-            bounces: false,
-            index: 0,
-            rect: {
-                x: 0,
-                y: headerH,
-                w: 'auto',
-                h: api.winHeight -headerH
-            },
-            scrollEnabled: true,
-            frames: [{
-                name: 'welcome_1',
-                url: './html/welcome/welcome_frame_1.html',
-                bounces: false,
-                bgColor: 'widget://assets/image/welcome/1.jpg'
-            }, {
-                name: 'welcome_2',
-                url: './html/welcome/welcome_frame_2.html',
-                bounces: false,
-                bgColor: 'widget://assets/image/welcome/2.jpg'
-            }]
-        }, function (ret, err) {
-            var index = ret.index;
-            if (index === 1) {
-                $api.setStorage('firstStart', '1');
-            }
-        });
-    }
-
-    // 跳转到登录
-    function openLogin() {
-        api.openFrame({
-            name: 'login_index',
-            url: './html/login/login_index.html',
-            rect: {
-                x: 0,
-                y: 0,
-                w: 'auto',
-                h: 'auto'
-            },
-            bgColor: '#fff',
-        });
-    }
-
-    // 跳转到首页
-    function openIndex() {
-        api.openWin({
-            name: 'index_win',
-            url: './html/common/index_win.html',
-            slidBackEnabled: false,
-            reload: true,
-            vScrollBarEnabled: false,
-            hScrollBarEnabled: false,
-        });
-    }
-</script>

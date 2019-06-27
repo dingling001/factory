@@ -31,6 +31,7 @@ function ApiAjax(url, subDatas, callbackfun) {
         if (ret.code == 1) {
             callbackfun(ret, err);
         } else if (ret.code == -3 || ret.code == 5) {
+            $api.rmStorage('fac_token');
             openView('login', 'login/login', '账号登录')
             // api.openFrame({
             //     name: 'login',

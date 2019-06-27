@@ -11,7 +11,7 @@
     <link rel="stylesheet" href="../../assets/css/api.css">
     <link rel="stylesheet" href="../../assets/css/style.css">
     <!--<link rel="stylesheet" href="https://unpkg.com/mint-ui@1/lib/style.css">-->
-    <link rel="stylesheet" href="http://at.alicdn.com/t/font_1220513_2ea6fr0vbal.css">
+    <link rel="stylesheet" href="http://at.alicdn.com/t/font_1220513_m9v7vwkp1pp.css">
     <style>
 
         .input_box {
@@ -235,6 +235,30 @@
             font-size: 18px;
             color: #CECED1;
         }
+
+        .infoselect .is-selected {
+            color: #333;
+        }
+
+
+        ul {
+            padding: 0;
+            list-style: none;
+            display: flex;
+            align-items: center;
+            /*justify-content: flex-end;*/
+            /*justify-content: space-between;*/
+            flex-wrap: wrap;
+        }
+
+        li {
+            height: 30px;
+            display: inline-block;
+            text-align: center;
+            line-height: 30px;
+            cursor: pointer;
+            margin-right: .1rem;
+        }
     </style>
 </head>
 <body>
@@ -244,7 +268,7 @@
         <!--<div class="infoinput">发布日期：{{d_info.create_time}}</div>-->
     </div>
     <div class="hr"></div>
-    <form>
+      <form>
         <div class="input_box">
             <span class="label">标题</span>
             <div class="infoinput"><input type="text" placeholder="请输入订单标题"></div>
@@ -253,18 +277,21 @@
             <span class="label">地区</span>
             <div class="infoinput">
                 <div class="infoselect">
-                    <!--<select v-if="provinceArr.length>0">-->
-                        <!--&lt;!&ndash;<option value="" disabled selected>请完善地区</option>&ndash;&gt;-->
-                        <!--<option value="item.code" v-for="item in provinceArr">{{item.name}}</option>-->
-                    <!--</select>-->
-                    请完善地区
+                    <span v-if="province&&city&&district" class="is-selected">{{province}}-{{city}}-{{district}}</span>
+                    <span v-else>请完善地区</span>
                     <span class="iconfont icon-arrow-right"></span>
                 </div>
             </div>
         </div>
-        <div class="input_box type">
+        <div class="input_box">
             <span class="label">类型</span>
-            <div class="infoinput">类型</div>
+            <div class="infoinput">
+                <ul>
+                    <li v-for="c,index of cities"   @click="checkedBox(index)">
+                        <span :class="['iconfont',arr.includes(index)?'icon-xuanzhong':'icon-xuanzhong1']" ></span>{{c}}
+                    </li>
+                </ul>
+            </div>
         </div>
         <div class="input_box ">
             <span class="label">材质</span>
@@ -336,54 +363,51 @@
     var app = new Vue({
         el: '#app',
         data: {
-            provinceArr: []
+            province: '',
+            city: '',
+            district: '',
+            province_code: '',
+            city_code: '',
+            region_code: '',
+            cate_list: [],
+            cities: ["上海", "北北京北京京", "广州", "重庆", "西安","北京", "广州"],
+            arr: []
         },
         created: function () {
             apiready = function () {
-                app._getProvinceList()
+                api.addEventListener({
+                    name: 'city_event'
+                }, function (ret, err) {
+                    if (ret) {
+                        app.province = ret.value.province;
+                        app.city = ret.value.city;
+                        app.district = ret.value.district;
+                        app.province_code = ret.value.province_code;
+                        app.city_code = ret.value.city_code;
+                        app.region_code = ret.value.region_code;
+                    }
+                });
             }
         },
         methods: {
             // 发布订单
-            _getOrderDetail: function () {
-                ApiAjax('api/getOrderDetail', {
-                    token: getToken(), order_id: app.id
-                }, function (ret, err) {
-                    if (ret.code == 1) {
-                        app.d_info = ret.data;
-                    }
-                });
-            },
-            // 获取省列表getProvinceList
-            _getProvinceList: function () {
-                ApiAjax('api/getProvinceList', {}, function (ret) {
-                    var provinceArr = [];
-                    var data = ret.data;
-                    data.forEach(function (item) {
-                        var obj = {};
-                        obj.name = item.name;
-                        obj.code = item.code;
-                        provinceArr.push(obj);
+            checkedBox: function (i) {
+                const contains = (() =>
+                        Array.prototype.includes
+                            ? (arr, value) => arr.includes(value)
+                            : (arr, value) => arr.some(el => el === value)
+                )();
+                if (contains(app.arr, i)) {
+                    //includes()方法判断是否包含某一元素,返回true或false表示是否包含元素，对NaN一样有效
+                    //filter()方法用于把Array的某些元素过滤掉，filter()把传入的函数依次作用于每个元素，然后根据返回值是true还是false决定保留还是丢弃该元素：生成新的数组
+                    app.arr = app.arr.filter(function (ele) {
+                        return ele != i;
                     });
-                    app.provinceArr = provinceArr;
-                });
-                // $api.setStorage('provinceArr', provinceArr);
-            },
-            _getCityList: function (province_code = '11') {
-                var cityArr = [];
-                ApiAjax('api/getCityList', {
-                    province_code: province_code
-                }, function (ret) {
-                    var data = ret.data;
-                    data.forEach(function (item) {
-                        var obj = {};
-                        obj.name = item.name;
-                        obj.code = item.code;
-                        cityArr.push(obj);
-                    });
-                    // app.slots[2].values = cityArr;
-                });
-                // $api.setStorage('cityArr', cityArr);
+                    //this.arr=this.arr.filter((ele)=>ele!=i);
+                    //filter()为假时删除
+                } else {
+                    this.arr.push(i);
+                }
             },
             openCity: function () {
                 api.openFrame({
@@ -394,6 +418,11 @@
                         y: 0,
                         w: 'auto',
                         h: 'auto'
+                    },
+                    animation: {
+                        type: "none",                //动画类型（详见动画类型常量）
+                        subType: "from_bottom",       //动画子类型（详见动画子类型常量）
+                        duration: 1000                //动画过渡时间，默认300毫秒
                     },
                     reload: true,
                     bounces: false,

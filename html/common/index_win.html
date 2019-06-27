@@ -112,7 +112,7 @@
                 },
             ],
             cate_count: 0,
-            iphonex:false
+            iphonex: false
         },
         created: function () {
             apiready = function () {
@@ -244,7 +244,11 @@
             },
             // 跳转发布
             relFn: function () {
-                openView('order_rel', 'order/order_rel', '发布订单')
+                if (getToken()) {
+                    openView('order_rel', 'order/order_rel', '发布订单')
+                } else {
+                    openView('login', 'login/login', '登录')
+                }
             }
         }
     })
