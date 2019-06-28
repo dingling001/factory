@@ -16,7 +16,7 @@ function openWin(winName, url) {
     });
 }
 
-function ApiAjax(url, subDatas, callbackfun) {
+function ApiAjax(url, subDatas, callbackfun, file = {}) {
     // console.log(url);
     // console.log(JSON.stringify(subDatas));
     // console.log(callbackfun);
@@ -25,7 +25,8 @@ function ApiAjax(url, subDatas, callbackfun) {
         method: 'post',
         timeout: 1000,
         data: {
-            values: subDatas
+            values: subDatas,
+            files: file
         }
     }, function (ret, err) {
         if (ret.code == 1) {
@@ -370,11 +371,7 @@ function checkDate(date, type) {
                 return true;
             }
         } else {
-            if (startDate < endDate) {
-                return false;
-            } else {
-                return true;
-            }
+            return startDate - endDate < 0;
         }
 
     }
@@ -532,59 +529,3 @@ function escape2Html(str) {
     });
 }
 
-// 获取省列表getProvinceList
-function _getProvinceList() {
-    var provinceArr = [];
-    ApiAjax('api/getProvinceList', {}, function (ret) {
-        var data = ret.data;
-        data.forEach(function (item) {
-            var obj = {};
-            obj.name = item.name;
-            obj.code = item.code;
-            provinceArr.push(obj);
-        });
-    });
-    // $api.setStorage('provinceArr', provinceArr);
-    return provinceArr;
-}
-
-// 获取市列表getCityList
-function _getCityList(province_code) {
-    var cityArr = [];
-    ApiAjax('api/getCityList', {
-        province_code: province_code
-    }, function (ret) {
-        var data = ret.data;
-        // alert(JSON.stringify(ret))
-        data.forEach(function (item) {
-            var obj = {};
-            obj.name = item.name;
-            obj.code = item.code;
-            cityArr.push(obj);
-        });
-        // app.slots[2].values = cityArr;
-        // alert(JSON.stringify(cityArr))
-    });
-    // $api.setStorage('cityArr', cityArr);
-    // alert(province_code)
-    return cityArr
-}
-
-// 获取区列表getRegionList
-function _getRegionList(city_code = '1101') {
-    var countyArr = [];
-    ApiAjax('api/getRegionList', {
-        city_code: city_code
-    }, function (ret) {
-        var data = ret.data;
-        data.forEach(function (item) {
-            var obj = {};
-            obj.name = item.name;
-            obj.code = item.code;
-            countyArr.push(obj);
-        });
-        // app.slots[5].values = countyArr;
-    });
-    // $api.setStorage('countyArr', countyArr);
-    return countyArr
-}
