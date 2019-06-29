@@ -15,7 +15,7 @@
     <link rel="stylesheet" href="../../assets/css/LArea.css">
 </head>
 <body>
-<div id="app" v-chock>
+<div id="app" v-cloak>
     <div class="mod_address_slide show" @click="closeCity">
         <div class="mod_address_slide_main type_flex" @click.stop>
             <div class="mod_address_slide_head control_box">
@@ -139,7 +139,7 @@
             },
 
             send_city: function () {
-                if (app.indc && app.indp && app.indd) {
+                if (app.indp >= 0 && app.indc >= 0 && app.indd >= 0) {
                     api.sendEvent({
                         name: 'city_event',
                         extra: {
@@ -152,8 +152,6 @@
                         }
                     });
                     app.closeCity();
-                } else {
-
                 }
             },
             closeCity: function () {

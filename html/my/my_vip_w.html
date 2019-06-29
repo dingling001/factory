@@ -17,26 +17,13 @@
         }
 
         .my_head {
-            background: linear-gradient(-90deg, #E9D5AC, #C0A069);
+            background: linear-gradient(left, #E9D5AC, #C0A069);
+            background: -webkit-linear-gradient(left, #C0A069 , #E9D5AC); /* Safari 5.1 - 6.0 */
+            background: -o-linear-gradient(right, #C0A069, #E9D5AC); /* Opera 11.1 - 12.0 */
+            background: -moz-linear-gradient(right, #C0A069, #E9D5AC); /* Firefox 3.6 - 15 */
+            background: linear-gradient(to right, #C0A069 , #E9D5AC); /* 标准的语法 */
             height: 2.37rem;
             position: relative;
-            box-shadow: 0 4px 7px 2px rgba(246, 122, 118, 0.33);
-        }
-
-        .company_name {
-            font-size: 17px;
-            color: #333;
-            padding: .5rem .33rem;
-            background-color: #fff;
-            position: absolute;
-            bottom: -.6rem;
-            left: 0;
-            right: 0;
-            z-index: 10;
-            margin: 0 auto;
-            width: 93.6%;
-            border-radius: 5px;
-            box-shadow: -1px 3px 2px 0px rgba(0, 0, 0, 0.08);
         }
 
         .order_index {
@@ -73,7 +60,7 @@
 </head>
 <body class="my_body">
 <!--<div id="loadStart"></div>-->
-<div id="app" v-chock>
+<div id="app" v-cloak>
     <header class="my_head">
         <div class="order_index">
             <div class="close_left" @click="close_set"><span class="iconfont icon-fanhui"></span></div>

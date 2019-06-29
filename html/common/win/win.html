@@ -15,6 +15,7 @@
             height: auto;
             font-size: 18px;
             color: #424242;
+            overflow: hidden;
         }
 
         .index_headers {
@@ -37,6 +38,7 @@
             padding-right: 0.5rem;
             color: #333;
             font-weight: bold;
+            font-size: 17px;
         }
 
         .close_left {
@@ -51,11 +53,34 @@
             bottom: -0.1rem;
             content: '';
         }
+
+        .vip_head {
+            background: linear-gradient(left, #C0A069, #E9D5AC);
+            background: -webkit-linear-gradient(left, #C0A069, #E9D5AC); /* Safari 5.1 - 6.0 */
+            background: -o-linear-gradient(right, #C0A069, #E9D5AC); /* Opera 11.1 - 12.0 */
+            background: -moz-linear-gradient(right, #C0A069, #E9D5AC); /* Firefox 3.6 - 15 */
+            background: linear-gradient(to right, #C0A069, #E9D5AC); /* 标准的语法 */
+        }
+
+        .vip_head .index_headers {
+            border-bottom: 1px solid;
+            border-image: -webkit-linear-gradient(left, #C0A069, #E9D5AC);
+            border-image: -moz-linear-gradient(right, #C0A069, #E9D5AC);
+            border-image: linear-gradient(to right, #C0A069, #E9D5AC);
+        }
+
+        .vip_head .icon-fanhui {
+            color: #fff;
+        }
+
+        .vip_head div {
+            color: #fff;
+        }
     </style>
 </head>
 <body>
 <div id='app' v-cloak>
-    <header id="header">
+    <header id="header" :class="{vip_head:vip==1}">
         <div class="index_headers">
             <div class="close_left" @click="closeWin"><span class="iconfont icon-fanhui"></span></div>
             <div class="win_mid">{{winTitle}}</div>
@@ -66,34 +91,27 @@
 </body>
 </html>
 <script type="text/javascript" src="../../../assets/js/api.js"></script>
-<script type="text/javascript" src="../../../assets/js/public.js"></script>
 <script type="text/javascript" src="../../../assets/js/fastclick.js"></script>
 <script>
     new FastClick(document.body);
 </script>
 <script type="text/javascript" src="../../../assets/js/vue.min.js"></script>
-<script type="text/javascript" src="../../../assets/js/axios.min.js"></script>
+<script type="text/javascript" src="../../../assets/js/public.js"></script>
 <script type="text/javascript">
-    window.apiready = function () {
-        var app = new Vue({
-            el: '#app',
-            data: {
-                winTitle: api.pageParam.winTitle || '',
-                win: api.pageParam.win,
-                pageload: 0
-            },
-            created: function () {
-                apiready = function () {
-                    api.setWinAttr({
-                        slidBackEnabled: false
-                    });
-                }
-            },
-            mounted: function () {
+    var app = new Vue({
+        el: '#app',
+        data: {
+            winTitle: '',
+            win: '',
+            pageload: 0,
+            savevalue: 0,
+            vip: 0
+        },
+        created: function () {
+        },
+        mounted: function () {
+            apiready = function () {
                 $api.fixStatusBar($api.dom('header'));
-                api.setStatusBarStyle({
-                    style: 'dark'
-                });
                 if (api.systemType == "ios") {
                     api.openFrame({
                         name: api.pageParam.fmName,
@@ -128,7 +146,7 @@
                                     h: 'auto'
                                 },
                                 pageParam: api.pageParam.fm,
-                                bounces: false,
+                                bounces: true,
                                 vScrollBarEnabled: false,
                                 hScrollBarEnabled: false,
                                 softInputBarEnabled: false
@@ -137,12 +155,43 @@
                         app.pageload++;
                     });
                 }
-            },
-            methods: {
-                closeWin: function () {
-                    closeWindow();
+                app.winTitle = api.pageParam.winTitle;
+                app.vip = api.pageParam.win.vip;
+                if (app.vip == 1) {
+                    api.setStatusBarStyle({
+                        style: 'light'
+                    });
+                } else {
+                    api.setStatusBarStyle({
+                        style: 'dark'
+                    });
                 }
+                api.addEventListener({
+                    name: 'saveData'
+                }, function (ret, err) {
+                    alert(JSON.stringify(ret.value));
+                });
             }
-        })
-    }
+        },
+        methods: {
+            closeWin: function () {
+                if (app.savevalue == 0) {
+                    closeWindow();
+                } else if (app.savevalue == 1) {
+
+                }
+            },
+            // 是否缓存发布订单信息
+            cacheData: function () {
+                api.confirm({
+                    title: '将此次编辑保留？',
+                    msg: 'testmsg',
+                    buttons: ['不保留', '保留']
+                }, function (ret, err) {
+                    var index = ret.buttonIndex;
+
+                });
+            },
+        }
+    })
 </script>

@@ -29,25 +29,11 @@ function ApiAjax(url, subDatas, callbackfun, file = {}) {
             files: file
         }
     }, function (ret, err) {
-        if (ret.code == 1) {
-            callbackfun(ret, err);
-        } else if (ret.code == -3 || ret.code == 5) {
+        if (ret.code == -3 || ret.code == 5) {
             $api.rmStorage('fac_token');
             openView('login', 'login/login', '账号登录')
-            // api.openFrame({
-            //     name: 'login',
-            //     url: 'widget://html/login/login.html',
-            //     rect: {
-            //         x: 0,
-            //         y: 0,
-            //         w: 'auto',
-            //         h: 'auto'
-            //     },
-            //     bgColor: '#fff',
-            // });
         } else {
-            toastMsg(ret.message || '出错了')
-            ERROR = ret.message || '网络问题'
+            callbackfun(ret, err);
         }
     });
 }

@@ -183,7 +183,7 @@
 </head>
 <body class="my_body">
 <div id="loadStart"></div>
-<div id="app" v-chock>
+<div id="app" v-cloak>
     <div class="my_head">
         <div class="order_index">
             <span></span>
@@ -213,7 +213,7 @@
             <span class="iconfont icon-wodebaojia"></span>
             <span>我的报价</span>
         </div>
-        <div class="my_item" @click="go_item('my_vip_w')">
+        <div class="my_item" @click="go_view('my_vip','会员中心')">
             <span class="iconfont icon-huiyuanzhongxin"></span>
             <span>会员中心</span>
         </div>
@@ -243,11 +243,6 @@
 </script>
 <script type="text/javascript" src="../../assets/js/vue.min.js"></script>
 <script type="text/javascript" src="../../assets/js/index.js"></script>
-<script type="text/javascript"
-        src="https://res.wx.qq.com/mmbizwap/zh_CN/htmledition/js/vconsole/3.0.0/vconsole.min.js"></script>
-<script>
-    new VConsole();
-</script>
 <script>
     var app = new Vue({
         el: '#app',
@@ -273,7 +268,12 @@
                 loadEnd('my_f');
                 ApiAjax('my/getMyinfo', {token: getToken()}, function (ret, err) {
                     // alert(JSON.stringify(ret))
-                    app.my_info = ret.data;
+                    if (ret.code == 1) {
+                        app.my_info = ret.data;
+
+                    } else {
+
+                    }
                 })
             },
             // 特殊头
@@ -286,7 +286,7 @@
             },
             // 公共头
             go_view: function (url, name) {
-                openView(url, 'my/' + url, name)
+                openView(url, 'my/' + url, name, false, false, false, {vip: 1})
             },
             login: function () {
                 openView('login', 'login/login', '账号登录')

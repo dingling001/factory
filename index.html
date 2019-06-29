@@ -1,5 +1,6 @@
 <!doctype html>
 <html>
+
 <head>
     <meta charset="utf-8">
     <meta name="viewport"
@@ -8,7 +9,7 @@
     <title>加工宝</title>
     <script type="text/javascript" src="assets/js/api.js"></script>
     <script type="text/javascript">
-        apiready = function () {
+        window.apiready = function () {
             var firstStart = $api.getStorage('firstStart');
             var fac_token = $api.getStorage('fac_token');
             api.setStatusBarStyle({
@@ -17,11 +18,11 @@
             // api.removeLaunchView();
             //判断条件 
             if (!firstStart) {
-                openGuide();//首次下载安装操作 
+                openGuide(); //首次下载安装操作 
             } else if (firstStart && fac_token) {
                 openIndex()
             } else if (firstStart && !fac_token) {
-                openLogin();//不是首次未登录
+                openLogin(); //不是首次未登录
             } else {
                 // alert('error')
             }
@@ -91,7 +92,9 @@
         }
     </script>
 </head>
+
 <body style="background: transparent">
 <header style="height: 44px"></header>
 </body>
+
 </html>

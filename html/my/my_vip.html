@@ -1,0 +1,182 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title></title>
+    <script src="../../assets/js/fontsize.js"></script>
+    <link rel="stylesheet" href="../../assets/css/api.css">
+    <link rel="stylesheet" href="http://at.alicdn.com/t/font_1220513_2apiqln0i2w.css">
+    <style type="text/css">
+        body {
+            background-color: #F9F9FA;
+        }
+
+        .vip_top {
+            background: linear-gradient(left, #E9D5AC, #C0A069);
+            background: -webkit-linear-gradient(left, #C0A069, #E9D5AC); /* Safari 5.1 - 6.0 */
+            background: -o-linear-gradient(right, #C0A069, #E9D5AC); /* Opera 11.1 - 12.0 */
+            background: -moz-linear-gradient(right, #C0A069, #E9D5AC); /* Firefox 3.6 - 15 */
+            background: linear-gradient(to right, #C0A069, #E9D5AC); /* 标准的语法 */
+            height: 2.37rem;
+            position: relative;
+            font-size: 0;
+        }
+
+        .vip_bg {
+            width: 89%;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .vip_bg img {
+            width: 100%;
+        }
+
+        .vip_day {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 90%;
+            display: flex;
+            align-items: center;
+            flex-direction: column;
+            z-index: 1;
+            font-size: 12px;
+            color: #fff;
+            padding: .1rem 0;
+        }
+
+        .vip_day .iconfont {
+            font-weight: 900;
+            font-size: 45px;
+            background: linear-gradient(to top, #C0A069, #E8D3AA);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .vip_day .vip {
+            background: linear-gradient(to top, #C0A069, #E8D3AA);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-size: 24px;
+            font-weight: 900;
+            padding: .1rem 0 0 0;
+        }
+
+        .vip_item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 90%;
+            margin: 0 auto 0.32rem auto;
+            padding: .25rem .3rem 0.25rem 0.45rem;
+            border-radius: 0.2rem;
+            box-shadow: 0px 23px 81px 0px rgba(103, 103, 103, 0.2);
+            background-color: #fff;
+        }
+
+        .vip_l {
+            display: flex;
+            align-items: center;
+            color: #333333;
+            font-size: 15px;
+        }
+
+        .vip_logo {
+            width: .5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: .1rem;
+        }
+
+        .vip_logo img {
+            width: 100%;
+        }
+
+        .vip_r {
+            font-size: 12px;
+            background: linear-gradient(94deg, rgba(192, 160, 105, 1), rgba(233, 213, 172, 1));
+            box-shadow: 0px 9px 28px 0px rgba(195, 164, 110, 0.23);
+            border-radius: 28rem;
+            color: #fff;
+            padding: .1rem .5rem;
+        }
+
+        .vip1 {
+            margin-top: 1.5rem;
+        }
+
+        .vip_item:active {
+            background-color: #F9F9FA;
+        }
+    </style>
+</head>
+<body>
+<div id="app" v-cloak>
+    <div class="vip_top">
+        <div class="vip_bg">
+            <img src="../../assets/image/vip_bg.png" alt="">
+            <span class="vip_day">
+                <span class="iconfont icon-VIPCopy"></span>
+                <span class="vip">VIP会员</span>
+                <span>尚未开通会员</span>
+            </span>
+        </div>
+    </div>
+    <div class="vip_item vip1" @click="openPower('my_vip_power','会员特权')">
+        <div class="vip_l">
+            <div class="vip_logo"><img src="../../assets/image/vip_logo.png" alt=""></div>
+            <span>会员特权</span>
+        </div>
+        <div class="vip_r">去查看</div>
+    </div>
+    <div class="vip_item" @click="openPower('my_vip_apply','申请/续费会员')">
+        <div class="vip_l">
+            <div class="vip_logo"><img src="../../assets/image/vip_apply.png" alt=""></div>
+            <span>申请会员</span>
+        </div>
+        <div class="vip_r">去申请</div>
+    </div>
+</div>
+</body>
+</html>
+<script type="text/javascript" src="../../assets/js/api.js"></script>
+<script type="text/javascript" src="../../assets/js/public.js"></script>
+<script type="text/javascript" src="../../assets/js/fastclick.js"></script>
+<script>
+    new FastClick(document.body);
+</script>
+<script type="text/javascript" src="../../assets/js/vue.min.js"></script>
+<script type="text/javascript" src="../../assets/js/index.js"></script>
+<script>
+    var app = new Vue({
+        el: '#app',
+        data: {
+            vip: ''
+        },
+        created: function () {
+            apiready = function () {
+                api.setFrameAttr({
+                    name: 'my_vip',
+                    bounces: false
+                });
+            }
+        },
+        methods: {
+            openPower: function (name, title) {
+                openView(name, 'my/' + name, title, false, false, false, {vip: 1})
+            }
+
+        }
+    })
+
+</script>
