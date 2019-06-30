@@ -250,7 +250,7 @@
     </div>
     <div class="input_box ">
         <span class="label">订单截止日期</span>
-        <div class="infoinput">{{d_info.emd_time}}</div>
+        <div class="infoinput">{{d_info.end_time}}</div>
     </div>
     <div class="input_box border-0">
         <span class="label">订单备注：</span>
@@ -267,10 +267,11 @@
     <div class="detail_title">订单附件</div>
     <div class="d_file" v-if="d_info.file_path">
         <div class="d_left">
-            <span class="d_img"><img src="../../assets/image/pdf.png" alt=""></span>
-            <span>{{filename}}.{{dot}}<span class="size">({{size}})k</span></span>
+            <!--<span class="d_img"><img src="../../assets/image/pdf.png" alt=""></span>-->
+            <span>材料.{{dot}}<span class="size">({{size / 1000}})k</span></span>
         </div>
-        <div class="d_rbtn" @click="downloadFile">下载附件</div>
+        <div class="d_rbtn" @click="downloadFile" v-if="btnstatus">下载附件</div>
+        <div class="d_rbtn" @click="openmanagerfile" v-else>查看附件</div>
     </div>
     <div v-else class="nodata">暂无附件</div>
     <div class="input_box">
@@ -311,11 +312,6 @@
 </script>
 <script type="text/javascript" src="../../assets/js/vue.min.js"></script>
 <script type="text/javascript" src="../../assets/js/index.js"></script>
-<script type="text/javascript"
-        src="https://res.wx.qq.com/mmbizwap/zh_CN/htmledition/js/vconsole/3.0.0/vconsole.min.js"></script>
-<script>
-    new VConsole();
-</script>
 <script>
     var app = new Vue({
         el: '#app',
@@ -326,7 +322,8 @@
             dot: '',
             size: 0,
             type: 0,
-            offer_list: []
+            offer_list: [],
+            btnstatus: true //是否下载状态
         },
         created: function () {
             apiready = function () {
@@ -336,13 +333,22 @@
                 if (app.type == 3) {
                     // 我的报价详情
                     app._offerDetail()
-                }
-                else if (app.type == 2) {
+                } else if (app.type == 2) {
                     app._offerList();
-                }
-                else {
+                } else {
                     app._getOrderDetail();
                 }
+                api.addEventListener({
+                    name: 'keyback'
+                }, function (ret, err) {
+                    if (ret) {
+                        var downloadManager = api.require('downloadManager');
+                        downloadManager.closeManagerView();
+                    } else {
+                        console.log(JSON.stringify(err));
+                    }
+                });
+                app.checkDownload()
             }
         },
         methods: {
@@ -352,8 +358,11 @@
                     token: getToken(),
                     order_id: app.id
                 }, function (ret, err) {
+                    // alert(JSON.stringify(ret))
                     loadEnd('index_detail');
                     app.d_info = ret.data;
+                    app.d_info.create_time = timestampToTime(app.d_info.create_time);
+                    app.d_info.num = toWan(app.d_info.num)
                     if (ret.data.pics) {
                         for (var i in app.d_info.pics) {
                             app.d_info.pics[i] = imgUrl + app.d_info.pics[i];
@@ -377,33 +386,92 @@
                     activeIndex: index,
                 });
             },
-            // 下载附件
-            downloadFile: function () {
+            // 打开下载管理器
+            openmanagerfile: function () {
                 var downloadManager = api.require('downloadManager');
                 downloadManager.openManagerView({
-                    title: '下载管理'
+                    title: '下载附件'
                 }, function (ret, err) {
                     if (ret) {
-                        alert(JSON.stringify(ret));
-                        downloadManager.enqueue({
-                            url: app.d_info.file_path,
-                            savePath: 'fs://assets/download',
-                            cache: true,
-                            allowResume: true,
-                            title: app.d_info.compname,
-                            networkTypes: 'all'
-                        }, function (ret, err) {
-                            if (ret) {
-                                alert(JSON.stringify(ret));
-                            } else {
-                                // alert(JSON.stringify(err));
-                            }
-                        });
+                        // alert(JSON.stringify(ret))
+                        if (ret.id) {
+                            downloadManager.openDownloadedFile({
+                                id: ret.id
+                            }, function (ret, err) {
+                                alert(JSON.stringify(ret) + 'downopen')
+                                if (ret) {
+                                    // alert(JSON.stringify(ret)+'downopen')
+                                } else {
+                                    toastMsg(ret.msg)
+                                }
+                            });
+                        } else {
+                            // alert(JSON.stringify(err));
+                        }
                     } else {
                         // alert(JSON.stringify(err));
                     }
                 });
             },
+            // 下载附件
+            downloadFile: function () {
+                api.showProgress({
+                    title: '下载中...',
+                    text: '下载附件',
+                    modal: false
+                });
+                var downloadManager = api.require('downloadManager');
+                downloadManager.enqueue({
+                    url: app.d_info.file_path,
+                    // savePath: 'fs://assets/download',
+                    cache: true,
+                    allowResume: true,
+                    // title: app.d_info.compname + '',
+                    networkTypes: 'all'
+                }, function (ret_enqueue, err) {
+                    if (ret_enqueue) {
+                        api.hideProgress();
+                        setTimeout(function () {
+                            downloadManager.query({
+                                ids: []
+                                , status: 3
+                            }, function (ret, err) {
+                                if (ret.data.length > 0) {
+                                    for (var i in ret.data) {
+                                        if (ret_enqueue.id == ret.data[i].id) {
+                                            if (ret.data[i].status == 3) {
+                                                toastMsg('下载成功')
+                                                app.btnstatus = false;
+                                            }
+                                        }
+                                    }
+                                }
+                            });
+                        }, 1000)
+                    } else {
+                        toastMsg()
+                    }
+                });
+            },
+            // 查询下载状态
+            checkDownload: function () {
+                var downloadManager = api.require('downloadManager');
+                downloadManager.query({
+                    ids: []
+                    , status: 3
+                }, function (ret, err) {
+                    if (ret.data.length > 0) {
+                        for (var i in ret.data) {
+                            // if ($api.getStorage('downid') == ret.data[i].id) {
+                            //     if (ret.data[i].status == 3) {
+                            //         app.btnstatus = false;
+                            //     }
+                            // }
+                        }
+                    }
+                });
+            },
+
             // 我的报价详情
             _offerDetail: function () {
                 ApiAjax('my/offerDetail', {
@@ -411,6 +479,7 @@
                     order_id: app.id
                 }, function (ret, err) {
                     loadEnd('index_detail');
+                    // alert(JSON.stringify(ret))
                     app.d_info = ret.data;
                     if (ret.data.pics) {
                         for (var i in app.d_info.pics) {

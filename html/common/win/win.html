@@ -169,7 +169,8 @@
                 api.addEventListener({
                     name: 'saveData'
                 }, function (ret, err) {
-                    alert(JSON.stringify(ret.value));
+                    // alert(JSON.stringify(ret.value));
+                    app.savevalue = ret.value.savevalue;
                 });
             }
         },
@@ -178,18 +179,21 @@
                 if (app.savevalue == 0) {
                     closeWindow();
                 } else if (app.savevalue == 1) {
-
+                    app.cacheData()
                 }
             },
             // 是否缓存发布订单信息
             cacheData: function () {
                 api.confirm({
                     title: '将此次编辑保留？',
-                    msg: 'testmsg',
+                    msg: '',
                     buttons: ['不保留', '保留']
                 }, function (ret, err) {
                     var index = ret.buttonIndex;
-
+                    if (index == 1) {
+                        closeWindow();
+                        $api.rmStorage('postData')
+                    }
                 });
             },
         }

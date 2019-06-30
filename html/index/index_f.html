@@ -147,7 +147,7 @@
             <div class="new_img"><img :src="imgUrl+item.pics" alt=""></div>
             <div class="new_right">
                 <div>
-                    <div class="new_name"><span>{{item.title}}</span><span class="new_num">{{item.num}}件</span></div>
+                    <div class="new_name"><span>{{item.title}}</span><span class="new_num">{{toWan(item.num)}}件</span></div>
                     <div class="new_city">{{item.address}}</div>
                 </div>
                 <div class="new_date">发布日期：{{item.create_time}}</div>

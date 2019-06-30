@@ -16,26 +16,47 @@ function openWin(winName, url) {
     });
 }
 
-function ApiAjax(url, subDatas, callbackfun, file = {}) {
+function ApiAjax(url, subDatas, callbackfun, file = {}, type = false) {
     // console.log(url);
     // console.log(JSON.stringify(subDatas));
     // console.log(callbackfun);
-    api.ajax({
-        url: baseurl + url,
-        method: 'post',
-        timeout: 1000,
-        data: {
-            values: subDatas,
-            files: file
-        }
-    }, function (ret, err) {
-        if (ret.code == -3 || ret.code == 5) {
-            $api.rmStorage('fac_token');
-            openView('login', 'login/login', '账号登录')
-        } else {
-            callbackfun(ret, err);
-        }
-    });
+    if (type) {
+        api.ajax({
+            url: baseurl + url,
+            method: 'post',
+            headers: {
+                'Content-Type': 'application/json;charset=utf-8'
+            },
+            data: {
+                body: subDatas
+            }
+        }, function (ret, err) {
+            if (ret.code == -3 || ret.code == 5) {
+                $api.rmStorage('fac_token');
+                openView('login', 'login/login', '账号登录')
+            } else {
+                callbackfun(ret, err);
+            }
+        })
+    } else {
+        api.ajax({
+            url: baseurl + url,
+            method: 'post',
+            timeout: 1000,
+            data: {
+                values: subDatas,
+                files: file
+            }
+        }, function (ret, err) {
+            if (ret.code == -3 || ret.code == 5) {
+                $api.rmStorage('fac_token');
+                openView('login', 'login/login', '账号登录')
+            } else {
+                callbackfun(ret, err);
+            }
+        });
+    }
+
 }
 
 function offline() {

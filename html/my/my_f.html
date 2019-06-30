@@ -286,7 +286,7 @@
             },
             // 公共头
             go_view: function (url, name) {
-                openView(url, 'my/' + url, name, false, false, false, {vip: 1})
+                openView(url, 'my/' + url, name, false, false, false, {vip: url == 'my_vip' ? 1 : 0})
             },
             login: function () {
                 openView('login', 'login/login', '账号登录')

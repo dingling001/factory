@@ -335,8 +335,8 @@
             <div class="infoinput">
                 <ul>
                     <li v-for="(c,index) of cate_list" @click="checkedBox(c.id)"
-                        :class="{'typeactive':arr.includes(c.id)}">
-                        <span :class="['iconfont',arr.includes(c.id)?'icon-xuanzhong':'icon-xuanzhong1']"></span>{{c.cate_name}}
+                        :class="{'typeactive':postData.cate_ids.includes(c.id)}">
+                        <span :class="['iconfont',postData.cate_ids.includes(c.id)?'icon-xuanzhong':'icon-xuanzhong1']"></span>{{c.cate_name}}
                     </li>
                 </ul>
             </div>
@@ -457,7 +457,9 @@
                         app.postData.region_code = ret.value.region_code;
                     }
                 });
-
+                if ($api.getStorage('posData')) {
+                    app.postData = JSON.parse($api.getStorage('posData'))
+                }
             }
         },
         methods: {
@@ -474,16 +476,16 @@
                             ? (arr, value) => arr.includes(value)
                             : (arr, value) => arr.some(el => el === value)
                 )();
-                if (contains(app.arr, i)) {
+                if (contains(app.postData.cate_ids, i)) {
                     //includes()方法判断是否包含某一元素,返回true或false表示是否包含元素，对NaN一样有效
                     //filter()方法用于把Array的某些元素过滤掉，filter()把传入的函数依次作用于每个元素，然后根据返回值是true还是false决定保留还是丢弃该元素：生成新的数组
-                    app.arr = app.arr.filter(function (ele) {
+                    app.postData.cate_ids = app.postData.cate_ids.filter(function (ele) {
                         return ele != i;
                     });
                     //this.arr=this.arr.filter((ele)=>ele!=i);
                     //filter()为假时删除
                 } else {
-                    app.arr.push(i);
+                    app.postData.cate_ids.push(i);
                 }
             },
             // 打开城市选择
@@ -621,7 +623,7 @@
                     toastMsg('请完善地区');
                     return
                 }
-                if (app.postData.cate_ids.length < 0) {
+                if (app.postData.cate_ids.length <= 0) {
                     toastMsg('至少选择一个分类');
                     return
                 }
@@ -629,7 +631,7 @@
                     toastMsg('请填写材质');
                     return
                 }
-                if (app.postData.num < 0) {
+                if (app.postData.num <= 0) {
                     toastMsg('数量不能少于1');
                     return
                 }
@@ -685,7 +687,7 @@
                     province_code: app.postData.province_code,
                     city_code: app.postData.city_code,
                     region_code: app.postData.region_code,
-                    cate_ids: app.arr,
+                    cate_ids: app.postData.cate_ids,
                     material: app.postData.material,
                     num: app.postData.num,
                     end_time: app.postData.end_time,
@@ -695,13 +697,25 @@
                     linktel: app.postData.linktel,
                     linkman: app.postData.linkman
                 };
-                alert(JSON.stringify(post));
+                // alert(JSON.stringify(post));
+                $api.setStorage('postData', JSON.stringify(post));
                 ApiAjax('order/orderRelease', post, function (ret, err) {
-                    alert(JSON.stringify(ret))
+                    // alert(JSON.stringify(ret))
                     api.hideProgress();
-                    toastMsg('发布成功，等待审核…');
-
-                })
+                    if (ret.code == 1) {
+                        toastMsg('发布成功，等待审核…');
+                        api.openWin({
+                            name: 'index_win',
+                            url: '../common/index_win.html',
+                            slidBackEnabled: false,
+                            reload: true,
+                            vScrollBarEnabled: false,
+                            hScrollBarEnabled: false,
+                        });
+                    } else {
+                        toastMsg(ret.message)
+                    }
+                }, {}, true)
             },
             // 是否缓存
             savedata() {
