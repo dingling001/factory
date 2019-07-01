@@ -4,7 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport"
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">     <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
     <title>忘记密码</title>
     <script src="../../assets/js/fontsize.js"></script>
     <link rel="stylesheet" href="../../assets/css/api.css">
@@ -47,9 +48,7 @@
         },
         created: function () {
             apiready = function () {
-                $api.fixStatusBar($api.dom('header'));
-                app.headerH = $api.offset($api.dom('header')).h;
-                app.first = api.pageParam.first || 0;
+
             }
         },
         methods: {

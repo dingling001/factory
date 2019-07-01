@@ -10,27 +10,10 @@
     <link rel="stylesheet" href="../assets/css/api.css">
     <link rel="stylesheet" href="http://at.alicdn.com/t/font_1220513_y7h38su3rxq.css">
     <style>
-        .input {
-            text-align: left;
-            padding: .15rem;
-            width: 100%;
-            margin: 0;
-
-        }
-
-        .input:focus {
-            border: 0;
-            outline: none;
-        }
-
-        .input::placeholder {
-            text-align: center;
-        }
-
-        form {
-            font-size: 13px;
-            flex: 1;
-            margin: 0 .2rem;
+        #app {
+            font-size: 16px;
+            padding: .5rem;
+            color: #666;
         }
     </style>
 </head>
@@ -56,10 +39,7 @@
             keyword: ''
         },
         created: function () {
-            apiready = function () {
-                $api.fixStatusBar($api.dom('header'));
-                app.headerH = $api.offset($api.dom('header')).h;
-            }
+
         },
         methods: {}
     })
