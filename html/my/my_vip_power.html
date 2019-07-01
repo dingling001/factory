@@ -50,7 +50,8 @@
         <div class="vip_logo"><img src="../../assets/image/vip_logo.png" alt=""></div>
         <span>会员特权</span>
     </div>
-    <div class="p_content"><p>    会员俱乐部 |VIP特权 |VIP等级 |我的账户 |帮助中心 黄金VIP会员 适用于电脑/手机/iPad</p><p>    开通声明: 钻石VIP会员开通黄金VIP会员,将会在钻石VIP会员到期后消耗黄金..</p>
+    <div class="p_content" v-html="pay_info.vip_desc">
+        <!--<p>    会员俱乐部 |VIP特权 |VIP等级 |我的账户 |帮助中心 黄金VIP会员 适用于电脑/手机/iPad</p><p>    开通声明: 钻石VIP会员开通黄金VIP会员,将会在钻石VIP会员到期后消耗黄金..</p>-->
     </div>
 </div>
 </body>
@@ -67,16 +68,23 @@
     var app = new Vue({
         el: '#app',
         data: {
-            vip: ''
+            pay_info: {}
         },
         created: function () {
             apiready = function () {
+                app._getAppInfo();
             }
         },
         methods: {
-            openPower: function () {
-
-            }
+            // 特权信息
+            _getAppInfo: function () {
+                ApiAjax('my/getAppInfo', {token: getToken()}, function (ret, err) {
+                    // alert(JSON.stringify(ret))
+                    if (ret.code == 1) {
+                        app.pay_info = ret.data;
+                    }
+                })
+            },
         }
     })
 </script>

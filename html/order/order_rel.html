@@ -133,7 +133,6 @@
             justify-content: center;
             height: 1.65rem;
             border-radius: 3px;
-            overflow: hidden;
             position: relative;
         }
 
@@ -156,14 +155,16 @@
 
         .pic_item .del {
             position: absolute;
-            right: 0;
-            top: 0;
+            right: -.1rem;
+            top: -.1rem;
             z-index: 10;
             font-size: 0;
             width: .5rem;
             height: .5rem;
             text-align: center;
             line-height: .5rem;
+            border-radius: 50%;
+            background-color: rgba(0, 0, 0, .1);
         }
 
         .pic_item .del .iconfont {
@@ -583,6 +584,7 @@
                     groupName: 'jiagongbao'
                 }, function (ret, err) {
                     if (ret) {
+
                         app.uploadImg(ret.data)
                     }
                 });
@@ -607,6 +609,9 @@
             // 图片预览
             browserImg: function (index) {
                 var imageBrowser = api.require('imageBrowser');
+                for (var i in app.postData.pic_url) {
+                    app.postData.pic_url[i] = imgUrl + app.postData.pic_url[i]
+                }
                 imageBrowser.openImages({
                     imageUrls: app.postData.pic_url,
                     showList: false,

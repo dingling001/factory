@@ -281,7 +281,7 @@
         <span class="label">发单企业</span>
         <div class="infoinput">{{d_info.compname}}</div>
     </div>
-    <div class="input_box">
+    <div class="input_box" @click="callPhone">
         <span class="label">联系方式</span>
         <div class="infoinput">{{d_info.linktel}}</div>
     </div>
@@ -294,11 +294,12 @@
         <div class="infoinput">单价： <span class="price">{{d_info.price}}</span>元</div>
     </div>
     <!--<div class="input_box" v-else-if="type==2" @click="">已有50人报价，查看报价</div>-->
-    <div class="input_box" @click="lookPrice" v-else-if="type==2"><span class="outordernum">已有50人报价，查看报价</span></div>
+    <div class="input_box" @click="lookPrice" v-else-if="type==2"><span class="outordernum">已有{{d_info.offer_count}}人报价，查看报价</span>
+    </div>
     <div v-show="type!=2">
         <div class="tips">注：您的剩余报价次数 <span>{{d_info.free_times}}</span>次</div>
         <div class="vip_box">
-            <div class="vip_btn">会员查看信息</div>
+            <div class="vip_btn" @click="vipShow">会员查看信息</div>
         </div>
     </div>
 </div>
@@ -323,7 +324,8 @@
             size: 0,
             type: 0,
             offer_list: [],
-            btnstatus: true //是否下载状态
+            btnstatus: true, //是否下载状态
+            vip: 0
         },
         created: function () {
             apiready = function () {
@@ -334,10 +336,11 @@
                     // 我的报价详情
                     app._offerDetail()
                 } else if (app.type == 2) {
-                    app._offerList();
+                    app._myOrderDetail();
                 } else {
                     app._getOrderDetail();
                 }
+                app._checkVip();
                 api.addEventListener({
                     name: 'keyback'
                 }, function (ret, err) {
@@ -348,7 +351,7 @@
                         console.log(JSON.stringify(err));
                     }
                 });
-                app.checkDownload()
+                app.checkDownload();
             }
         },
         methods: {
@@ -368,13 +371,14 @@
                             app.d_info.pics[i] = imgUrl + app.d_info.pics[i];
                         }
                     }
-                    if (ret.data.file_path) {
-                        app.dot = getFileType(app.d_info.file_path);
-                        var url = app.d_info.file_path.split("\\");//这里要将 \ 转义一下
-                        app.filename = url[url.length - 1];
-                        app.size = getImageSizeInBytes(app.d_info.file_path);
-                    }
-
+                    setTimeout(function () {
+                        if (ret.data.file_path) {
+                            app.dot = getFileType(app.d_info.file_path);
+                            var url = app.d_info.file_path.split("\\");//这里要将 \ 转义一下
+                            app.filename = url[url.length - 1];
+                            app.size = getImageSizeInBytes(app.d_info.file_path);
+                        }
+                    }, 500)
                 });
             },
             // 图片预览
@@ -471,7 +475,6 @@
                     }
                 });
             },
-
             // 我的报价详情
             _offerDetail: function () {
                 ApiAjax('my/offerDetail', {
@@ -494,7 +497,29 @@
                     }
                 });
             },
-            // 查看报价offerList
+            // 我的外发订单详情
+            _myOrderDetail: function () {
+                ApiAjax('my/myOrderDetail', {
+                    token: getToken(),
+                    order_id: app.id
+                }, function (ret, err) {
+                    loadEnd('index_detail');
+                    // alert(JSON.stringify(ret))
+                    app.d_info = ret.data;
+                    if (ret.data.pics) {
+                        for (var i in app.d_info.pics) {
+                            app.d_info.pics[i] = imgUrl + app.d_info.pics[i];
+                        }
+                    }
+                    if (ret.data.file_path) {
+                        app.dot = getFileType(app.d_info.file_path);
+                        var url = app.d_info.file_path.split("\\");//这里要将 \ 转义一下
+                        app.filename = url[url.length - 1];
+                        app.size = getImageSizeInBytes(app.d_info.file_path);
+                    }
+                });
+            },
+            // 我的报价列表offerList
             _offerList: function () {
                 ApiAjax('my/offerList', {
                     token: getToken(),
@@ -507,7 +532,28 @@
             },
             // 查看报价
             lookPrice: function () {
+                if (app.offer_list.length <= 0) {
+                    toastMsg('暂无人报价')
+                } else {
 
+                }
+            },
+            // 会员查看信息
+            vipShow: function () {
+
+            },
+            // 拨打联系人
+            callPhone: function () {
+
+            },
+            _checkVip: function () {
+                ApiAjax('api/checkVip', {
+                    token: getToken(),
+                }, function (ret, err) {
+                    if (ret.code == 1 && ret.data) {
+                        app.vip = 1;
+                    }
+                })
             }
         }
     })

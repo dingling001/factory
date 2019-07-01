@@ -63,6 +63,10 @@
             width: 100%;
             height: 100%;
         }
+
+        .share_box .icon-shoucang_ {
+            color: #E72424;
+        }
     </style>
 </head>
 <body>
@@ -73,7 +77,8 @@
             <span class="order_detail el1">{{order_title}}</span>
             <div class="share_box">
                 <span class="iconfont icon-fenxiang"></span>
-                <span class="iconfont icon-shoucang" @click="collect_fn"></span></div>
+                <span :class="['iconfont',d_info.collect? 'icon-shoucang_':'icon-shoucang']" @click="collect_fn"></span>
+            </div>
         </div>
     </header>
     <div class="price_btn" id="price_btn" @click="orderPrice" v-show="type!=2">
@@ -102,7 +107,8 @@
             d_info: {},
             type: 0,
             price: 0,
-            showbtn: true
+            showbtn: true,
+            vip: 0
         },
         created: function () {
             apiready = function () {
@@ -113,12 +119,21 @@
                 api.setStatusBarStyle({
                     style: 'dark',
                 });
+                app._checkVip();
                 app._offerDetail();
             }
         },
         methods: {
             // 报价/修改报价
             orderPrice: function () {
+                if (app.vip == 0) {
+                    toastMsg('您还不是会员，不能报价')
+                    return
+                }
+                if (app.d_info.free_times <= 0) {
+                    toastMsg('您的报价次数已用完，请开通会员，不限制报价次数')
+                    return
+                }
                 api.prompt({
                     buttons: ['确定', '取消'],
                     title: app.order_title,
@@ -160,6 +175,7 @@
                     token: getToken(),
                     order_id: app.id
                 }, function (ret, err) {
+                    // alert(JSON.stringify(ret))
                     app.d_info = ret.data;
                     app.price = ret.data.price;
                     app.type = parseFloat(app.price) > 0 ? 3 : app.type;
@@ -193,8 +209,26 @@
             },
             // 收藏
             collect_fn: function () {
-
+                app.d_info.collect = !app.d_info.collect;
+                ApiAjax('api/orderCollect', {
+                    token: getToken(),
+                    order_id: app.id,
+                }, function (res, err) {
+                    if (res.code == 1) {
+                        toastMsg(res.data)
+                    }
+                })
             },
+            // 检查是否是会员
+            _checkVip: function () {
+                ApiAjax('api/checkVip', {
+                    token: getToken(),
+                }, function (ret, err) {
+                    if (ret.code == 1 && ret.data) {
+                        app.vip = 1;
+                    }
+                })
+            }
         }
     })
 </script>

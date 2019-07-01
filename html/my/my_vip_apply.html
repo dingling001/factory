@@ -95,6 +95,7 @@
             border-radius: 0.2rem;
             box-shadow: 0px 23px 81px 0px rgba(103, 103, 103, 0.2);
             background-color: #fff;
+            height: 1rem;
         }
 
         .vip_l {
@@ -136,10 +137,6 @@
             padding: .1rem 0;
         }
 
-        .vip_item:active {
-            background-color: #F9F9FA;
-        }
-
         .icon-weixin {
             color: #6CBA41;
             font-size: 23px;
@@ -170,6 +167,15 @@
         .login_btn {
             margin-top: 1rem;
         }
+
+        .vip_select {
+            font-size: 15px;
+        }
+
+        .vip_select .icon-queding {
+            color: #C0A069;
+            font-size: 22px;
+        }
     </style>
 </head>
 <body>
@@ -177,44 +183,46 @@
     <div class="vip_top">
         <div class="vip_bg">
             <img src="../../assets/image/vip_bg.png" alt="">
+            <!--<img :src="imgUrl+pay_info.vip_pic" alt="">-->
             <div class="vip_day">
                 <div class="vip_year"><span class="iconfont icon-VIPCopy"></span><span class="year">VIP年费会员</span></div>
-                <span class="vip"> ￥1000/年</span>
+                <span class="vip"> ￥{{pay_info.vip_price}}/年</span>
                 <span class="vip_now">立即开通</span>
             </div>
         </div>
     </div>
-    <div class="vip_item vip1">
+    <div class="vip_item vip1" @click="changPayWay(1)">
         <div class="vip_l">
             <div class="vip_logo"><span class="iconfont icon-weixin"></span></div>
             <span>微信支付</span>
         </div>
-        <!--<div class="vip_r">去查看</div>-->
+        <div class="vip_select" v-if="type==1"><span class="iconfont icon-queding"></span></div>
     </div>
-    <div class="vip_item">
+    <div class="vip_item" @click="changPayWay(2)">
         <div class="vip_l">
             <div class="vip_logo"><span class="iconfont icon-zhifubao"></span></div>
             <span>支付宝支付</span>
         </div>
-        <!--<div class="vip_r">去申请</div>-->
+        <div class="vip_select" v-if="type==2"><span class="iconfont icon-queding"></span></div>
     </div>
-    <div class="vip_item">
+    <div class="vip_item" @click="changPayWay(3)">
         <div class="vip_l">
             <div class="vip_logo"><span class="iconfont icon-yinhangka"></span></div>
             <span>银行卡支付</span>
         </div>
-        <!--<div class="vip_r">去申请</div>-->
+        <div class="vip_select" v-if="type==3"><span class="iconfont icon-queding"></span></div>
     </div>
     <div class="notice">
         <span>注：</span>
-        <ul>
-            <li> 微信和支付宝在线支付系统自动开通会员权限</li>
-            <li>银行转账客户请联系平台客服开通</li>
-            <li>需要开发票请联系平台客服</li>
-            <li>平台客服电话：400-800-4004</li>
-        </ul>
+        <!--<ul>-->
+        <!--<li> 微信和支付宝在线支付系统自动开通会员权限</li>-->
+        <!--<li>银行转账客户请联系平台客服开通</li>-->
+        <!--<li>需要开发票请联系平台客服</li>-->
+        <!--<li>平台客服电话：400-800-4004</li>-->
+        <!--</ul>-->
+        <span v-html="pay_info.pay_desc"></span>
     </div>
-    <div class="login_btn">立即支付</div>
+    <div class="login_btn" @click="pay_fn">立即支付</div>
 </div>
 </body>
 </html>
@@ -229,7 +237,10 @@
     var app = new Vue({
         el: '#app',
         data: {
-            vip: ''
+            vip: '',
+            type: 0,
+            pay_info: {},
+            vip_id: 1
         },
         created: function () {
             apiready = function () {
@@ -237,9 +248,106 @@
                     name: 'my_vip_apply',
                     bounces: false
                 });
+                app._getAppInfo();
             }
         },
-        methods: {}
+        methods: {
+            // 支付
+            pay_fn() {
+                if (app.type == 0) {
+                    toastMsg('请选择支付方式')
+                } else if (app.type == 3) {
+                    app.bankPay();
+                }
+                else {
+                    app._recharge();
+                }
+            },
+            // 支付方式
+            changPayWay: function (type) {
+                app.type = type;
+            },
+            // 会员说明
+            _getAppInfo: function () {
+                ApiAjax('my/getAppInfo', {token: getToken()}, function (ret, err) {
+                    if (ret.code == 1) {
+                        app.pay_info = ret.data;
+                    }
+                })
+            },
+            // 生成订单
+            _recharge: function () {
+                ApiAjax('my/recharge', {token: getToken(), vip_id: app.vip_id}, function (ret, err) {
+                    // alert(JSON.stringify(ret));
+                    if (ret.code == 1) {
+                        switch (app.type) {
+                            case 1:
+                                app.wechatPay(ret.data);
+                                break;
+                            case 2:
+                                app.aliPay(ret.data);
+                                break;
+                            default:
+                                return
+                        }
+                    } else {
+                        toastMsg(ret.message)
+                    }
+
+                })
+            },
+            // 微信支付
+            wechatPay: function (pay_order_sn) {
+                var wx = api.require('wxPay');
+                ApiAjax('pay/wxPay', {token: getToken(), pay_order_sn: pay_order_sn}, function (ret, err) {
+                    // alert(JSON.stringify(ret))
+                    if (ret.code == 1) {
+                        setTimeout(function () {
+                            wx.payOrder({
+                                apiKey: ret.data.appid,
+                                orderId: ret.data.prepayid,
+                                mchId: ret.data.partnerid,
+                                nonceStr: ret.data.nonceStr,
+                                timeStamp: ret.data.timeStamp,
+                                package: ret.data.package,
+                                sign: ret.data.sign
+                            }, function (res, err) {
+                                // alert(JSON.stringify(res))
+                                // if (res.status) {
+                                //     //支付成功
+                                // } else {
+                                //     alert(err.code);
+                                // }
+                                // alert(JSON.stringify(err))
+                            });
+                        }, 100)
+
+                    }
+                });
+            },
+            // 支付宝支付
+            aliPay: function (pay_order_sn) {
+                var aliPay = api.require('aliPay');
+                ApiAjax('pay/aliPay', {token: getToken(), pay_order_sn: pay_order_sn}, function (ret, err) {
+                    if (ret.code == 1) {
+                        aliPay.payOrder({
+                            orderInfo: ret.data
+                        }, function (ret, err) {
+                            // alert(JSON.stringify(ret))
+                            if (ret.code == 9000) {
+                                toastMsg('支付成功,正在跳转首页...');
+                            } else {
+                                toastMsg('支付取消')
+                            }
+                        });
+                    }
+                })
+            },
+            // 银行卡支付
+            bankPay: function () {
+                toastMsg('请联系客服人员，线下充值')
+            }
+        }
     })
 
 </script>

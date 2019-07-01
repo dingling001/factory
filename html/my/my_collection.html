@@ -4,13 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport"
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">     <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
     <title></title>
     <script src="../../assets/js/fontsize.js"></script>
     <link rel="stylesheet" href="http://at.alicdn.com/t/font_1220513_njjndgm1akh.css">
     <link rel="stylesheet" href="../../assets/css/api.css">
     <style type="text/css">
-        .new_title{
+        .new_title {
             position: fixed;
             top: 0;
             left: 0;
@@ -19,7 +20,8 @@
             padding: .15rem .25rem;
             background-color: #fff;
         }
-        .new_list{
+
+        .new_list {
             padding: .5rem 0;
         }
     </style>
@@ -28,17 +30,19 @@
 <div id='loadStart'></div>
 <div id="app" v-cloak>
     <div class="new_title">我收藏的订单</div>
-    <div class="new_list">
-        <div class="new_item" v-for="item in 10">
-            <div class="new_img"><img src="../../assets/image/test/b1.png" alt=""></div>
+    <div class="new_list" v-if="order_list.length>0">
+        <div class="new_item" v-for="(item,index) in order_list" @click="go_detail(item.id,item.title)" :key="item.id">
+            <div class="new_img"><img :src="imgUrl+item.pics" alt=""></div>
             <div class="new_right">
                 <div>
-                    <div class="new_name"><span>寻找封头厂家</span><span class="new_num">50000件</span></div>
-                    <div class="new_city">河北省-唐山市</div>
+                    <div class="new_name"><span>{{item.title}}</span><span class="new_num">{{toWan(item.num)}}件</span>
+                    </div>
+                    <div class="new_city">{{item.address}}</div>
                 </div>
-                <div class="new_date">发布日期：2019年5月20日</div>
+                <div class="new_date">发布日期：{{item.create_time}}</div>
             </div>
         </div>
+        <div v-if='showmore&&order_list.length>=perpage' class="enddata">{{showtext}}</div>
     </div>
 </div>
 </body>
@@ -56,14 +60,41 @@
     var app = new Vue({
         el: '#app',
         data: {
-
+            showmore: false,
+            order_list: [],
+            page: 1,
+            perpage: 10,
+            showtext: '加载中...',
         },
         created: function () {
             apiready = function () {
-
-                setTimeout(function () {
-                    loadEnd('order_f')
-                }, 1500)
+                app._myCollectList();
+                // 下拉刷新
+                api.setRefreshHeaderInfo({
+                    // loadingImg: 'widget://assets/image/head.png',
+                    loadingImg: 'widget://assets/image/logo.png',
+                    bgColor: '#fff',
+                    textColor: '#F11C15',
+                    textDown: '下拉刷新...',
+                    textUp: '释放更新...',
+                    showTime: true
+                }, function (ret, err) {
+                    app.order_list = [];
+                    app.page = 1;
+                    app.showtext = '加载中...';
+                    app._myCollectList();
+                    api.refreshHeaderLoadDone()
+                });
+                // 上拉加载
+                api.addEventListener({
+                    name: 'scrolltobottom',
+                    extra: {
+                        threshold: 50            //设置距离底部多少距离时触发，默认值为0，数字类型
+                    }
+                }, function (ret, err) {
+                    app.page++;
+                    app._myCollectList();
+                });
             }
         },
         methods: {
@@ -77,7 +108,7 @@
                         pageParam: {
                             id: id,
                             title: title,
-                            type:3
+                            type: 3
                         }
                     });
                 }
@@ -85,6 +116,22 @@
                     openView('login', 'login/login', '账号登录')
                 }
             },
+            _myCollectList: function () {
+                ApiAjax('my/myCollectList', {
+                    token: getToken(),
+                    page: app.page,
+                    perpage: app.perpage,
+                }, function (ret, err) {
+                    loadEnd('my_collection')
+                    var order_list = ret.data;
+                    if (ret.data.length > 0) {
+                        app.order_list = app.order_list.concat(order_list);
+                        app.showmore = true;
+                    } else {
+                        app.showtext = '到底了';
+                    }
+                });
+            }
         }
     })
 </script>

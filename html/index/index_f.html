@@ -75,8 +75,9 @@
             /*justify-content: space-between;*/
             /*padding: 0 .45rem;*/
             flex-wrap: wrap;
-            padding: .3rem 0;
+            padding: .3rem 0 0 0;
             background-color: #fff;
+            margin-bottom: .3rem;
         }
 
         .nav_item {
@@ -116,6 +117,13 @@
             width: 100%;
         }
 
+        .new_title {
+            padding: .2rem 0.25rem;
+        }
+
+        .new_list {
+            padding: 0;
+        }
     </style>
 </head>
 
@@ -147,7 +155,8 @@
             <div class="new_img"><img :src="imgUrl+item.pics" alt=""></div>
             <div class="new_right">
                 <div>
-                    <div class="new_name"><span>{{item.title}}</span><span class="new_num">{{toWan(item.num)}}件</span></div>
+                    <div class="new_name"><span>{{item.title}}</span><span class="new_num">{{toWan(item.num)}}件</span>
+                    </div>
                     <div class="new_city">{{item.address}}</div>
                 </div>
                 <div class="new_date">发布日期：{{item.create_time}}</div>
@@ -175,11 +184,6 @@
 <script type="text/javascript" src="../../assets/js/index.js"></script>
 <script type="text/javascript" src="../../assets/js/swiper-3.4.2.min.js"></script>
 <script type="text/javascript" src="../../assets/js/public.js"></script>
-<script type="text/javascript"
-        src="https://res.wx.qq.com/mmbizwap/zh_CN/htmledition/js/vconsole/3.0.0/vconsole.min.js"></script>
-<script>
-    new VConsole();
-</script>
 <script>
     var app = new Vue({
         el: '#app',
@@ -199,7 +203,7 @@
             cate_id: '',
             search: '',
             isFixed: false,
-            offsetTop: 0,
+            // offsetTop: 0,
             showmore: false,
             showtext: '加载中...',
             offline: false

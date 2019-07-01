@@ -252,6 +252,9 @@
         },
         created: function () {
             apiready = function () {
+                api.setStatusBarStyle({
+                    style: 'light',
+                });
                 app._getMyinfo();
                 api.addEventListener({
                     name: 'changtab'
@@ -278,15 +281,22 @@
             },
             // 特殊头
             go_item: function (name) {
-                api.openWin({
-                    name: name,
-                    url: './' + name + '.html',
-                    slidBackEnabled: false
-                });
+                if (getToken()) {
+                    api.openWin({
+                        name: name,
+                        url: './' + name + '.html',
+                    });
+                } else {
+                    app.login()
+                }
             },
             // 公共头
             go_view: function (url, name) {
-                openView(url, 'my/' + url, name, false, false, false, {vip: url == 'my_vip' ? 1 : 0})
+                if (getToken()) {
+                    openView(url, 'my/' + url, name, false, false, false, {vip: url == 'my_vip' ? 1 : 0})
+                } else {
+                    app.login()
+                }
             },
             login: function () {
                 openView('login', 'login/login', '账号登录')

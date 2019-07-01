@@ -48,6 +48,10 @@ function ApiAjax(url, subDatas, callbackfun, file = {}, type = false) {
                 files: file
             }
         }, function (ret, err) {
+            if (!ret) {
+                toastMsg('网络错误')
+                return
+            }
             if (ret.code == -3 || ret.code == 5) {
                 $api.rmStorage('fac_token');
                 openView('login', 'login/login', '账号登录')
@@ -282,7 +286,7 @@ function getImageSizeInBytes(imgURL) {
     var headerText = request.getAllResponseHeaders();
     var re = /Content\-Length\s*:\s*(\d+)/i;
     re.exec(headerText);
-    return parseInt(RegExp.$1);
+    return parseInt(RegExp.$1) || 0;
 }
 
 refreshDone = function (mess) {

@@ -83,6 +83,14 @@
         .new_list .new_item {
             height: 2.6rem;
         }
+
+        .status0 {
+            color: #F17E2A;
+        }
+
+        .status2 {
+            color: #246DE7;
+        }
     </style>
 </head>
 <body>
@@ -96,13 +104,18 @@
     </div>
     <div class="hr"></div>
     <div class="new_list" v-if="order_list.length>0">
-        <div class="new_item" v-for="item in order_list">
-            <div class="new_img"><img src="../../assets/image/test/b1.png" alt=""></div>
+        <div class="new_item" v-for="item in order_list" @click="go_detail(item.id,item.title)" :key="item.id">
+            <div class="new_img"><img :src="imgUrl+item.pics" alt=""></div>
             <div class="new_right">
-                <div class="new_name"><span>寻找封头厂家</span><span class="new_num">50000件</span></div>
-                <div class="new_city">河北省-唐山市</div>
-                <div class="new_date">发布日期：2019年5月20日</div>
-                <div class="status_box"><span class="success_order">已发布</span><span class="detail_btn">查看详情</span></div>
+                <div class="new_name"><span>{{item.title}}</span><span class="new_num">{{toWan(item.num)}}件</span></div>
+                <div class="new_city">{{item.address}}</div>
+                <div class="new_date">发布日期：{{item.create_time}}</div>
+                <div class="status_box">
+                    <span class="success_order" v-if="item.status==1">已发布</span>
+                    <span class="success_order status0" v-else-if="item.status==0">审核中</span>
+                    <span class="success_order status2" v-else-if="item.status==2">未通过</span>
+                    <span class="detail_btn">查看详情</span>
+                </div>
             </div>
         </div>
         <div v-if='showmore&&order_list.length>=perpage' class="enddata">{{showtext}}</div>
@@ -189,7 +202,7 @@
                     status: app.status
                 }, function (ret, err) {
                     loadEnd('my_outorder');
-                    alert(JSON.stringify(ret))
+                    // alert(JSON.stringify(ret))
                     var order_list = ret.data;
                     if (ret.data.length > 0) {
                         app.order_list = app.order_list.concat(order_list);
@@ -213,7 +226,7 @@
                 if (getToken()) {
                     api.openWin({
                         name: 'index_detail_w',
-                        url: './index_detail_w.html',
+                        url: '../index/index_detail_w.html',
                         bgColor: '#fff',
                         pageParam: {
                             id: id,

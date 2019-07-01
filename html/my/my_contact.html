@@ -59,27 +59,27 @@
     <div class="input_box">
         <span class="label">平台名称：</span>
         <!--<input type="number" placeholder="请输入您企业名称" v-model="name" class="infoinput">-->
-        <div class="infoinput">加工宝订单平台有限公司</div>
+        <div class="infoinput">{{contact_info.name}}</div>
     </div>
     <div class="input_box">
         <span class="label">平台邮箱：</span>
         <!--<input type="number" placeholder="请输入企业地址" v-model="code" class="infoinput">-->
-        <div class="infoinput">88945261@163.com</div>
+        <div class="infoinput">{{contact_info.email}}</div>
 
     </div>
     <div class="input_box">
         <span class="label">平台客服QQ：</span>
         <!--<input type="number" placeholder="请输入企业负责人姓名" v-model="code" class="infoinput">-->
-        <div class="infoinput">995268542</div>
+        <div class="infoinput">{{contact_info.qq}}</div>
     </div>
     <div class="input_box">
         <span class="label">平台客服微信：</span>
         <!--<input type="number" placeholder="请输入负责人电话" v-model="code" class="infoinput">-->
-        <div class="infoinput">13645852458</div>
+        <div class="infoinput">{{contact_info.weixin}}</div>
     </div>
-    <div class="input_box">
+    <div class="input_box" @click="callPhone">
         <span class="label">平台客服电话：</span>
-        <div class="infoinput">13645852458</div>
+        <div class="infoinput">{{contact_info.tel}}</div>
     </div>
 </div>
 </body>
@@ -96,15 +96,28 @@
     var app = new Vue({
         el: '#app',
         data: {
-            name: '',
-            code: '',
-            tel: ''
+            contact_info: {}
         },
         created: function () {
             apiready = function () {
-
+                app._contactUs()
             }
         },
-        methods: {}
+        methods: {
+            _contactUs: function () {
+                ApiAjax('my/contactUs', {token: getToken()}, function (ret, err) {
+                    // alert(JSON.stringify(ret))
+                    if (ret.code == 1) {
+                        app.contact_info = ret.data;
+                    }
+                })
+            },
+            callPhone: function () {
+                api.call({
+                    type: 'tel_prompt',
+                    number: app.contact_info.tel
+                });
+            }
+        }
     })
 </script>

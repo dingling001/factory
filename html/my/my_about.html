@@ -20,7 +20,7 @@
             justify-content: center;
             margin: .5rem auto;
             overflow: hidden;
-            border: 1px solid #E4E4E4;
+            /*border: 1px solid #E4E4E4;*/
             border-radius: 5px;
         }
 
@@ -53,10 +53,9 @@
 </head>
 <body>
 <div id="app" v-cloak>
-    <div class="logo_box"><img src="../../assets/image/logo.png" alt=""></div>
-    <div class="logo_name">加工宝订单平台</div>
-    <div class="logo_content">
-        建议通过阿里旺旺和卖家联系说明特别提醒或其他需求，并保留好阿里旺旺聊天记录，若后续出现交易纠纷可以作为依据.建议通过阿里旺旺和卖家联系说明特别提醒或其他需求，并保留好阿里旺旺聊天记录，若后续出现交易纠纷可以作为依据.
+    <div class="logo_box"><img :src="about_info.logo?imgUrl+about_info.logo:'../../assets/image/logo.png'" alt=""></div>
+    <div class="logo_name">{{about_info.name}}</div>
+    <div class="logo_content" v-html="about_info.intro">
     </div>
     <div class="app_v">版本号：V {{appVersion}}</div>
 </div>
@@ -74,12 +73,23 @@
     var app = new Vue({
         el: '#app',
         data: {
-            appVersion: ''
+            appVersion: '',
+            about_info: {}
         },
         created: function () {
             apiready = function () {
                 app.appVersion = api.appVersion;
+                app._aboutUs();
             }
         },
+        methods: {
+            _aboutUs: function () {
+                ApiAjax('my/aboutUs', {token: getToken()}, function (ret, err) {
+                    if (ret.code == 1) {
+                        app.about_info = ret.data;
+                    }
+                })
+            }
+        }
     })
 </script>
