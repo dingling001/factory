@@ -36,14 +36,10 @@
         created: function () {
             apiready = function () {
                 app.fnInitKeyback();
-
             }
         },
         methods: {
             start_fn: function () {
-                // api.closeFrameGroup({
-                //     name: 'welcome'
-                // });
                 var fac_token = $api.getStorage('fac_token');
                 if (fac_token) {
                     api.openWin({
@@ -63,7 +59,12 @@
                         bgColor: '#fff',
                     });
                 }
-
+                api.closeFrameGroup({
+                    name: 'welcome',
+                    animation: {
+                        type: 'fade'
+                    }
+                });
             },
             // 监听到Android返回键
             fnInitKeyback: function () {

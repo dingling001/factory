@@ -188,7 +188,7 @@
         <div class="order_index">
             <span></span>
             <span>个人中心</span>
-            <span class="iconfont icon-shezhi" @click="go_item('my_set')"></span>
+            <span class="iconfont icon-shezhi" @click="go_view('my_set','账号设置')"></span>
         </div>
         <div class="company" v-if="fac_token">
             <div class="company_name">{{my_info.tel}}<span
@@ -247,7 +247,7 @@
     var app = new Vue({
         el: '#app',
         data: {
-            fac_token: $api.getStorage('fac_token') || '',
+            fac_token: getToken(),
             my_info: {}
         },
         created: function () {
@@ -255,13 +255,20 @@
                 api.setStatusBarStyle({
                     style: 'light',
                 });
-                app._getMyinfo();
+                if (getToken()) {
+                    app._getMyinfo();
+                }
                 api.addEventListener({
                     name: 'changtab'
                 }, function (ret, err) {
-                    if (ret.value.tabindex == 2) {
+                    if (ret.value.tabindex == 2 && getToken()) {
                         app._getMyinfo();
                     }
+                });
+                api.addEventListener({
+                    name: 'loginOut'
+                }, function (ret, err) {
+                    app.fac_token = null;
                 });
             }
         },
@@ -293,7 +300,10 @@
             // 公共头
             go_view: function (url, name) {
                 if (getToken()) {
-                    openView(url, 'my/' + url, name, false, false, false, {vip: url == 'my_vip' ? 1 : 0})
+                    openView(url, 'my/' + url, name, false, false, false, {
+                        vip: url == 'my_vip' ? 1 : 0,
+                        set: url == 'my_set' ? 1 : 0
+                    })
                 } else {
                     app.login()
                 }

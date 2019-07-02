@@ -299,29 +299,27 @@
             // 微信支付
             wechatPay: function (pay_order_sn) {
                 var wx = api.require('wxPay');
+                // alert(JSON.stringify(wx));
                 ApiAjax('pay/wxPay', {token: getToken(), pay_order_sn: pay_order_sn}, function (ret, err) {
                     // alert(JSON.stringify(ret))
                     if (ret.code == 1) {
-                        setTimeout(function () {
-                            wx.payOrder({
-                                apiKey: ret.data.appid,
-                                orderId: ret.data.prepayid,
-                                mchId: ret.data.partnerid,
-                                nonceStr: ret.data.nonceStr,
-                                timeStamp: ret.data.timeStamp,
-                                package: ret.data.package,
-                                sign: ret.data.sign
-                            }, function (res, err) {
-                                // alert(JSON.stringify(res))
-                                // if (res.status) {
-                                //     //支付成功
-                                // } else {
-                                //     alert(err.code);
-                                // }
-                                // alert(JSON.stringify(err))
-                            });
-                        }, 100)
-
+                        wx.payOrder({
+                            apiKey: ret.data.appid,
+                            orderId: ret.data.prepayid,
+                            mchId: ret.data.partnerid,
+                            nonceStr: ret.data.nonceStr,
+                            timeStamp: ret.data.timeStamp,
+                            package: ret.data.package,
+                            sign: ret.data.sign
+                        }, function (res, err) {
+                            // alert(JSON.stringify(res))
+                            // if (res.status) {
+                            //     //支付成功
+                            // } else {
+                            //     alert(err.code);
+                            // }
+                            // alert(JSON.stringify(err))
+                        });
                     }
                 });
             },
@@ -329,16 +327,12 @@
             aliPay: function (pay_order_sn) {
                 var aliPay = api.require('aliPay');
                 ApiAjax('pay/aliPay', {token: getToken(), pay_order_sn: pay_order_sn}, function (ret, err) {
+
                     if (ret.code == 1) {
                         aliPay.payOrder({
                             orderInfo: ret.data
                         }, function (ret, err) {
                             // alert(JSON.stringify(ret))
-                            if (ret.code == 9000) {
-                                toastMsg('支付成功,正在跳转首页...');
-                            } else {
-                                toastMsg('支付取消')
-                            }
                         });
                     }
                 })

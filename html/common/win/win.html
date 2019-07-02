@@ -69,18 +69,33 @@
             border-image: linear-gradient(to right, #C0A069, #E9D5AC);
         }
 
-        .vip_head .icon-fanhui {
+        .vip_head .icon-fanhui, .set_head .icon-fanhui {
             color: #fff;
         }
 
-        .vip_head div {
+        .vip_head div, .set_head div {
             color: #fff;
+        }
+
+        .set_head {
+            background: linear-gradient(left, #F17977, #F11C15);
+            background: -webkit-linear-gradient(left, #F17977, #F11C15); /* Safari 5.1 - 6.0 */
+            background: -o-linear-gradient(right, #F17977, #F11C15); /* Opera 11.1 - 12.0 */
+            background: -moz-linear-gradient(right, #F17977, #F11C15); /* Firefox 3.6 - 15 */
+            background: linear-gradient(to right, #F17977, #F11C15); /* 标准的语法 */
+        }
+
+        .set_head .index_headers {
+            border-bottom: 1px solid;
+            border-image: -webkit-linear-gradient(left, #F17977, #F11C15);
+            border-image: -moz-linear-gradient(right, #F17977, #F11C15);
+            border-image: linear-gradient(to right, #F17977, #F11C15);
         }
     </style>
 </head>
 <body>
 <div id='app' v-cloak>
-    <header id="header" :class="{vip_head:vip==1}">
+    <header id="header" :class="[vip==1?'vip_head':'',set==1?'set_head':'']">
         <div class="index_headers">
             <div class="close_left" @click="closeWin"><span class="iconfont icon-fanhui"></span></div>
             <div class="win_mid">{{winTitle}}</div>
@@ -105,7 +120,8 @@
             win: '',
             pageload: 0,
             savevalue: 0,
-            vip: 0
+            vip: 0,
+            set: 0
         },
         created: function () {
         },
@@ -157,7 +173,8 @@
                 }
                 app.winTitle = api.pageParam.winTitle;
                 app.vip = api.pageParam.win.vip;
-                if (app.vip == 1) {
+                app.set = api.pageParam.win.set;
+                if (app.vip == 1 || app.set == 1) {
                     api.setStatusBarStyle({
                         style: 'light'
                     });

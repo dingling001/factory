@@ -15,36 +15,39 @@
 </head>
 <body>
 <div id="app" v-cloak>
-    <!--<header class="index_header" id="header" >-->
-    <!--<span class="title" @click="closeWindow('login_forgot')"><span class="iconfont icon-fanhui"></span> 忘记密码</span>-->
-    <!--</header>-->
-    <div class="input_box box">
-        <span class="iconfont icon-shouji"></span>
-        <input type="number" placeholder="请输入您的手机号" v-model="phone">
-    </div>
-    <div class="input_box">
-        <span class="iconfont icon-yanzhengma"></span>
-        <input type="number" placeholder="请输入验证码" v-model="code">
-        <span class="code_btn">获取验证码</span>
-    </div>
-    <div class="login_btn" @click="reset">重置密码</div>
+    <form>
+        <div class="input_box box">
+            <span class="iconfont icon-shouji"></span>
+            <input type="number" placeholder="请输入您的手机号" v-model="phone">
+        </div>
+        <div class="input_box">
+            <span class="iconfont icon-yanzhengma"></span>
+            <input type="number" placeholder="请输入验证码" v-model="code">
+            <span v-if="show" class="code_btn" @click="getCode">获取验证码</span>
+            <span v-else class="code_btn">{{count}}S后可重发</span>
+        </div>
+        <div class="login_btn" @click="reset">重置密码</div>
+    </form>
 </div>
 </body>
 </html>
 <script type="text/javascript" src="../../assets/js/api.js"></script>
-<script type="text/javascript" src="../../assets/js/public.js"></script>
 <script type="text/javascript" src="../../assets/js/fastclick.js"></script>
 <script>
     new FastClick(document.body);
 </script>
 <script type="text/javascript" src="../../assets/js/vue.min.js"></script>
 <script type="text/javascript" src="../../assets/js/index.js"></script>
+<script type="text/javascript" src="../../assets/js/public.js"></script>
 <script>
     var app = new Vue({
         el: '#app',
         data: {
             phone: '',
             code: '',
+            timer: null,
+            count: '',
+            show: true
         },
         created: function () {
             apiready = function () {
@@ -52,17 +55,59 @@
             }
         },
         methods: {
+            // 获取忘记验证码
+            getCode: function () {
+                if (!/^1\d{10}$/gi.test(app.phone)) {
+                    toastMsg('手机号不正确')
+                } else {
+                    const TIME_COUNT = 60;
+                    var post = {
+                        tel: app.phone,
+                    };
+                    ApiAjax('Login/getPasswdSms', post, function (ret, err) {
+                        if (ret) {
+                            if (!app.timer) {
+                                app.count = TIME_COUNT;
+                                app.show = false;
+                                app.timer = setInterval(function () {
+                                    if (app.count > 0 && app.count <= TIME_COUNT) {
+                                        app.count--;
+                                    } else {
+                                        app.show = true;
+                                        clearInterval(app.timer);
+                                        app.timer = null;
+                                    }
+                                }, 1000)
+                            }
+                        }
+                    });
+                }
+            },
             // 重置
             reset: function () {
-                openView('login_reset', 'login/login_reset', '重置密码')
-                // if (app.phone == '') {
-                //     toastMsg('请输入您手机号')
-                // } else if (app.code == '') {
-                //     toastMsg('请输入验证码')
-                // } else {
-                //     openView('login_reset', 'login/login_reset', '重置密码')
-                // }
-            },
+                // openView('login_reset', 'login/login_reset', '重置密码')
+                if (app.phone == '') {
+                    toastMsg('请输入您手机号')
+                }
+                else if (!mobileReg.test(app.phone)) {
+                    toastMsg('请输入正确的手机号')
+                }
+                else if (app.code == '') {
+                    toastMsg('请输入验证码')
+                } else {
+                    var post = {
+                        tel: app.phone,
+                        code: app.code
+                    };
+                    ApiAjax('/Login/resetPasswd', post, function (ret, err) {
+                        if (ret.code == 1) {
+                            openView('login_reset', 'login/login_reset', '重置密码')
+                        } else {
+                            toastMsg(ret.message)
+                        }
+                    });
+                }
+            }
         }
     })
 </script>

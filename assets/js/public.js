@@ -6,17 +6,15 @@ var id_card = /^[1-9]\d{5}(18|19|([23]\d))\d{2}((0[1-9])|(10|11|12))(([0-2][1-9]
 // var goodUrl = 'http://kindapp.w.bronet.cn/A6079080424317/'; //测试域名
 // var goodUrl = 'http://wx.cijievip.com/A6079080424317/';//正式域名
 var imgUrl = 'http://j.jianghairui.com/';
+
 // var ERROR = '';
 
 
-function ApiAjax(url, subDatas, callbackfun, file = {}, type = false) {
-    // console.log(url);
-    // console.log(JSON.stringify(subDatas));
-    // console.log(callbackfun);
+function ApiAjax(url, subDatas, callbackfun, file = {}, type = false, post = 'post') {
     if (type) {
         api.ajax({
             url: baseurl + url,
-            method: 'post',
+            method: post,
             headers: {
                 'Content-Type': 'application/json;charset=utf-8'
             },
@@ -34,7 +32,7 @@ function ApiAjax(url, subDatas, callbackfun, file = {}, type = false) {
     } else {
         api.ajax({
             url: baseurl + url,
-            method: 'post',
+            method: post,
             timeout: 1000,
             data: {
                 values: subDatas,
@@ -176,6 +174,7 @@ function getToken() {
         return null;
     }
 }
+
 function loadEnd() {
     var ele = document.getElementById('loadStart');
     var app = document.getElementById('app');
@@ -309,6 +308,7 @@ function toWan(str) {
         return str
     }
 }
+
 //
 // function getRequest(type = 'post', url, params) {
 //     var promise = new Promise(function (resolve, reject) {

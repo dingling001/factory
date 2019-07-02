@@ -75,9 +75,10 @@
         <div class="my_info">
             <div class="close_left" @click="close_detail"><span class="iconfont icon-fanhui"></span></div>
             <span class="order_detail el1">{{order_title}}</span>
-            <div class="share_box">
+            <div class="share_box" @click="openShare">
                 <span class="iconfont icon-fenxiang"></span>
-                <span :class="['iconfont',d_info.collect? 'icon-shoucang_':'icon-shoucang']" @click="collect_fn"></span>
+                <span :class="['iconfont',d_info.collect? 'icon-shoucang_':'icon-shoucang']"
+                      @click.stop="collect_fn"></span>
             </div>
         </div>
     </header>
@@ -228,6 +229,33 @@
                         app.vip = 1;
                     }
                 })
+            },
+            // 分享
+            openShare: function () {
+                api.openFrame({
+                    bgColor: 'rgba(0,0,0,0.05)',
+                    name: 'share',
+                    url: '../common/share.html',
+                    bounces: false,
+                    animation: {
+                        type: "push",
+                        subType: "from_bottom",
+                        duration: 300
+                    },
+                    rect: {
+                        x: 0,
+                        y: 0,
+                        w: 'auto',
+                        h: 'auto'
+                    },
+                    pageParam: {
+                        share_url: 'http://wx.cijievip.com/A6079080424317/html/index/doc_home_f.html',
+                        share_title: app.d_info.title,
+                        share_img: app.d_info.pics[0],
+                        share_desc: '急需' + app.d_info.material + app.d_info.num + '件',
+                        share_id: app.id
+                    }
+                });
             }
         }
     })

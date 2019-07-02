@@ -4,7 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport"
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">     <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
     <title>完善信息</title>
     <script src="../../assets/js/fontsize.js"></script>
     <link rel="stylesheet" href="../../assets/css/LArea.css">
@@ -77,49 +78,51 @@
     <header class="index_header" id="header">
         <span class="title" @click="closeWindow('login_info')"><span class="iconfont icon-fanhui"></span> 完善信息</span>
     </header>
-    <div class="input_box">
-        <span class="label need">企业名称</span>
-        <input type="number" placeholder="请输入您企业名称" v-model="name">
-    </div>
-    <div class="input_box">
-        <span class="label">企业地址</span>
-        <input  placeholder="请输入企业地址" v-model="code"  id="demo1" type="text" readonly="" name="input_area" >
-    </div>
-    <div class="input_box">
-        <span class="label">负责人姓名</span>
-        <input type="number" placeholder="请输入企业负责人姓名" v-model="code">
-    </div>
-    <div class="input_box">
-        <span class="label need">联系电话</span>
-        <input type="number" placeholder="请输入负责人电话" v-model="code">
-    </div>
-    <div class="input_box border-0">
-        <span class="label">企业经营项目：</span>
-    </div>
-    <div class="area_box">
-        <textarea name="" id="" cols="30" rows="10" placeholder="请输入企业经营项目（不超过200字）"></textarea>
-    </div>
-    <div class="login_btn" @click="go_index">保存</div>
-
-    <!--<mt-button @click="login">按钮</mt-button>-->
+    <form>
+        <div class="input_box">
+            <span class="label need">企业名称</span>
+            <input type="text" placeholder="请输入您的企业名称" v-model="name">
+        </div>
+        <div class="input_box">
+            <span class="label">企业地址</span>
+            <input type="text" placeholder="请输入企业地址" v-model="address">
+        </div>
+        <div class="input_box">
+            <span class="label">负责人姓名</span>
+            <input type="text" placeholder="请输入企业负责人姓名" v-model="linkman">
+        </div>
+        <div class="input_box">
+            <span class="label need">联系电话</span>
+            <input type="number" placeholder="请输入负责人电话" v-model="linktel">
+        </div>
+        <div class="input_box border-0">
+            <span class="label">企业经营项目：</span>
+        </div>
+        <div class="area_box">
+            <textarea v-model="busine" placeholder="请输入企业经营项目（不超过200字）" ></textarea>
+        </div>
+        <div class="login_btn" @click="_completeInfo">保存</div>
+    </form>
 </div>
 </body>
 </html>
 <script type="text/javascript" src="../../assets/js/api.js"></script>
-<script type="text/javascript" src="../../assets/js/public.js"></script>
 <script type="text/javascript" src="../../assets/js/fastclick.js"></script>
 <script>
     new FastClick(document.body);
 </script>
 <script type="text/javascript" src="../../assets/js/vue.min.js"></script>
 <script type="text/javascript" src="../../assets/js/index.js"></script>
+<script type="text/javascript" src="../../assets/js/public.js"></script>
 <script>
     var app = new Vue({
         el: '#app',
         data: {
             name: '',
-            code: '',
-            tel: ''
+            address: '',
+            linkman: '',
+            linktel: '',
+            busine: ''
         },
         created: function () {
             apiready = function () {
@@ -129,17 +132,40 @@
             }
         },
         methods: {
-            // 跳过去首页
-            go_index: function () {
-                api.openWin({
-                    name: 'index_win',
-                    url: '../common/index_win.html',
-                    animation: {
-                        type: "fade",                //动画类型（详见动画类型常量）
-                        duration: 300
+            _completeInfo: function () {
+                if (app.name == '') {
+                    toastMsg('请输入您的企业名称');
+                    return
+                }
+                if (!mobileReg.test(app.linktel)) {
+                    toastMsg('请输入正确的手机号');
+                    return
+                }
+                var post = {
+                    token: getToken(),
+                    name: app.name,
+                    address: app.address,
+                    linkman: app.linkman,
+                    linktel: app.linktel,
+                    busine: app.busine
+                };
+                ApiAjax('api/completeInfo', post, function (ret, err) {
+                    if (ret.code == 1) {
+                        api.openWin({
+                            name: 'index_win',
+                            url: '../common/index_win.html',
+                            animation: {
+                                type: "fade",                //动画类型（详见动画类型常量）
+                                duration: 300
+                            }
+                        });
+                    } else {
+                        toastMsg(ret.message)
                     }
-                });
-            },
+                })
+            }
+
+
         }
     })
 </script>

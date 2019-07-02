@@ -402,11 +402,11 @@
                             downloadManager.openDownloadedFile({
                                 id: ret.id
                             }, function (ret, err) {
-                                alert(JSON.stringify(ret) + 'downopen')
+                                // alert(JSON.stringify(ret) + 'downopen')
                                 if (ret) {
                                     // alert(JSON.stringify(ret)+'downopen')
                                 } else {
-                                    toastMsg(ret.msg)
+                                    toastMsg(ret.message)
                                 }
                             });
                         } else {

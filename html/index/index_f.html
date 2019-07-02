@@ -259,15 +259,11 @@
         methods: {
             // 获取首页轮播图getSlideList
             _getSlideList: function () {
-                api.ajax({
-                    url: baseurl + 'api/getSlideList',
-                    method: 'post',
-                    data: {}
-                }, function (ret, err) {
+                ApiAjax('api/getSlideList', {}, function (ret, err) {
                     loadEnd('index_f');
                     app.slide_list = ret.data;
                     app.int_swiper();
-                });
+                })
             },
             // 获取分类列表getCateList
             _getCateList: function () {
