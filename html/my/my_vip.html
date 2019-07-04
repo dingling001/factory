@@ -128,7 +128,8 @@
             <span class="vip_day">
                 <span class="iconfont icon-VIPCopy"></span>
                 <span class="vip">VIP会员</span>
-                <span>尚未开通会员</span>
+                <span v-if="vip_time">{{vip_time}}</span>
+                <span v-else>尚未开通会员</span>
             </span>
         </div>
     </div>
@@ -142,9 +143,11 @@
     <div class="vip_item" @click="openPower('my_vip_apply','申请/续费会员')">
         <div class="vip_l">
             <div class="vip_logo"><img src="../../assets/image/vip_apply.png" alt=""></div>
-            <span>申请会员</span>
+            <span v-if="vip==0">申请会员</span>
+            <span v-else>会员续费</span>
         </div>
-        <div class="vip_r">去申请</div>
+        <div class="vip_r" v-if="vip==0">去申请</div>
+        <div class="vip_r" v-else>去续期</div>
     </div>
 </div>
 </body>
@@ -161,7 +164,9 @@
     var app = new Vue({
         el: '#app',
         data: {
-            vip: ''
+            vip: 0,
+            my_info: {},
+            vip_time: ''
         },
         created: function () {
             apiready = function () {
@@ -169,13 +174,33 @@
                     name: 'my_vip',
                     bounces: false
                 });
+                app._checkVip();
             }
         },
         methods: {
             openPower: function (name, title) {
                 openView(name, 'my/' + name, title, false, false, false, {vip: 1})
+            },
+            // 获取我的个人信息
+            _getMyinfo: function () {
+                ApiAjax('my/getMyinfo', {token: getToken()}, function (ret, err) {
+                    if (ret.code == 1) {
+                        app.my_info = ret.data;
+                        app.vip_time = timestampToTime(ret.data.vip_time);
+                    }
+                })
+            },
+            // 查看是否是会员
+            _checkVip: function () {
+                ApiAjax('api/checkVip', {
+                    token: getToken(),
+                }, function (ret, err) {
+                    if (ret.code == 1 && ret.data) {
+                        app.vip = 1;
+                        app._getMyinfo()
+                    }
+                })
             }
-
         }
     })
 

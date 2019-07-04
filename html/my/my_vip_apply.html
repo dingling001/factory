@@ -327,19 +327,33 @@
             aliPay: function (pay_order_sn) {
                 var aliPay = api.require('aliPay');
                 ApiAjax('pay/aliPay', {token: getToken(), pay_order_sn: pay_order_sn}, function (ret, err) {
-
                     if (ret.code == 1) {
                         aliPay.payOrder({
                             orderInfo: ret.data
-                        }, function (ret, err) {
-                            // alert(JSON.stringify(ret))
+                        }, function (res, err) {
+                            if (res.statusCode == '9000') {
+                                toastMsg('支付成功')
+                            } else if (res.statusCode == '6001') {
+                                toastMsg('取消支付')
+                            } else {
+                                toastMsg('支付失败')
+                            }
                         });
                     }
                 })
             },
             // 银行卡支付
             bankPay: function () {
-                toastMsg('请联系客服人员，线下充值')
+                // toastMsg('请联系客服人员，线下充值')
+                api.alert({
+                    title: '对公转账信息',
+                    msg: ' 请联系我们为您开通银联支付，我们的唯一账户为' + app.pay_info.bank_account,
+                    buttons: ['知道了']
+                }, function (ret, err) {
+                    if (ret.index == 1) {
+
+                    }
+                });
             }
         }
     })

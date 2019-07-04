@@ -257,6 +257,10 @@
                 });
                 if (getToken()) {
                     app._getMyinfo();
+                } else {
+                    setTimeout(function () {
+                        loadEnd('my_f');
+                    }, 1500)
                 }
                 api.addEventListener({
                     name: 'changtab'

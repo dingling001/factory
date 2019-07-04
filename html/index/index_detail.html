@@ -11,7 +11,7 @@
     <link rel="stylesheet" href="../../assets/css/api.css">
     <link rel="stylesheet" href="../../assets/css/style.css">
     <!--<link rel="stylesheet" href="https://unpkg.com/mint-ui@1/lib/style.css">-->
-    <link rel="stylesheet" href="http://at.alicdn.com/t/font_1220513_njjndgm1akh.css">
+    <link rel="stylesheet" href="http://at.alicdn.com/t/font_1220513_yobxgbxpb4.css">
     <style>
         body {
             background-color: #F9F9FA;
@@ -83,6 +83,23 @@
             padding: 0 .4rem .6rem .4rem;
             text-align: justify;
             background-color: #fff;
+            position: relative;
+        }
+
+        .area_box .iconfont {
+            position: absolute;
+            right: 0.6rem;
+            bottom: .4rem;
+            font-size: 50px;
+            z-index: 10;
+        }
+
+        .icon-shenhezhong {
+            color: #F17E2A;
+        }
+
+        .icon-failed {
+            color: #333;
         }
 
         .title {
@@ -255,7 +272,9 @@
     <div class="input_box border-0">
         <span class="label">订单备注：</span>
     </div>
-    <div class="area_box" v-html="d_info.desc">
+    <div class="area_box">{{d_info.desc}}
+        <span class="iconfont icon-shenhezhong" v-if="d_info.status==0"></span>
+        <span class="iconfont icon-failed" v-else-if='d_info.status==2'></span>
     </div>
     <div class="detail_title">相关图片</div>
     <div class="pic_list" v-if="d_info.pics">
@@ -270,7 +289,7 @@
             <!--<span class="d_img"><img src="../../assets/image/pdf.png" alt=""></span>-->
             <span>材料.{{dot}}<span class="size">({{size / 1000}})k</span></span>
         </div>
-        <div class="d_rbtn" @click="downloadFile" v-if="btnstatus">下载附件</div>
+        <div class="d_rbtn" @click="downloadFile" v-if="btnstatus">{{dowmtext}}</div>
         <div class="d_rbtn" @click="openmanagerfile" v-else>查看附件</div>
     </div>
     <div v-else class="nodata">暂无附件</div>
@@ -294,7 +313,7 @@
         <div class="infoinput">单价： <span class="price">{{d_info.price}}</span>元</div>
     </div>
     <!--<div class="input_box" v-else-if="type==2" @click="">已有50人报价，查看报价</div>-->
-    <div class="input_box" @click="lookPrice" v-else-if="type==2"><span class="outordernum">已有{{d_info.offer_count}}人报价，查看报价</span>
+    <div class="input_box" @click="lookPrice" v-else-if="type==2&&d_info.status==1"><span class="outordernum">已有{{d_info.offer_count}}人报价，查看报价</span>
     </div>
     <div v-show="type!=2">
         <div class="tips">注：您的剩余报价次数 <span>{{d_info.free_times}}</span>次</div>
@@ -325,7 +344,8 @@
             type: 0,
             offer_list: [],
             btnstatus: true, //是否下载状态
-            vip: 0
+            vip: 0,
+            dowmtext: '下载附件'
         },
         created: function () {
             apiready = function () {
@@ -348,10 +368,9 @@
                         var downloadManager = api.require('downloadManager');
                         downloadManager.closeManagerView();
                     } else {
-                        console.log(JSON.stringify(err));
                     }
                 });
-                app.checkDownload();
+                // app.checkDownload();
             }
         },
         methods: {
@@ -419,6 +438,7 @@
             },
             // 下载附件
             downloadFile: function () {
+                app.dowmtext = '下载中…';
                 api.showProgress({
                     title: '下载中...',
                     text: '下载附件',
@@ -444,7 +464,7 @@
                                     for (var i in ret.data) {
                                         if (ret_enqueue.id == ret.data[i].id) {
                                             if (ret.data[i].status == 3) {
-                                                toastMsg('下载成功')
+                                                toastMsg('下载成功');
                                                 app.btnstatus = false;
                                             }
                                         }
