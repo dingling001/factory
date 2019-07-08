@@ -13,7 +13,7 @@
     <style>
         .input {
             text-align: left;
-            padding: .1rem;
+            padding: .1rem .3rem;
             width: 100%;
             margin: 0;
         }
@@ -41,9 +41,11 @@
     <header id="header" class="index_header">
         <span class="iconfont icon-fanhui" @click="closeWindow('search_w')"></span>
         <form>
-            <input class="input" v-model="keyword" placeholder="请输入您要搜索的内容" autofocus type="search"/>
+            <input class="input" v-model="keyword" placeholder="请输入您要搜索的内容" autofocus type="search" @input="showHis"/>
         </form>
-        <span class="iconfont icon-sousuo"></span>
+        <div class="close_left" @click="search_fn">
+            <span class="iconfont icon-sousuo"></span>
+        </div>
     </header>
 </div>
 </body>
@@ -83,8 +85,30 @@
                         duration: 400
                     }
                 });
+                api.addEventListener({
+                    name: 'historykeword'
+                }, function (ret, err) {
+                    app.keyword = ret.value.keyword;
+                });
             }
         },
-        methods: {}
+        methods: {
+            search_fn: function () {
+                api.sendEvent({
+                    name: 'search_keyword',
+                    extra: {
+                        keyword: app.keyword
+                    }
+                });
+            },
+            showHis: function () {
+                api.sendEvent({
+                    name: 'showHis',
+                    extra: {
+                        keyword: app.keyword
+                    }
+                });
+            }
+        }
     })
 </script>

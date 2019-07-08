@@ -4,7 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport"
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">     <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
     <title></title>
     <script src="../../assets/js/fontsize.js"></script>
     <link rel="stylesheet" href="../../assets/css/api.css">
@@ -39,14 +40,36 @@
             background: rgba(231, 36, 36, .8);
             padding: 6px 15px;
             border-radius: 5px;
-            margin: 0 1rem .44rem 0;
+            margin: 0 .5rem .44rem 0;
         }
     </style>
 </head>
 <body>
 <div id="app" v-cloak>
-    <div class="search_his"><span class="his">历史搜索</span><span>清空历史搜索记录</span></div>
-    <div class="his_list"><span>车床加工</span></div>
+    <div v-if="order_list.length>0">
+        <div class="new_title">搜索结果</div>
+        <div class="new_list">
+            <div class="new_item" v-for="item in order_list" @click="go_detail(item.id,item.title)">
+                <div class="new_img">
+                    <img :src=" item.pics?imgUrl+item.pics:'../../assets/image/noimg.png'" alt="">
+                </div>
+                <div class="new_right">
+                    <div>
+                        <div class="new_name"><span>{{item.title}}</span><span class="new_num">{{item.num}}件</span>
+                        </div>
+                        <div class="new_city">{{item.address}}</div>
+                    </div>
+                    <div class="new_date">发布日期：{{item.create_time}}</div>
+                </div>
+            </div>
+            <div v-if='showmore&&order_list.length>=perpage' class="enddata">{{showtext}}</div>
+        </div>
+    </div>
+    <div v-else>
+        <div class="search_his"><span class="his">历史搜索</span><span @click="clearS">清空历史搜索记录</span></div>
+        <div class="his_list"><span v-for="(item,index) in history_list" @click="history_fn(index)">{{item}}</span>
+        </div>
+    </div>
 </div>
 </body>
 </html>
@@ -62,20 +85,105 @@
 <script>
     var app = new Vue({
         el: '#app',
-        data: {},
+        data: {
+            order_list: [],
+            cate_count: 0,
+            page: 1,
+            perpage: 10,
+            cate_id: '',
+            keyword: '',
+            flg: false,
+            isFixed: false,
+            // offsetTop: 0,
+            showmore: false,
+            showtext: '加载中...',
+            offline: false,
+            history_list: []
+        },
         created: function () {
             apiready = function () {
-                app.int_swiper();
+                api.addEventListener({
+                    name: 'search_keyword'
+                }, function (ret, err) {
+                    app.keyword = ret.value.keyword;
+                    if (app.keyword) {
+                        app._getOrderList();
+                        if (app.history_list.length >= 10) {
+                            return;
+                        }
+                        if (JSON.stringify(app.history_list).indexOf(app.keyword) > 0) {
+                            return
+                        }
+                        app.history_list.push(app.keyword);
+                        $api.setStorage('history_list', JSON.stringify(app.history_list));
+                    } else {
+                        app.order_list = [];
+                    }
+                });
+                api.addEventListener({
+                    name: 'showHis'
+                }, function (ret, err) {
+                    app.keyword = ret.value.keyword;
+                    if (app.keyword) {
+                        app._getOrderList()
+                        if (app.order_list == 0) {
+                            app.keyword = '';
+                            app._getOrderList()
+                        }
+                    } else {
+                        app.order_list = [];
+                    }
+                });
+                // 上拉加载
+                api.addEventListener({
+                    name: 'scrolltobottom',
+                    extra: {
+                        threshold: 50            //设置距离底部多少距离时触发，默认值为0，数字类型
+                    }
+                }, function (ret, err) {
+                    app.page++;
+                    app._getOrderList();
+                });
+                if ($api.getStorage('history_list')) {
+                    app.history_list = JSON.parse($api.getStorage('history_list'));
+                }
             }
         },
         methods: {
-            int_swiper: function () {
-                var mySwiper = new Swiper('.swiper-container', {
-                    slidesPerView: 'auto',
-                    observer: true,
-                    observeParents: true,
-                    freeMode: true,
-                })
+            // 搜索结果
+            _getOrderList: function () {
+                ApiAjax('api/getOrderList', {
+                    page: app.page,
+                    perpage: app.perpage,
+                    cate_id: app.cate_id,
+                    search: app.keyword
+                }, function (ret, err) {
+                    // alert(JSON.stringify(ret))
+                    var order_list = ret.data;
+                    if (ret.data.length > 0) {
+                        app.order_list = app.order_list.concat(order_list);
+                        app.showmore = true;
+                    } else {
+                        app.showtext = '到底了';
+                    }
+
+                    // app.order_list = ret.data;
+                });
+            },
+            // 清除历史记录
+            clearS: function () {
+                $api.rmStorage('history_list');
+                app.history_list = [];
+            },
+            history_fn(index) {
+                app.keyword = this.history_list[index];
+                app._getOrderList();
+                api.sendEvent({
+                    name: 'historykeword',
+                    extra: {
+                        keyword: app.keyword
+                    }
+                });
             }
         }
     })

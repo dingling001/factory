@@ -658,9 +658,7 @@
                 }
                 if (app.postData.linktel == '') {
                     toastMsg('请输入联系电话');
-                    return
-                }
-                if (!mobileReg.test(app.postData.linktel)) {
+                } else if (!mobileReg.test(app.postData.linktel)) {
                     toastMsg('联系电话不正确');
                     return
                 }

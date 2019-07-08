@@ -22,7 +22,13 @@
     <div class="hr"></div>
     <div class="new_list" v-if="flg&&order_list.length>0">
         <div class="new_item" v-for="item in order_list" @click="go_detail(item.id,item.title)">
-            <div class="new_img"><img :src="imgUrl+item.pics" alt="" v-if="item.pics"><span class="iconfont icon-zanwutupian"></span></div>
+            <!--<div class="new_img">-->
+                <!--<img :src="imgUrl+item.pics" alt="" v-if="item.pics">-->
+                <!--<span class="iconfont icon-zanwutupian"></span>-->
+            <!--</div>-->
+            <div class="new_img">
+                <img :src=" item.pics?imgUrl+item.pics:'../../assets/image/noimg.png'" alt="">
+            </div>
             <div class="new_right">
                 <div>
                     <div class="new_name"><span>{{item.title}}</span><span class="new_num">{{item.num}}件</span></div>

@@ -63,12 +63,12 @@
             font-size: 16px;
             color: #fff;
             background-color: #E72424;
-            padding: 0.15rem 0;
+            padding: 0.2rem 0;
         }
 
         .icon-weixin, .icon-pengyouquan {
             color: #6CBA41;
-            font-size: 23px;
+            font-size: 30px;
         }
     </style>
 </head>
@@ -82,17 +82,17 @@
                 <span class="">微信</span>
             </div>
             <div class="share_item" @click="share_f('timeline')">
-                <!--<svg class="icon" aria-hidden="true">-->
-                <!--<use xlink:href="#icon-pengyouquan"></use>-->
-                <!--</svg>-->
-                <span class="iconfont icon-pengyouquan"></span>
+                <svg class="icon" aria-hidden="true">
+                    <use xlink:href="#icon-pengyouquan1"></use>
+                </svg>
+                <!--<span class="iconfont icon-pengyouquan"></span>-->
                 <span class="">微信朋友圈</span>
             </div>
             <div class="share_item">
-                <!--<svg class="icon" aria-hidden="true">-->
-                <!--<use xlink:href="#icon-QQgai" @click="share_qq"></use>-->
-                <!--</svg>-->
-                <span class="iconfont icon-qq"></span>
+                <svg class="icon" aria-hidden="true">
+                    <use xlink:href="#icon-qq" @click="share_qq"></use>
+                </svg>
+                <!--<span class="iconfont icon-qq"></span>-->
                 <span class="">腾讯QQ</span>
             </div>
             <!--<div class="share_item" @click="clipBoard">-->
@@ -143,6 +143,7 @@
             },
             share_f: function (type) {
                 var wx = api.require('wx');
+                var systemType = api.systemType;
                 wx.isInstalled(function (ret, err) {
                     if (ret.installed) {
                         wx.shareWebpage({
@@ -150,15 +151,15 @@
                             scene: type,
                             title: app.title,
                             description: app.desc,
-                            thumb: 'widget://assets/image/logo200.png',
-                            contentUrl: app.url + '&invite_type=' + app.invite_type ? app.url : goodUrl + 'download.html'
+                            thumb: '../../assets/image/logo.png',
+                            contentUrl: app.url
                         }, function (ret, err) {
                             if (ret.status) {
                                 toastMsg('分享成功');
                             } else {
                                 toastMsg('取消分享');
                             }
-                            api.closeFrame();
+                            api.closeFrame({name: 'share'});
                         });
                     } else {
                         toastMsg('当前设备未安装微信客户端');
@@ -171,11 +172,11 @@
                 qq.installed(function (ret, err) {
                     if (ret.status) {
                         qq.shareNews({
-                            url: app.url ? app.url : goodUrl + 'download.html',
+                            url: app.url,
                             type: 'QFriend',
                             title: app.title,
                             description: app.desc,
-                            imgUrl: 'widget://assets/image/logo200.png'
+                            imgUrl: '../../assets/image/logo.png'
                         }, function (ret, err) {
                             // alert(JSON.stringify(ret))
                             if (ret.status) {
@@ -183,7 +184,7 @@
                             } else {
                                 toastMsg(err.code)
                             }
-                            api.closeFrame()
+                            api.closeFrame({name: 'share'})
                         });
                     } else {
                         toastMsg('请安装腾讯QQ')

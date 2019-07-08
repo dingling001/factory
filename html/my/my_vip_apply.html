@@ -301,7 +301,7 @@
                 var wx = api.require('wxPay');
                 // alert(JSON.stringify(wx));
                 ApiAjax('pay/wxPay', {token: getToken(), pay_order_sn: pay_order_sn}, function (ret, err) {
-                    // alert(JSON.stringify(ret))
+                    alert(JSON.stringify(ret))
                     if (ret.code == 1) {
                         wx.payOrder({
                             apiKey: ret.data.appid,
@@ -312,7 +312,7 @@
                             package: ret.data.package,
                             sign: ret.data.sign
                         }, function (res, err) {
-                            // alert(JSON.stringify(res))
+                            alert(JSON.stringify(res))
                             // if (res.status) {
                             //     //支付成功
                             // } else {
@@ -320,6 +320,8 @@
                             // }
                             // alert(JSON.stringify(err))
                         });
+                    }else{
+                        toastMsg(ret.message)
                     }
                 });
             },
