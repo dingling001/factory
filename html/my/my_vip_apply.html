@@ -301,26 +301,25 @@
                 var wx = api.require('wxPay');
                 // alert(JSON.stringify(wx));
                 ApiAjax('pay/wxPay', {token: getToken(), pay_order_sn: pay_order_sn}, function (ret, err) {
-                    alert(JSON.stringify(ret))
+                    // alert(JSON.stringify(ret))
                     if (ret.code == 1) {
                         wx.payOrder({
                             apiKey: ret.data.appid,
                             orderId: ret.data.prepayid,
                             mchId: ret.data.partnerid,
-                            nonceStr: ret.data.nonceStr,
-                            timeStamp: ret.data.timeStamp,
+                            nonceStr: ret.data.noncestr,
+                            timeStamp: ret.data.timestamp,
                             package: ret.data.package,
                             sign: ret.data.sign
                         }, function (res, err) {
-                            alert(JSON.stringify(res))
-                            // if (res.status) {
-                            //     //支付成功
-                            // } else {
-                            //     alert(err.code);
-                            // }
-                            // alert(JSON.stringify(err))
+                            if (res.status) {
+                                //支付成功
+                                toastMsg('支付成功')
+                            } else {
+                                toastMsg('取消支付')
+                            }
                         });
-                    }else{
+                    } else {
                         toastMsg(ret.message)
                     }
                 });

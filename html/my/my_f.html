@@ -274,6 +274,11 @@
                 }, function (ret, err) {
                     app.fac_token = null;
                 });
+                api.addEventListener({
+                    name: 'loginindex'
+                }, function (ret, err) {
+                    app._getMyinfo();
+                });
             }
         },
         methods: {
@@ -284,7 +289,7 @@
                     // alert(JSON.stringify(ret))
                     if (ret.code == 1) {
                         app.my_info = ret.data;
-
+                        app.fac_token = getToken();
                     } else {
 
                     }

@@ -168,7 +168,7 @@
 
             },
             share_qq: function () {
-                var qq = api.require('qq');
+                var qq = api.require('QQPlus');
                 qq.installed(function (ret, err) {
                     if (ret.status) {
                         qq.shareNews({
@@ -176,7 +176,7 @@
                             type: 'QFriend',
                             title: app.title,
                             description: app.desc,
-                            imgUrl: '../../assets/image/logo.png'
+                            imgUrl: app.img ? imgUrl + app.img : 'widget://assets/image/logo.png'
                         }, function (ret, err) {
                             // alert(JSON.stringify(ret))
                             if (ret.status) {

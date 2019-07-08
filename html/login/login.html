@@ -85,6 +85,10 @@
                                 duration: 300
                             }
                         });
+                        api.sendEvent({
+                            name: 'loginindex',
+                        });
+
                     } else {
                         api.openWin({
                             name: 'login_info',
