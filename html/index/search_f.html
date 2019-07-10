@@ -45,8 +45,11 @@
 </head>
 <body>
 <div id="app" v-cloak>
-    <div class="search_his"><span class="his">历史搜索</span><span>清空历史搜索记录</span></div>
-    <div class="his_list"><span>车床加工</span></div>
+    <div>
+        <div class="search_his"><span class="his">历史搜索</span><span>清空历史搜索记录</span></div>
+        <div class="his_list"><span>车床加工</span></div>
+    </div>
+
 </div>
 </body>
 </html>
@@ -62,21 +65,72 @@
 <script>
     var app = new Vue({
         el: '#app',
-        data: {},
+        data: {
+            order_list: [],
+            cate_count: 0,
+            page: 1,
+            perpage: 3,
+            cate_id: '',
+            search: '',
+            isFixed: false,
+            // offsetTop: 0,
+            showmore: false,
+            showtext: '加载中...',
+            offline: false
+        },
         created: function () {
             apiready = function () {
-                app.int_swiper();
+                if(app.keyword){
+                    app._getOrderList();
+
+                }
+                api.setRefreshHeaderInfo({
+                    // loadingImg: 'widget://assets/image/head.png',
+                    loadingImg: 'widget://assets/image/logo.png',
+                    bgColor: '#fff',
+                    textColor: '#F11C15',
+                    textDown: '下拉刷新...',
+                    textUp: '释放更新...',
+                    showTime: true
+                }, function (ret, err) {
+                    app.order_list = [];
+                    app.page = 1;
+                    app.showtext = '加载中...';
+                    app._getOrderList();
+                    api.refreshHeaderLoadDone()
+                });
+                // 上拉加载
+                api.addEventListener({
+                    name: 'scrolltobottom',
+                    extra: {
+                        threshold: 50            //设置距离底部多少距离时触发，默认值为0，数字类型
+                    }
+                }, function (ret, err) {
+                    app.page++;
+                    app._getOrderList();
+                });
             }
         },
         methods: {
-            int_swiper: function () {
-                var mySwiper = new Swiper('.swiper-container', {
-                    slidesPerView: 'auto',
-                    observer: true,
-                    observeParents: true,
-                    freeMode: true,
-                })
-            }
+            // 搜索结果
+            _getOrderList: function () {
+                ApiAjax('api/getOrderList', {
+                    page: app.page,
+                    perpage: app.perpage,
+                    cate_id: app.cate_id,
+                    search: app.search
+                }, function (ret, err) {
+                    loadEnd('index_f');
+                    var order_list = ret.data;
+                    if (ret.data.length > 0) {
+                        app.order_list = app.order_list.concat(order_list);
+                        app.showmore = true;
+                    } else {
+                        app.showtext = '到底了';
+                    }
+                    // app.order_list = ret.data;
+                });
+            },
         }
     })
 </script>

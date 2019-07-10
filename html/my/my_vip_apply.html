@@ -249,6 +249,7 @@
                     bounces: false
                 });
                 app._getAppInfo();
+                app._vipPageViewTimes();
             }
         },
         methods: {
@@ -258,8 +259,7 @@
                     toastMsg('请选择支付方式')
                 } else if (app.type == 3) {
                     app.bankPay();
-                }
-                else {
+                } else {
                     app._recharge();
                 }
             },
@@ -354,6 +354,15 @@
 
                     }
                 });
+            },
+            // 进入支付页面次数
+
+            _vipPageViewTimes: function () {
+                ApiAjax('pmy/vipPageViewTimes', {token: getToken()}, function (ret, err) {
+                    if (ret.code == 1) {
+
+                    }
+                })
             }
         }
     })

@@ -129,11 +129,11 @@
         },
         created: function () {
             apiready = function () {
-                app.url = api.pageParam.share_url;
-                app.title = api.pageParam.share_title;
-                app.desc = api.pageParam.share_desc;
-                app.img = api.pageParam.share_img;
-                app.id = api.pageParam.share_id;
+                // app.url = api.pageParam.share_url;
+                // app.title = api.pageParam.share_title;
+                // app.desc = api.pageParam.share_desc;
+                // app.img = api.pageParam.share_img;
+                // app.id = api.pageParam.share_id;
                 // alert(JSON.stringify(app.img))
             }
         },
@@ -141,7 +141,9 @@
             close: function () {
                 api.closeFrame();
             },
-            share_f: function (type) {
+
+
+            share_fs: function (type) {
                 var wx = api.require('wx');
                 wx.isInstalled(function (ret, err) {
                     if (ret.installed) {
@@ -167,7 +169,7 @@
 
             },
             share_qq: function () {
-                var qq = api.require('qq');
+                var qq = api.require('QQPlus');
                 qq.installed(function (ret, err) {
                     if (ret.status) {
                         qq.shareNews({
@@ -175,7 +177,7 @@
                             type: 'QFriend',
                             title: app.title,
                             description: app.desc,
-                            imgUrl: 'widget://assets/image/logo200.png'
+                            imgUrl: imgUrl + app.img
                         }, function (ret, err) {
                             // alert(JSON.stringify(ret))
                             if (ret.status) {
