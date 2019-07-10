@@ -39,6 +39,7 @@ function ApiAjax(url, subDatas, callbackfun, file = {}, type = false, post = 'po
                 files: file
             }
         }, function (ret, err) {
+            // alert(JSON.stringify(ret))
             if (!ret) {
                 toastMsg('网络错误')
                 return

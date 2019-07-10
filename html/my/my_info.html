@@ -55,34 +55,35 @@
     </style>
 </head>
 <body>
+<div id="loadStart"></div>
 <div id="app" v-cloak class="company">
     <div class="input_box">
-        <span class="label need">企业名称</span>
+        <span class="label">企业名称</span>
         <!--<input type="number" placeholder="请输入您企业名称" v-model="name" class="infoinput">-->
-        <div class="infoinput">天津市****公司</div>
+        <div class="infoinput">{{my_info.name}}</div>
     </div>
     <div class="input_box">
         <span class="label">企业地址</span>
         <!--<input type="number" placeholder="请输入企业地址" v-model="code" class="infoinput">-->
-        <div class="infoinput">天津市****公司</div>
+        <div class="infoinput">{{my_info.address}}</div>
 
     </div>
     <div class="input_box">
         <span class="label">负责人姓名</span>
         <!--<input type="number" placeholder="请输入企业负责人姓名" v-model="code" class="infoinput">-->
-        <div class="infoinput">天津市****公司</div>
+        <div class="infoinput">{{my_info.linkman}}</div>
     </div>
     <div class="input_box">
-        <span class="label need">联系电话</span>
+        <span class="label">联系电话</span>
         <!--<input type="number" placeholder="请输入负责人电话" v-model="code" class="infoinput">-->
-        <div class="infoinput">天津市****公司</div>
+        <div class="infoinput">{{my_info.linktel}}</div>
     </div>
     <div class="input_box border-0">
         <span class="label">企业经营项目：</span>
     </div>
     <div class="area_box">
         <!--<textarea name="" id="" cols="30" rows="10" placeholder="请输入企业经营项目（不超过200字）"></textarea>-->
-        <div>软件开发管理软件 聚合多种功能,从产品到测试,全流程支持,无需切换软件.ONES.AI 助力企业创新协作,从而缩短研发周期,提高产品质量.点击免费注册使用!</div>
+        <div>{{my_info.busine}}</div>
     </div>
 </div>
 </body>
@@ -103,16 +104,28 @@
         },
         created: function () {
             apiready = function () {
-                app._getMyinfo();
+                app._getMyinfo()
             }
         },
         methods: {
             _getMyinfo: function () {
+                loadEnd('my_info')
                 ApiAjax('my/getMyinfo', {token: getToken()}, function (ret, err) {
                     // alert(JSON.stringify(ret));
-                    app.my_info = ret.data;
+                    if (ret.code == 1) {
+                        app.my_info = ret.data;
+                    } else {
+                        toastMsg(ret.message)
+                        setTimeout(function () {
+                            app.go_infochange()
+                        }, 15000)
+                    }
                 })
-            }
+            },
+            // 修改信息
+            go_infochange: function () {
+                openView('my_infocahnge', 'my/my_infocahnge', '修改个人信息')
+            },
         }
     })
 </script>
