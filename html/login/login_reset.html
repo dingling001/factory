@@ -17,11 +17,11 @@
     <form>
         <div class="input_box box">
             <span class="iconfont icon-shouji"></span>
-            <input type="number" placeholder="请输入您的新密码（6-12位）" v-model="password">
+            <input type="password" placeholder="请输入您的新密码（6-12位）" v-model="password">
         </div>
         <div class="input_box">
             <span class="iconfont icon-yanzhengma"></span>
-            <input type="number" placeholder="请再次输入您的密码（6-12位）" v-model="repassword">
+            <input type="password" placeholder="请再次输入您的密码（6-12位）" v-model="repassword">
         </div>
         <div class="login_btn" @click="login">前往登录</div>
     </form>
@@ -42,9 +42,12 @@
         data: {
             password: '',
             repassword: '',
+            forgot_token: ''
         },
         created: function () {
             apiready = function () {
+                alert(JSON.stringify(api.pageParam))
+                app.forgot_token = api.pageParam.forgot_token;
             }
         },
         methods: {
@@ -57,19 +60,25 @@
                 } else if (app.password != app.repassword) {
                     toastMsg('俩次密码不一致')
                 } else {
-                    ApiAjax('Login/setNewPasswd', {token: getToken(), password: app.password}, function (ret, err) {
+                    ApiAjax('Login/setNewPasswd', {
+                        token: app.forgot_token,
+                        password: app.password
+                    }, function (ret, err) {
                         if (ret.code == 1) {
-                            api.openFrame({
-                                name: 'login_index',
-                                url: './login_index.html',
-                                rect: {
-                                    x: 0,
-                                    y: 0,
-                                    w: 'auto',
-                                    h: 'auto'
-                                },
-                                bgColor: '#fff',
-                            });
+                            toastMsg('重置成功');
+                            setTimeout(function () {
+                                api.openFrame({
+                                    name: 'login_index',
+                                    url: './login_index.html',
+                                    rect: {
+                                        x: 0,
+                                        y: 0,
+                                        w: 'auto',
+                                        h: 'auto'
+                                    },
+                                    bgColor: '#fff',
+                                });
+                            }, 1500)
                         } else {
                             toastMsg(ret.message)
                         }

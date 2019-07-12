@@ -41,7 +41,8 @@
     <header id="header" class="index_header">
         <span class="iconfont icon-fanhui" @click="closeWindow('search_w')"></span>
         <form>
-            <input class="input" v-model="keyword" placeholder="请输入您要搜索的内容" autofocus type="search" @input="showHis"/>
+            <input class="input" v-model="keyword" @keyup.13="showHis" ref="input1" placeholder="请输入您要搜索的内容" autofocus
+                   type="search" autocomplete="off"/>
         </form>
         <div class="close_left" @click="search_fn">
             <span class="iconfont icon-sousuo"></span>
@@ -102,6 +103,8 @@
                 });
             },
             showHis: function () {
+
+                app.$refs.input1.blur();
                 api.sendEvent({
                     name: 'showHis',
                     extra: {

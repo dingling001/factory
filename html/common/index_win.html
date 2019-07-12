@@ -246,6 +246,9 @@
             },
             // 跳转发布
             relFn: function () {
+                api.closeFrameGroup({
+                    name: 'index'
+                });
                 if (getToken()) {
                     openView('order_rel', 'order/order_rel', '发布订单')
                 } else {

@@ -99,7 +99,7 @@
             <span class="label">企业经营项目：</span>
         </div>
         <div class="area_box">
-            <textarea v-model="busine" placeholder="请输入企业经营项目（不超过200字）" ></textarea>
+            <textarea v-model="busine" placeholder="请输入企业经营项目（不超过200字）" maxlength="200" @input="getinputnum"></textarea>
         </div>
         <div class="login_btn" @click="_completeInfo">保存</div>
     </form>
@@ -128,7 +128,6 @@
             apiready = function () {
                 $api.fixStatusBar($api.dom('header'));
                 app.headerH = $api.offset($api.dom('header')).h;
-                app.first = api.pageParam.first || 0;
             }
         },
         methods: {
@@ -151,6 +150,7 @@
                 };
                 ApiAjax('api/completeInfo', post, function (ret, err) {
                     if (ret.code == 1) {
+                        api.closeWin();
                         api.openWin({
                             name: 'index_win',
                             url: '../common/index_win.html',
@@ -163,6 +163,11 @@
                         toastMsg(ret.message)
                     }
                 })
+            },
+            getinputnum: function () {
+                if (app.busine >= 200) {
+                    toastMsg('请输入少于200字的内容')
+                }
             }
 
 

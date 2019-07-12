@@ -460,7 +460,8 @@
                                 ids: []
                                 , status: 3
                             }, function (ret, err) {
-                                if (ret.data.length > 0) {
+                                if (!ret) return false;
+                                if (ret && ret.data.length > 0) {
                                     for (var i in ret.data) {
                                         if (ret_enqueue.id == ret.data[i].id) {
                                             if (ret.data[i].status == 3) {

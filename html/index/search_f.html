@@ -62,7 +62,7 @@
                     <div class="new_date">发布日期：{{item.create_time}}</div>
                 </div>
             </div>
-            <div v-if='showmore&&order_list.length>=perpage' class="enddata">{{showtext}}</div>
+            <!--<div v-if='showmore&&order_list.length>=perpage' class="enddata">{{showtext}}</div>-->
         </div>
     </div>
     <div v-else>
@@ -134,16 +134,16 @@
                         app.order_list = [];
                     }
                 });
-                // 上拉加载
-                api.addEventListener({
-                    name: 'scrolltobottom',
-                    extra: {
-                        threshold: 50            //设置距离底部多少距离时触发，默认值为0，数字类型
-                    }
-                }, function (ret, err) {
-                    app.page++;
-                    app._getOrderList();
-                });
+                // // 上拉加载
+                // api.addEventListener({
+                //     name: 'scrolltobottom',
+                //     extra: {
+                //         threshold: 50            //设置距离底部多少距离时触发，默认值为0，数字类型
+                //     }
+                // }, function (ret, err) {
+                //     app.page++;
+                //     app._getOrderList();
+                // });
                 if ($api.getStorage('history_list')) {
                     app.history_list = JSON.parse($api.getStorage('history_list'));
                 }
@@ -158,16 +158,11 @@
                     cate_id: app.cate_id,
                     search: app.keyword
                 }, function (ret, err) {
-                    // alert(JSON.stringify(ret))
-                    var order_list = ret.data;
-                    if (ret.data.length > 0) {
-                        app.order_list = app.order_list.concat(order_list);
-                        app.showmore = true;
-                    } else {
-                        app.showtext = '到底了';
-                    }
+                    alert(JSON.stringify(ret))
+                    // var order_list = ret.data;
 
-                    // app.order_list = ret.data;
+
+                    app.order_list = ret.data;
                 });
             },
             // 清除历史记录
@@ -177,14 +172,32 @@
             },
             history_fn(index) {
                 app.keyword = this.history_list[index];
-                app._getOrderList();
+                app.page = 1;
                 api.sendEvent({
                     name: 'historykeword',
                     extra: {
                         keyword: app.keyword
                     }
                 });
-            }
+                app._getOrderList();
+            },
+            // 订单详情
+            go_detail: function (id, title) {
+                if (getToken()) {
+                    api.openWin({
+                        name: 'index_detail_w',
+                        url: './index_detail_w.html',
+                        bgColor: '#fff',
+                        pageParam: {
+                            id: id,
+                            title: title,
+                            type: 0
+                        }
+                    });
+                } else {
+                    openView('login', 'login/login', '账号登录')
+                }
+            },
         }
     })
 </script>

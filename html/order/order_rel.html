@@ -658,7 +658,7 @@
                 }
                 if (app.postData.linktel == '') {
                     toastMsg('请输入联系电话');
-                } else if (!mobileReg.test(app.postData.linktel)) {
+                } else if (!/^1\d{10}$/gi.test(app.postData.linktel)) {
                     toastMsg('联系电话不正确');
                     return
                 }
@@ -707,14 +707,25 @@
                     api.hideProgress();
                     if (ret.code == 1) {
                         toastMsg('发布成功，等待审核…');
-                        api.openWin({
-                            name: 'index_win',
-                            url: '../common/index_win.html',
-                            slidBackEnabled: false,
-                            reload: true,
-                            vScrollBarEnabled: false,
-                            hScrollBarEnabled: false,
-                        });
+                        // api.openWin({
+                        //     name: 'index_win',
+                        //     url: '../common/index_win.html',
+                        //     slidBackEnabled: false,
+                        //     reload: true,
+                        //     vScrollBarEnabled: false,
+                        //     hScrollBarEnabled: false,
+                        // });
+                        setTimeout(function () {
+                            api.openWin({
+                                name: 'index_win',
+                                url: '../common/index_win.html',
+                                slidBackEnabled: false,
+                                reload: true,
+                                vScrollBarEnabled: false,
+                                hScrollBarEnabled: false,
+                            });
+                            // openView('my_outorder','my/my_outorder','外发订单')
+                        },1500)
                     } else {
                         toastMsg(ret.message)
                     }
@@ -732,12 +743,12 @@
                     var postData = JSON.parse(JSON.stringify(app.postData));
                     for (var i in postData) {
                         if (obj[i] == postData[i]) {
-                            api.sendEvent({
-                                name: 'saveData',
-                                extra: {
-                                    savevalue: 1
-                                }
-                            });
+                            // api.sendEvent({
+                            //     name: 'saveData',
+                            //     extra: {
+                            //         savevalue: 1
+                            //     }
+                            // });
                         }
                     }
                 },

@@ -18,11 +18,11 @@
     <form>
         <div class="input_box box">
             <span class="iconfont icon-shouji"></span>
-            <input type="number" placeholder="请输入您的手机号" v-model="phone">
+            <input type="number" placeholder="请输入您的手机号" v-model="phone" maxlength="11">
         </div>
         <div class="input_box">
             <span class="iconfont icon-yanzhengma"></span>
-            <input type="number" placeholder="请输入验证码" v-model="code">
+            <input type="text" maxlength="6" placeholder="请输入验证码" v-model="code">
             <span v-if="show" class="code_btn" @click="getCode">获取验证码</span>
             <span v-else class="code_btn">{{count}}S后可重发</span>
         </div>
@@ -65,7 +65,7 @@
                         tel: app.phone,
                     };
                     ApiAjax('Login/getPasswdSms', post, function (ret, err) {
-                        if (ret) {
+                        if (ret.code == 1) {
                             if (!app.timer) {
                                 app.count = TIME_COUNT;
                                 app.show = false;
@@ -79,6 +79,8 @@
                                     }
                                 }, 1000)
                             }
+                        } else {
+                            toastMsg(ret.message)
                         }
                     });
                 }
@@ -88,11 +90,9 @@
                 // openView('login_reset', 'login/login_reset', '重置密码')
                 if (app.phone == '') {
                     toastMsg('请输入您手机号')
-                }
-                else if (!mobileReg.test(app.phone)) {
+                } else if (!/^1\d{10}$/gi.test(app.phone)) {
                     toastMsg('请输入正确的手机号')
-                }
-                else if (app.code == '') {
+                } else if (app.code == '') {
                     toastMsg('请输入验证码')
                 } else {
                     var post = {
@@ -101,7 +101,8 @@
                     };
                     ApiAjax('/Login/resetPasswd', post, function (ret, err) {
                         if (ret.code == 1) {
-                            openView('login_reset', 'login/login_reset', '重置密码')
+                            // $api.setStorage('fac_token', ret.data);
+                            openView('login_reset', 'login/login_reset', '重置密码', 'login_reset', false, {forgot_token: ret.data})
                         } else {
                             toastMsg(ret.message)
                         }
