@@ -53,6 +53,7 @@
 
         .type .infoinput {
             display: flex;
+            flex: 1;
             align-items: center;
             justify-content: flex-end;
             flex-wrap: wrap;
@@ -63,7 +64,7 @@
             background-color: #E72424;
             border-radius: 5px;
             color: #fff;
-            margin-left: .2rem;
+            margin: 0 0 .2rem .2rem;
         }
 
         .infoinput .num {
@@ -243,7 +244,7 @@
 <div id="app" v-cloak class="company">
     <div class="input_box title">
         <span class="label ">订单详情</span>
-        <div class="infoinput">发布日期：{{d_info.create_time}}</div>
+        <div class="infoinput" v-if="d_info.create_time">发布日期：{{d_info.create_time}}</div>
     </div>
     <div class="input_box">
         <span class="label">标题</span>
@@ -254,7 +255,7 @@
         <div class="infoinput">{{d_info.address}}</div>
     </div>
     <div class="input_box type">
-        <span class="label">类型1</span>
+        <span class="label">类型</span>
         <div class="infoinput"><span v-for="i in d_info.cate_names">{{i}}</span></div>
     </div>
     <div class="input_box ">
@@ -316,7 +317,7 @@
     <div class="input_box" @click="lookPrice" v-else-if="type==2&&d_info.status==1"><span class="outordernum">已有{{d_info.offer_count}}人报价，查看报价</span>
     </div>
     <div v-show="type!=2">
-        <div class="tips">注：您的剩余报价次数 <span>{{d_info.free_times}}</span>次</div>
+        <div class="tips" v-if="app.vip==0">注：您的剩余报价次数 <span>{{d_info.free_times}}</span>次</div>
         <div class="vip_box">
             <div class="vip_btn" @click="vipShow">会员查看信息</div>
         </div>
@@ -561,11 +562,29 @@
             },
             // 会员查看信息
             vipShow: function () {
+                if (app.vip == 0) {
+                    api.confirm({
+                        title: '',
+                        msg: '您还没有开通会员，不可查看以下信息。 ',
+                        buttons: ['取消', '去开通']
+                    }, function (ret, err) {
+                        var index = ret.buttonIndex;
+                        if (index == 2) {
+                            openView('my_vip', 'my/my_vip', '开通会员', false, false, false, {vip: 1})
+                        }
+                    });
+                }
 
             },
             // 拨打联系人
             callPhone: function () {
-
+                if (aoo.vip == 0) {
+                    return
+                }
+                api.call({
+                    type: 'tel_prompt',
+                    number: app.d_info.linktel
+                });
             },
             _checkVip: function () {
                 ApiAjax('api/checkVip', {

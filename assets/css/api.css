@@ -278,7 +278,7 @@ td, th {
     align-items: center;
     justify-content: space-between;
     padding: 0 0.45rem;
-    height: 88px;
+    height: 1.2rem;
     font-size: 17px;
 }
 
@@ -365,6 +365,7 @@ td, th {
 .examination_swiper .swiper-slide .examination_active {
     color: #E72424;
     border-bottom: 2px solid #E72424;
+    font-weight: bold;
 }
 
 .input {
@@ -641,6 +642,7 @@ footer {
 input[type="search"]::-webkit-search-cancel-button {
     display: none;
 }
-input{
+
+input {
     -webkit-appearance: none;
 }

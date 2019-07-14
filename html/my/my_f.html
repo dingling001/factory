@@ -42,6 +42,7 @@
 
         .company .icon-vip {
             color: #FFD200;
+            margin-left: .1rem;
         }
 
         .company .company_name .novip {
@@ -179,6 +180,10 @@
             border: 0;
             color: #fff;
         }
+
+        .order_index .center {
+            font-weight: bold;
+        }
     </style>
 </head>
 <body class="my_body">
@@ -187,12 +192,13 @@
     <div class="my_head">
         <div class="order_index">
             <span></span>
-            <span>个人中心</span>
+            <span class="center">个人中心</span>
             <span class="iconfont icon-shezhi" @click="go_view('my_set','账号设置')"></span>
         </div>
         <div class="company" v-if="fac_token">
-            <div class="company_name">{{my_info.tel}}<span
-                    :class="['iconfont icon-vip', my_info.vip==1?'':'novip']"></span></div>
+            <div class="company_name">
+                <span>{{my_info.tel}}</span>
+                <span :class="['iconfont icon-vip', my_info.vip==1?'':'novip']"></span></div>
         </div>
         <div class="company" v-else>
             <div class="company_name" @click="login">

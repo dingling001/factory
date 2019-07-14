@@ -127,6 +127,10 @@
         methods: {
             // 报价/修改报价
             orderPrice: function () {
+                if (app.d_info.status == 2) {
+                    toastMsg('订单审核中…')
+                    return
+                }
                 if (app.vip == 0) {
                     toastMsg('您还不是会员，不能报价')
                     return
@@ -157,10 +161,11 @@
                                         msg: '您的报价已提交',
                                     }, function (ret, err) {
                                     });
+                                } else {
+                                    toastMsg(ret.message)
                                 }
                             })
-                        }
-                        else {
+                        } else {
                             api.alert({
                                 title: '报价有误！',
                                 msg: '您的报价不能低于0元',
@@ -210,6 +215,10 @@
             },
             // 收藏
             collect_fn: function () {
+                if (app.d_info.status == 2) {
+                    toastMsg('订单审核中…')
+                    return
+                }
                 app.d_info.collect = !app.d_info.collect;
                 ApiAjax('api/orderCollect', {
                     token: getToken(),
@@ -232,6 +241,10 @@
             },
             // 分享
             openShare: function () {
+                if (app.d_info.status == 2) {
+                    toastMsg('订单审核中…')
+                    return
+                }
                 api.openFrame({
                     bgColor: 'rgba(0,0,0,0.05)',
                     name: 'share',

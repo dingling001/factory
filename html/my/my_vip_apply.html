@@ -249,17 +249,25 @@
                     bounces: false
                 });
                 app._getAppInfo();
+                app._vipPageViewTimes();
             }
         },
         methods: {
+            _vipPageViewTimes: function () {
+                ApiAjax('my/vipPageViewTimes', {token: getToken()}, function (ret, err) {
+                    if (ret.code == 1) {
+                    } else {
+                        toastMsg(ret.message)
+                    }
+                })
+            },
             // 支付
             pay_fn() {
                 if (app.type == 0) {
                     toastMsg('请选择支付方式')
                 } else if (app.type == 3) {
                     app.bankPay();
-                }
-                else {
+                } else {
                     app._recharge();
                 }
             },

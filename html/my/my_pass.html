@@ -19,12 +19,14 @@
 <body class="my_body">
 <!--<div id="loadStart"></div>-->
 <div id="app" v-cloak class="set">
-    <div class="input_box box"><span class="iconfont icon-yanzhengma"></span> <input type="text"
-                                                                                     placeholder="请输入您的新密码（6-12位）"
-                                                                                     v-model="password"></div>
-    <div class="input_box"><span class="iconfont icon-yanzhengma"></span> <input type="password"
-                                                                                 placeholder="请再次输入您的密码（6-12位）"
-                                                                                 v-model="repassword"></div>
+    <div class="input_box box">
+        <span class="iconfont icon-yanzhengma"></span>
+        <input type="text" placeholder="请输入您的新密码（6-12位）" v-model="password">
+    </div>
+    <div class="input_box">
+        <span class="iconfont icon-yanzhengma"></span>
+        <input type="password" placeholder="请再次输入您的密码（6-12位）" v-model="repassword">
+    </div>
     <div class="login_btn" @click="set_save">{{btn_text}}</div>
 </div>
 </body>
@@ -51,9 +53,33 @@
             }
         },
         methods: {
+            // 修改密码
             set_save: function () {
+                if (app.password == '') {
+                    toastMsg('请输入密码')
+                } else if (app.password < 6 && app.password > 12) {
+                    toastMsg('密码位数设置错误')
+                } else if (app.password !== app.repassword) {
+                    toastMsg('俩次密码不一致')
+                } else {
+                    var post = {
+                        password: app.password,
+                        token: getToken(),
+                    };
+                    ApiAjax('my/changePassword', post, function (ret, err) {
+                        if (ret.code == 1) {
+                            toastMsg(app.btn_text + '成功');
+                            setTimeout(function () {
+                                api.closeWin();
+                            }, 1500)
+                        } else {
+                            toastMsg(ret.message)
+                        }
+                    });
+                }
 
             }
+
         }
     })
 </script>
