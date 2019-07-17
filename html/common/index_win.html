@@ -262,7 +262,7 @@
             },
             // 获取分类列表getCateList
             _getCateList: function () {
-                ApiAjax('api/getCateList', {}, function (ret, err) {
+                ApiAjax('api/getAllCateList', {}, function (ret, err) {
                     app.cate_list = app.cate_list.concat(ret.data.list);
                     app.cate_count = ret.data.count;
                 })
