@@ -11,7 +11,7 @@
     <link rel="stylesheet" href="../../assets/css/api.css">
     <link rel="stylesheet" href="../../assets/css/style.css">
     <!--<link rel="stylesheet" href="https://unpkg.com/mint-ui@1/lib/style.css">-->
-    <link rel="stylesheet" href="http://at.alicdn.com/t/font_1220513_njjndgm1akh.css">
+    <link rel="stylesheet" href="../../assets/font/iconfont.css">
     <style>
         header {
             width: 100%;
@@ -131,10 +131,10 @@
                     toastMsg('订单审核中…')
                     return
                 }
-                if (app.vip == 0) {
-                    toastMsg('您还不是会员，不能报价')
-                    return
-                }
+                // if (app.vip == 0) {
+                //     toastMsg('您还不是会员，不能报价')
+                //     return
+                // }
                 if (app.d_info.free_times <= 0) {
                     toastMsg('您的报价次数已用完，请开通会员，不限制报价次数')
                     return
@@ -153,16 +153,16 @@
                             ApiAjax('api/offerPrice', {
                                 token: getToken(),
                                 order_id: app.id,
-                                price: price,
+                                price: price
                             }, function (res, err) {
                                 if (res.code == 1) {
                                     api.alert({
                                         title: app.order_title,
-                                        msg: '您的报价已提交',
+                                        msg: '您的报价已提交'
                                     }, function (ret, err) {
                                     });
                                 } else {
-                                    toastMsg(ret.message)
+                                    toastMsg(res.message)
                                 }
                             })
                         } else {
@@ -181,7 +181,7 @@
                     token: getToken(),
                     order_id: app.id
                 }, function (ret, err) {
-                    // alert(JSON.stringify(ret))
+                    // //alert(JSON.stringify(ret))
                     app.d_info = ret.data;
                     app.price = ret.data.price;
                     app.type = parseFloat(app.price) > 0 ? 3 : app.type;
@@ -216,7 +216,7 @@
             // 收藏
             collect_fn: function () {
                 if (app.d_info.status == 2) {
-                    toastMsg('订单审核中…')
+                    toastMsg('订单审核中…');
                     return
                 }
                 app.d_info.collect = !app.d_info.collect;

@@ -8,7 +8,7 @@
     <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
     <title></title>
     <script src="../../assets/js/fontsize.js"></script>
-    <link rel="stylesheet" href="http://at.alicdn.com/t/font_1220513_njjndgm1akh.css">
+    <link rel="stylesheet" href="../../assets/font/iconfont.css">
     <link rel="stylesheet" href="../../assets/css/api.css">
 
     <style type="text/css">
@@ -202,7 +202,7 @@
                     status: app.status
                 }, function (ret, err) {
                     loadEnd('my_outorder');
-                    // alert(JSON.stringify(ret))
+                    // //alert(JSON.stringify(ret))
                     var order_list = ret.data;
                     if (ret.data.length > 0) {
                         app.order_list = app.order_list.concat(order_list);

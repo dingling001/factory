@@ -9,7 +9,7 @@
     <title></title>
     <script src="../../assets/js/fontsize.js"></script>
     <link rel="stylesheet" href="../../assets/css/api.css">
-    <link rel="stylesheet" href="http://at.alicdn.com/t/font_1220513_2apiqln0i2w.css">
+    <link rel="stylesheet" href="../../assets/font/iconfont.css">
     <style type="text/css">
         body {
             background-color: #F9F9FA;
@@ -262,7 +262,7 @@
                 })
             },
             // 支付
-            pay_fn() {
+            pay_fn: function () {
                 if (app.type == 0) {
                     toastMsg('请选择支付方式')
                 } else if (app.type == 3) {
@@ -279,6 +279,7 @@
             _getAppInfo: function () {
                 ApiAjax('my/getAppInfo', {token: getToken()}, function (ret, err) {
                     if (ret.code == 1) {
+                        // alert(JSON.stringify(ret))
                         app.pay_info = ret.data;
                     }
                 })
@@ -286,7 +287,7 @@
             // 生成订单
             _recharge: function () {
                 ApiAjax('my/recharge', {token: getToken(), vip_id: app.vip_id}, function (ret, err) {
-                    // alert(JSON.stringify(ret));
+                    // //alert(JSON.stringify(ret));
                     if (ret.code == 1) {
                         switch (app.type) {
                             case 1:
@@ -307,9 +308,9 @@
             // 微信支付
             wechatPay: function (pay_order_sn) {
                 var wx = api.require('wxPay');
-                // alert(JSON.stringify(wx));
+                // //alert(JSON.stringify(wx));
                 ApiAjax('pay/wxPay', {token: getToken(), pay_order_sn: pay_order_sn}, function (ret, err) {
-                    // alert(JSON.stringify(ret))
+                    // //alert(JSON.stringify(ret))
                     if (ret.code == 1) {
                         wx.payOrder({
                             apiKey: ret.data.appid,

@@ -8,7 +8,7 @@
     <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
     <title></title>
     <script src="../../assets/js/fontsize.js"></script>
-    <link rel="stylesheet" href="http://at.alicdn.com/t/font_1220513_yobxgbxpb4.css">
+    <link rel="stylesheet" href="../../assets/font/iconfont.css">
     <style>
         body, html {
             background-color: transparent !important;
@@ -113,7 +113,7 @@
     new FastClick(document.body);
 </script>
 <script type="text/javascript" src="../../assets/js/vue.min.js"></script>
-<script type="text/javascript" src="http://at.alicdn.com/t/font_1220513_yobxgbxpb4.js"></script>
+<script type="text/javascript" src="../../assets/font/iconfont.js"></script>
 <script type="text/javascript" src="../../assets/js/public.js"></script>
 <script>
     var app = new Vue({
@@ -134,7 +134,7 @@
                 app.desc = api.pageParam.share_desc;
                 app.img = api.pageParam.share_img;
                 app.id = api.pageParam.share_id;
-                // alert(JSON.stringify(app.img))
+                // //alert(JSON.stringify(app.img))
             }
         },
         methods: {
@@ -178,7 +178,7 @@
                             description: app.desc,
                             imgUrl: app.img ? imgUrl + app.img : 'widget://assets/image/logo.png'
                         }, function (ret, err) {
-                            // alert(JSON.stringify(ret))
+                            // //alert(JSON.stringify(ret))
                             if (ret.status) {
                                 toastMsg("分享成功！");
                             } else {

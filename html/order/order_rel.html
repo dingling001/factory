@@ -11,7 +11,7 @@
     <link rel="stylesheet" href="../../assets/css/api.css">
     <link rel="stylesheet" href="../../assets/css/style.css">
     <!--<link rel="stylesheet" href="https://unpkg.com/mint-ui@1/lib/style.css">-->
-    <link rel="stylesheet" href="http://at.alicdn.com/t/font_1220513_njjndgm1akh.css">
+    <link rel="stylesheet" href="../../assets/font/iconfont.css">
     <style type="text/css">
 
         .input_box {
@@ -458,9 +458,9 @@
                         app.postData.region_code = ret.value.region_code;
                     }
                 });
-                if ($api.getStorage('postData')) {
-                    app.postData = JSON.parse($api.getStorage('postData'))
-                }
+                // if ($api.getStorage('postData')) {
+                //     app.postData = JSON.parse($api.getStorage('postData'))
+                // }
             }
         },
         methods: {
@@ -700,10 +700,10 @@
                     linktel: app.postData.linktel,
                     linkman: app.postData.linkman
                 };
-                // alert(JSON.stringify(post));
+                // //alert(JSON.stringify(post));
                 $api.setStorage('postData', JSON.stringify(post));
                 ApiAjax('order/orderRelease', post, function (ret, err) {
-                    // alert(JSON.stringify(ret))
+                    // //alert(JSON.stringify(ret))
                     api.hideProgress();
                     if (ret.code == 1) {
                         toastMsg('发布成功，等待审核…');
@@ -716,16 +716,16 @@
                         //     hScrollBarEnabled: false,
                         // });
                         setTimeout(function () {
-                            api.openWin({
-                                name: 'index_win',
-                                url: '../common/index_win.html',
-                                slidBackEnabled: false,
-                                reload: true,
-                                vScrollBarEnabled: false,
-                                hScrollBarEnabled: false,
-                            });
-                            // openView('my_outorder','my/my_outorder','外发订单')
-                        },1500)
+                            // api.openWin({
+                            //     name: 'index_win',
+                            //     url: '../common/index_win.html',
+                            //     slidBackEnabled: false,
+                            //     reload: true,
+                            //     vScrollBarEnabled: false,
+                            //     hScrollBarEnabled: false,
+                            // });
+                            openView('my_outorder', 'my/my_outorder', '外发订单')
+                        }, 1500)
                     } else {
                         toastMsg(ret.message)
                     }

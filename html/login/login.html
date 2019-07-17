@@ -11,7 +11,7 @@
     <link rel="stylesheet" href="../../assets/css/api.css">
     <link rel="stylesheet" href="../../assets/css/style.css">
     <!--<link rel="stylesheet" href="https://unpkg.com/mint-ui@1/lib/style.css">-->
-    <link rel="stylesheet" href="http://at.alicdn.com/t/font_1220513_njjndgm1akh.css">
+    <link rel="stylesheet" href="../../assets/font/iconfont.css">
 </head>
 <body>
 <div id="app" v-cloak>
@@ -66,6 +66,7 @@
                     ApiAjax('Login/usernameLogin', post, function (ret, err) {
                         if (ret.code == 1) {
                             $api.setStorage('fac_token', ret.data);
+
                             app._checkComplete(ret.data)
                         } else {
                             toastMsg(ret.message)
@@ -77,7 +78,6 @@
             _checkComplete: function (token) {
                 ApiAjax('api/checkComplete', {token: token}, function (ret, err) {
                     if (ret.code == 1) {
-                        api.closeWin();
                         api.openWin({
                             name: 'index_win',
                             url: '../common/index_win.html',
@@ -105,7 +105,6 @@
                 //     name: 'login_code',
                 //     url: './login_code.html',
                 // });
-                api.closeWin();
                 openView('login_code', 'login/login_code', '验证码登录')
 
             },
@@ -115,12 +114,10 @@
                 //     name: 'login_forgot',
                 //     url: './login_forgot.html',
                 // });
-                api.closeWin();
                 openView('login_forgot', 'login/login_forgot', '忘记密码')
             },
             // 查看协议
             go_agree: function () {
-                api.closeWin();
                 api.openWin({
                     name: 'login_agree',
                     url: './login_agree.html',

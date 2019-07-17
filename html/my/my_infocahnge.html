@@ -12,7 +12,7 @@
     <link rel="stylesheet" href="../../assets/css/api.css">
     <link rel="stylesheet" href="../../assets/css/style.css">
     <!--<link rel="stylesheet" href="https://unpkg.com/mint-ui@1/lib/style.css">-->
-    <link rel="stylesheet" href="http://at.alicdn.com/t/font_1220513_njjndgm1akh.css">
+    <link rel="stylesheet" href="../../assets/font/iconfont.css">
     <style>
         .label {
             font-size: 16px;
@@ -80,26 +80,26 @@
     <!--</header>-->
     <form>
         <div class="input_box">
-            <span class="label need">企业名称</span>
-            <input type="text" :placeholder="my_info.name" v-model="name">
+            <span class="label">企业名称</span>
+            <input type="text" v-model="name">
         </div>
         <div class="input_box">
             <span class="label">企业地址</span>
-            <input type="text" :placeholder="my_info.address" v-model="address">
+            <input type="text" v-model="address">
         </div>
         <div class="input_box">
             <span class="label">负责人姓名</span>
-            <input type="text" :placeholder="my_info.linkman" v-model="linkman">
+            <input type="text" v-model="linkman">
         </div>
         <div class="input_box">
-            <span class="label need">联系电话</span>
-            <input type="number" :placeholder="my_info.linktel" v-model="linktel">
+            <span class="label">联系电话</span>
+            <input type="number" v-model="linktel">
         </div>
         <div class="input_box border-0">
             <span class="label">企业经营项目：</span>
         </div>
         <div class="area_box">
-            <textarea v-model="busine" :placeholder="my_info.busine"></textarea>
+            <textarea v-model="busine"></textarea>
         </div>
         <div class="login_btn" @click="_completeInfo">保存</div>
     </form>
@@ -155,11 +155,16 @@
                 ApiAjax('my/getMyinfo', {token: getToken()}, function (ret, err) {
                     if (ret.code == 1) {
                         app.my_info = ret.data;
+                        app.name = app.my_info.name;
+                        app.address = app.my_info.address;
+                        app.linkman = app.my_info.linkman;
+                        app.linktel = app.my_info.linktel;
+                        app.busine = app.my_info.busine;
                     } else {
                         toastMsg(ret.message)
                         setTimeout(function () {
                             app.go_infochange()
-                        }, 15000)
+                        }, 1500)
                     }
                 })
             },

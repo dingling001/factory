@@ -11,7 +11,7 @@
     <link rel="stylesheet" href="../../assets/css/api.css">
     <link rel="stylesheet" href="../../assets/css/style.css">
     <!--<link rel="stylesheet" href="https://unpkg.com/mint-ui@1/lib/style.css">-->
-    <link rel="stylesheet" href="http://at.alicdn.com/t/font_1220513_njjndgm1akh.css">
+    <link rel="stylesheet" href="../../assets/font/iconfont.css">
     <style type="text/css">
         .logo_box {
             width: 1.86rem;
@@ -69,27 +69,30 @@
 </script>
 <script type="text/javascript" src="../../assets/js/vue.min.js"></script>
 <script type="text/javascript" src="../../assets/js/index.js"></script>
-<script>
+<script type="text/javascript">
     var app = new Vue({
-        el: '#app',
-        data: {
-            appVersion: '',
-            about_info: {}
-        },
-        created: function () {
-            apiready = function () {
-                app.appVersion = api.appVersion;
-                app._aboutUs();
+            el: '#app',
+            data: {
+                appVersion: '',
+                about_info: {}
+            },
+            created: function () {
+                apiready = function () {
+                    // app.appVersion = api.appVersion;
+                    app._aboutUs();
+                }
+            },
+            methods: {
+                _aboutUs: function () {
+                    ApiAjax('my/aboutUs', {token: getToken()}, function (ret, err) {
+                        if (ret.code == 1) {
+                            app.about_info = ret.data;
+                            app.about_info.intro = app.about_info.intro.replace(/(<img .*?src=.*ueditor)/g, '<img style="width:100%" src="' + imgUrl + 'ueditor')
+                        }
+                    })
+                }
             }
-        },
-        methods: {
-            _aboutUs: function () {
-                ApiAjax('my/aboutUs', {token: getToken()}, function (ret, err) {
-                    if (ret.code == 1) {
-                        app.about_info = ret.data;
-                    }
-                })
-            }
-        }
-    })
-</script>
+        })
+        < /script>
+
+

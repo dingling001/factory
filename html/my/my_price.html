@@ -8,7 +8,7 @@
     <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
     <title></title>
     <script src="../../assets/js/fontsize.js"></script>
-    <link rel="stylesheet" href="http://at.alicdn.com/t/font_1220513_njjndgm1akh.css">
+    <link rel="stylesheet" href="../../assets/font/iconfont.css">
     <link rel="stylesheet" href="../../assets/css/api.css">
     <style type="text/css">
         .new_title {
@@ -32,10 +32,11 @@
     <div class="new_title">我报价的订单</div>
     <div class="new_list">
         <div class="new_item" v-for="item in order_list" @click="go_detail(item.order_id,item.title)">
-            <div class="new_img"><img :src="imgUrl+item.pics" alt=""></div>
+            <div class="new_img"><img :src=" item.pics?imgUrl+item.pics:'../../assets/image/noimg.png'" alt=""></div>
             <div class="new_right">
                 <div>
-                    <div class="new_name"><span>{{item.title}}</span><span class="new_num">{{item.num}}件</span></div>
+                    <div class="new_name"><span>{{item.title}}</span><span class="new_num">{{toWan(item.num)}}件</span>
+                    </div>
                     <div class="new_city">{{item.address}}</div>
                 </div>
                 <div class="new_date">发布日期：{{item.create_time}}</div>
@@ -45,7 +46,7 @@
     </div>
     <div v-else class="nodata_box">
         <div class="nodata_box_img"><img src="../../assets/image" alt=""></div>
-        <div class="nodata_box_text">暂无外发订单</div>
+        <div class="nodata_box_text">暂无报价</div>
     </div>
 </div>
 </body>
@@ -110,12 +111,17 @@
                     status: app.status
                 }, function (ret, err) {
                     loadEnd('my_price');
-                    var order_list = ret.data;
-                    if (ret.data.length > 0) {
-                        app.order_list = app.order_list.concat(order_list);
-                        app.showmore = true;
-                    } else {
-                        app.showtext = '到底了';
+                    if (ret.code == 1) {
+                        var order_list = ret.data;
+                        if (ret.data.length > 0) {
+                            app.order_list = app.order_list.concat(order_list);
+                            app.showmore = true;
+                        } else {
+                            app.showtext = '到底了';
+                        }
+                    }
+                    else {
+                        toastMsg(ret.message)
                     }
                     // app.order_list = ret.data;
                 });
@@ -137,7 +143,7 @@
                 else {
                     openView('login', 'login/login', '账号登录')
                 }
-            },
+            }
         }
     })
 </script>

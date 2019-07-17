@@ -10,7 +10,7 @@
     <title></title>
     <script src="../../assets/js/fontsize.js"></script>
     <link rel="stylesheet" href="../../assets/css/api.css">
-    <link rel="stylesheet" href="http://at.alicdn.com/t/font_1220513_njjndgm1akh.css">
+    <link rel="stylesheet" href="../../assets/font/iconfont.css">
     <link rel="stylesheet" href="../../assets/css/swiper-3.4.2.min.css">
     <style type="text/css">
         body {
@@ -143,7 +143,7 @@
     <div class="nav_box">
         <div class="nav_item" v-for="(item,index) in cate_list" @click="more_fn(index,item.id)">
             <span class="icon_box"><img :src="index==cate_list.length-1?item.pic:imgUrl+item.pic" alt=""></span>
-            <span class="icon_name">1{{item.cate_name}}</span>
+            <span class="icon_name">{{item.cate_name}}</span>
         </div>
         <!--<div class="nav_item" @click="more_fn(0,'')" v-if="cate_list.length>=9">-->
         <!--<span class="icon_box"><img src="../../assets/image/more.png" alt=""></span>-->
@@ -197,7 +197,7 @@
                     "id": '',
                     "cate_name": "更多",
                     "pic": "../../assets/image/more.png"
-                },
+                }
             ],
             order_list: [],
             cate_count: 0,
@@ -209,7 +209,8 @@
             // offsetTop: 0,
             showmore: false,
             showtext: '加载中...',
-            offline: false
+            offline: false,
+            ajpush: null
         },
         created: function () {
             apiready = function () {
@@ -256,10 +257,61 @@
                 //         app.page = 1;
                 //         app.showtext = '加载中...';
                 //     }
-                // });
+                // }
+                // 推送
+                var systemType = api.systemType
+                app.ajpush = api.require('ajpush');
+                api.addEventListener({name: 'pause'}, function (ret, err) {
+                    app.onPause();//监听应用进入后台，通知jpush暂停事件
+                });
+                api.addEventListener({name: 'resume'}, function (ret, err) {
+                    app.onResume();//监听应用恢复到前台，通知jpush恢复事件
+                });
+                app.ajpush.init(function (ret) {
+                    if (ret && ret.status) {
+                        app.ajpush.setListener(
+                            function (ret) {
+                                alert(JSON.stringify(ret))
+                                var id = ret.id;
+                                var title = ret.title;
+                                var content = ret.content;
+                                var extra = ret.extra;
+                                if (systemType == 'android') {
+                                    api.addEventListener({
+                                        name: 'appintent'
+                                    }, function (ret, err) {
+                                        if (ret && ret.appParam.ajpush) {
+                                            var ajpush = ret.appParam.ajpush;
+                                            var id = ajpush.id;
+                                            var title = ajpush.title;
+                                            var content = ajpush.content;
+                                            var extra = ajpush.extra;
+                                            app.go_detail(id,title)
+                                        }
+                                    })
+                                }else if(systemType=='ios'){
+                                    api.addEventListener({
+                                        name: 'noticeclicked'
+                                    }, function(ret, err) {
+                                        if (ret && ret.value) {
+                                            var ajpush = ret.value;
+                                            var content = ajpush.content;
+                                            var extra = ajpush.extra;
+                                        }
+                                    })
+                                }
+                                // ajpush.getRegistrationId(function (res) {
+                                //     alert(JSON.stringify())
+                                //     var registrationId = res.id;
+                                // });
+                            }
+                        );
+                    }
+                });
             }
         },
         methods: {
+
             // 获取首页轮播图getSlideList
             _getSlideList: function () {
                 ApiAjax('api/getSlideList', {}, function (ret, err) {
@@ -272,7 +324,7 @@
             _getCateList: function () {
                 ApiAjax('api/getCateList', {}, function (ret, err) {
                     loadEnd('index_f');
-                    app.cate_list = ret.data.list.concat(app.cate_list);
+                    app.cate_list =ret.data.list.length>=9? ret.data.list.concat(app.cate_list):ret.data.list;
                     app.cate_count = ret.data.count;
                 })
             },
@@ -370,6 +422,17 @@
             //         app.isFixed = false;
             //     }
             // }
+            //统计-app恢复
+            onResume: function () {
+
+                app.ajpush.onResume();
+                console.log('JPush onResume');
+            },
+            //统计-app暂停
+            onPause: function () {
+                app.ajpush.onPause();
+                console.log('JPush onPause');
+            }
         },
         // destroyed: function () {
         //     window.removeEventListener('scroll', this.handleScroll); // 离开页面 关闭监听 不然会报错

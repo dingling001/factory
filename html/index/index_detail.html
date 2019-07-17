@@ -10,8 +10,7 @@
     <script src="../../assets/js/fontsize.js"></script>
     <link rel="stylesheet" href="../../assets/css/api.css">
     <link rel="stylesheet" href="../../assets/css/style.css">
-    <!--<link rel="stylesheet" href="https://unpkg.com/mint-ui@1/lib/style.css">-->
-    <link rel="stylesheet" href="http://at.alicdn.com/t/font_1220513_yobxgbxpb4.css">
+    <link rel="stylesheet" href="../../assets/font/iconfont.css">
     <style>
         body {
             background-color: #F9F9FA;
@@ -317,7 +316,7 @@
     <div class="input_box" @click="lookPrice" v-else-if="type==2&&d_info.status==1"><span class="outordernum">已有{{d_info.offer_count}}人报价，查看报价</span>
     </div>
     <div v-show="type!=2">
-        <div class="tips" v-if="app.vip==0">注：您的剩余报价次数 <span>{{d_info.free_times}}</span>次</div>
+        <div class="tips" v-if="vip==0">注：您的剩余报价次数 <span>{{d_info.free_times}}</span>次</div>
         <div class="vip_box">
             <div class="vip_btn" @click="vipShow">会员查看信息</div>
         </div>
@@ -352,7 +351,7 @@
             apiready = function () {
                 app.id = api.pageParam.id;
                 app.type = api.pageParam.type || 0;// 0 首页订单，1订单中心， 2我的报价订单 ,3外发订单，4我的收藏订单
-                // alert(app.type)
+                // //alert(app.type)
                 if (app.type == 3) {
                     // 我的报价详情
                     app._offerDetail()
@@ -371,6 +370,7 @@
                     } else {
                     }
                 });
+                app._offerList();
                 // app.checkDownload();
             }
         },
@@ -381,7 +381,7 @@
                     token: getToken(),
                     order_id: app.id
                 }, function (ret, err) {
-                    // alert(JSON.stringify(ret))
+                    // //alert(JSON.stringify(ret))
                     loadEnd('index_detail');
                     app.d_info = ret.data;
                     app.d_info.create_time = timestampToTime(app.d_info.create_time);
@@ -417,23 +417,23 @@
                     title: '下载附件'
                 }, function (ret, err) {
                     if (ret) {
-                        // alert(JSON.stringify(ret))
+                        // //alert(JSON.stringify(ret))
                         if (ret.id) {
                             downloadManager.openDownloadedFile({
                                 id: ret.id
                             }, function (ret, err) {
-                                // alert(JSON.stringify(ret) + 'downopen')
+                                // //alert(JSON.stringify(ret) + 'downopen')
                                 if (ret) {
-                                    // alert(JSON.stringify(ret)+'downopen')
+                                    // //alert(JSON.stringify(ret)+'downopen')
                                 } else {
                                     toastMsg(ret.message)
                                 }
                             });
                         } else {
-                            // alert(JSON.stringify(err));
+                            // //alert(JSON.stringify(err));
                         }
                     } else {
-                        // alert(JSON.stringify(err));
+                        // //alert(JSON.stringify(err));
                     }
                 });
             },
@@ -504,7 +504,7 @@
                     order_id: app.id
                 }, function (ret, err) {
                     loadEnd('index_detail');
-                    // alert(JSON.stringify(ret))
+                    // //alert(JSON.stringify(ret))
                     app.d_info = ret.data;
                     if (ret.data.pics) {
                         for (var i in app.d_info.pics) {
@@ -526,7 +526,7 @@
                     order_id: app.id
                 }, function (ret, err) {
                     loadEnd('index_detail');
-                    // alert(JSON.stringify(ret))
+                    // //alert(JSON.stringify(ret))
                     app.d_info = ret.data;
                     if (ret.data.pics) {
                         for (var i in app.d_info.pics) {
@@ -557,7 +557,7 @@
                 if (app.offer_list.length <= 0) {
                     toastMsg('暂无人报价')
                 } else {
-
+                    openView('index_price', 'index/index_price', '查看报价',false, false, {id: app.id})
                 }
             },
             // 会员查看信息
@@ -578,7 +578,7 @@
             },
             // 拨打联系人
             callPhone: function () {
-                if (aoo.vip == 0) {
+                if (app.vip == 0) {
                     return
                 }
                 api.call({

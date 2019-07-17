@@ -10,7 +10,10 @@ var imgUrl = 'http://j.jianghairui.com/';
 // var ERROR = '';
 
 
-function ApiAjax(url, subDatas, callbackfun, file = {}, type = false, post = 'post') {
+function ApiAjax(url, subDatas, callbackfun, file, type, post) {
+    file = file || {};
+    type = type ? type : false;
+    post = post ? post : 'post';
     if (type) {
         api.ajax({
             url: baseurl + url,
@@ -67,6 +70,7 @@ function openView(fmName, fmUrl, winTitle, winName, winUrl, fmParams, winParams)
     var options = {
         name: '',
         url: '',
+        reload: true,
         pageParam: {
             winTitle: '',
             win: {},
@@ -105,11 +109,18 @@ function closeWindow(winName) {
             name: winName,
             animation: "reveal"
         });
+        api.closeFrame({
+            name: winName
+        });
     } else {
         api.closeWin({
             animation: "reveal"
         });
+        api.closeFrame({
+            animation: "reveal"
+        });
     }
+
 }
 
 function getHeight(id) {

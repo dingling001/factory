@@ -10,7 +10,7 @@
     <script src="../../assets/js/fontsize.js"></script>
     <link rel="stylesheet" href="../../assets/css/api.css">
     <link rel="stylesheet" href="../../assets/css/swiper-3.4.2.min.css">
-    <link rel="stylesheet" href="http://at.alicdn.com/t/font_1220513_njjndgm1akh.css">
+    <link rel="stylesheet" href="../../assets/font/iconfont.css">
     <style>
         .examination_swiper {
             display: flex;
@@ -39,16 +39,39 @@
         .iphonex {
             height: 4rem;
         }
+
+        header {
+            width: 100%;
+            height: auto;
+            font-size: 18px;
+            color: #424242;
+            overflow: hidden;
+        }
+
+        .index_headers {
+            line-height: 0.44rem;
+            color: #424242;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.2rem 0.4rem;
+        }
     </style>
 </head>
 <body>
 <div id="app" v-cloak>
-    <header class="index_header" v-if="index==0" @click="openSearch">
-        <span class="input">请输入您要搜索的内容</span>
-        <span class="iconfont icon-sousuo"></span>
+    <header class="" v-if="index==0" @click="openSearch">
+        <div class="index_headers">
+            <div></div>
+            <!--<div class="win_mid">{{winTitle}}</div>-->
+            <span class="input">请输入您要搜索的内容</span>
+            <span class="iconfont icon-sousuo"></span>
+        </div>
+        <!--<span class="input">请输入您要搜索的内容</span>-->
+        <!--<span class="iconfont icon-sousuo"></span>-->
     </header>
-    <header :class="['order_header', iphonex?'iphonex':'']" v-else-if="index==1">
-        <div class="order_index">
+    <header :class="['', iphonex?'iphonex':'']" v-else-if="index==1">
+        <div class="index_headers">
             <span></span>
             <span>订单中心</span>
             <div class="close_left" @click="relFn"><span class="iconfont icon-fenxiangfeiji"></span></div>
@@ -65,7 +88,7 @@
                     </div>
                 </div>
             </div>
-            <div class="icon_box"><span class="iconfont icon-arrow-right"></span></div>
+            <div class="icon_box" v-show="cate_list.length>7"><span class="iconfont icon-arrow-right"></span></div>
         </div>
     </header>
     <header class="index_header height0" v-else-if="index==2"></header>
@@ -109,7 +132,7 @@
                     "id": '',
                     "cate_name": "全部",
                     "pic": ""
-                },
+                }
             ],
             cate_count: 0,
             iphonex: false
@@ -138,17 +161,17 @@
                         name: 'index_f',
                         url: '../index/index_f.html',
                         bounces: true,
-                        reload: true,
+                        reload: true
                     }, {
                         name: 'order_f',
                         url: '../order/order_f.html',
                         bounces: true,
-                        reload: true,
+                        reload: true
                     }, {
                         name: 'my_f',
                         url: '../my/my_f.html',
                         bounces: false,
-                        reload: true,
+                        reload: true
                     }
                     ]
                 }, function (ret, err) {
@@ -165,15 +188,15 @@
                                 y: 0,
                                 w: 'auto',
                                 h: api.winHeight - app.footerH
-                            },
+                            }
                         });
                         api.setStatusBarStyle({
-                            style: 'light',
+                            style: 'light'
                         });
                     } else {
                         app.headerH = $api.offset($api.dom('header')).h;
                         api.setStatusBarStyle({
-                            style: 'dark',
+                            style: 'dark'
                         });
                         api.setFrameGroupAttr({
                             name: 'index',
@@ -182,7 +205,7 @@
                                 y: app.headerH,
                                 w: 'auto',
                                 h: api.winHeight - app.headerH - app.footerH
-                            },
+                            }
                         });
                         app.mySwiper = new Swiper('.examination_swiper .swiper-container', {
                             slidesPerView: 'auto',
@@ -191,10 +214,10 @@
                             observeParents: true,
                             freeMode: true,
                             initialSlide: 0,
-                            nextButton: '.icon_box',
+                            nextButton: '.icon_box'
                         });
                     }
-                    // alert(index)
+                    // //alert(index)
                 });
                 $api.fixStatusBar($api.dom('header'));
                 $api.fixTabBar($api.byId('footer'));
@@ -224,7 +247,7 @@
             openSearch: function () {
                 api.openWin({
                     name: 'search_w',
-                    url: '../index/search_w.html',
+                    url: '../index/search_w.html'
                 });
             },
             // 改变滑块
@@ -246,9 +269,6 @@
             },
             // 跳转发布
             relFn: function () {
-                api.closeFrameGroup({
-                    name: 'index'
-                });
                 if (getToken()) {
                     openView('order_rel', 'order/order_rel', '发布订单')
                 } else {

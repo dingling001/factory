@@ -12,7 +12,7 @@
     <link rel="stylesheet" href="../../assets/css/api.css">
     <link rel="stylesheet" href="../../assets/css/style.css">
     <!--<link rel="stylesheet" href="https://unpkg.com/mint-ui@1/lib/style.css">-->
-    <link rel="stylesheet" href="http://at.alicdn.com/t/font_1220513_njjndgm1akh.css">
+    <link rel="stylesheet" href="../../assets/font/iconfont.css">
     <style>
         .label {
             font-size: 16px;
@@ -150,7 +150,6 @@
                 };
                 ApiAjax('api/completeInfo', post, function (ret, err) {
                     if (ret.code == 1) {
-                        api.closeWin();
                         api.openWin({
                             name: 'index_win',
                             url: '../common/index_win.html',
@@ -165,7 +164,7 @@
                 })
             },
             getinputnum: function () {
-                if (app.busine >= 200) {
+                if (app.busine.length >= 200) {
                     toastMsg('请输入少于200字的内容')
                 }
             }

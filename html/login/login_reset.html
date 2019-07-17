@@ -10,17 +10,17 @@
     <script src="../../assets/js/fontsize.js"></script>
     <link rel="stylesheet" href="../../assets/css/api.css">
     <link rel="stylesheet" href="../../assets/css/style.css">
-    <link rel="stylesheet" href="http://at.alicdn.com/t/font_1220513_njjndgm1akh.css">
+    <link rel="stylesheet" href="../../assets/font/iconfont.css">
 </head>
 <body>
 <div id="app" v-cloak>
     <form>
         <div class="input_box box">
-            <span class="iconfont icon-shouji"></span>
+            <span class="iconfont icon-mima"></span>
             <input type="password" placeholder="请输入您的新密码（6-12位）" v-model="password">
         </div>
         <div class="input_box">
-            <span class="iconfont icon-yanzhengma"></span>
+            <span class="iconfont icon-mima"></span>
             <input type="password" placeholder="请再次输入您的密码（6-12位）" v-model="repassword">
         </div>
         <div class="login_btn" @click="login">前往登录</div>
@@ -46,7 +46,7 @@
         },
         created: function () {
             apiready = function () {
-                alert(JSON.stringify(api.pageParam))
+                // //alert(JSON.stringify(api.pageParam))
                 app.forgot_token = api.pageParam.forgot_token;
             }
         },

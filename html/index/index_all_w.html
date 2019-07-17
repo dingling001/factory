@@ -10,7 +10,7 @@
     <script src="../../assets/js/fontsize.js"></script>
     <link rel="stylesheet" href="../../assets/css/swiper-3.4.2.min.css">
     <link rel="stylesheet" href="../../assets/css/api.css">
-    <link rel="stylesheet" href="http://at.alicdn.com/t/font_1220513_njjndgm1akh.css">
+    <link rel="stylesheet" href="../../assets/font/iconfont.css">
     <style>
         .examination_swiper {
             display: flex;
@@ -57,7 +57,7 @@
                     </div>
                 </div>
             </div>
-            <div class="icon_box" v-if="cate_list.length>7"><span class="iconfont icon-arrow-right"></span></div>
+            <div class="icon_box" v-show="cate_list.length>7"><span class="iconfont icon-arrow-right"></span></div>
         </div>
     </header>
 </div>
@@ -112,25 +112,28 @@
                     },
                     bounces: true
                 });
-                app.mySwiper = new Swiper('.examination_swiper .swiper-container', {
-                    slidesPerView: 'auto',
-                    slideToClickedSlide: true,
-                    observer: true,
-                    observeParents: true,
-                    // freeMode: true,
-                    nextButton: '.icon_box',
-                });
-                setTimeout(function () {
-                    app.mySwiper.slideTo(app.ind, 500, false);
-                }, 500)
+
+
             }
         },
         methods: {
             // 获取分类列表getCateList
             _getCateList: function () {
-                ApiAjax('api/getCateList', {}, function (ret, err) {
+                ApiAjax('api/getAllCateList', {}, function (ret, err) {
                     app.cate_list = app.cate_list.concat(ret.data.list);
                     app.cate_count = ret.data.count;
+                    app.mySwiper = new Swiper('.examination_swiper .swiper-container', {
+                        slidesPerView: 'auto',
+                        slideToClickedSlide: true,
+                        observer: true,
+                        observeParents: true,
+                        freeMode: true,
+                        initialSlide: 0,
+                        nextButton: '.icon_box',
+                    });
+                    setTimeout(function () {
+                        app.mySwiper.slideTo(app.ind, 500, false);
+                    }, 500)
                 })
             },
             // 搜索页

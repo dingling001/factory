@@ -9,7 +9,7 @@
     <title></title>
     <script src="../../assets/js/fontsize.js"></script>
     <link rel="stylesheet" href="../../assets/css/api.css">
-    <link rel="stylesheet" href="http://at.alicdn.com/t/font_1220513_2apiqln0i2w.css">
+    <link rel="stylesheet" href="../../assets/font/iconfont.css">
     <style type="text/css">
         body {
             background-color: #F9F9FA;
@@ -79,9 +79,9 @@
             // 特权信息
             _getAppInfo: function () {
                 ApiAjax('my/getAppInfo', {token: getToken()}, function (ret, err) {
-                    // alert(JSON.stringify(ret))
                     if (ret.code == 1) {
                         app.pay_info = ret.data;
+                        app.pay_info.vip_desc = app.pay_info.vip_desc.replace(/(<img .*?src=.*ueditor)/g, '<img style="width:100%" src="'+ imgUrl+'ueditor')
                     }
                 })
             },
