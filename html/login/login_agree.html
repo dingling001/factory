@@ -13,10 +13,10 @@
 </head>
 <body>
 <div id="app">
-    <header class="index_header">
-        <span class="title" @click="closeWindow('login_agree')"><span class="iconfont icon-fanhui"></span>加工宝用户协议</span>
-    </header>
-    <div class="agree">协议</div>
+    <!--<header class="index_header">-->
+        <!--<span class="title" @click="closeWindow('login_agree')"><span class="iconfont icon-fanhui"></span>加工宝用户协议</span>-->
+    <!--</header>-->
+    <div class="agree" v-html="treaty"></div>
 </div>
 </body>
 </html>
@@ -31,13 +31,25 @@
 <script>
     var app = new Vue({
         el: '#app',
-        data: {},
+        data: {
+            treaty: ''
+        },
         created: function () {
             apiready = function () {
-                $api.fixStatusBar($api.dom('header'));
-                app.headerH = $api.offset($api.dom('header')).h;
+                // $api.fixStatusBar($api.dom('header'));
+                // app.headerH = $api.offset($api.dom('header')).h;
+                app._getAppInfo()
             }
         },
-        methods: {}
+        methods: {
+            // 会员说明
+            _getAppInfo: function () {
+                ApiAjax('api/getTreaty', {token: getToken()}, function (ret, err) {
+                    if (ret.code == 1) {
+                        app.treaty = ret.data;
+                    }
+                })
+            },
+        }
     })
 </script>

@@ -29,15 +29,25 @@
             align-items: center;
             color: #F11C15;
             transition: ease-in-out .3s;
+
         }
 
         .rel_btn .iconfont {
-            font-size: 50px;
+            font-size: 22px;
             font-weight: bold;
         }
 
         .touchop {
             opacity: 0;
+        }
+        .iconbox{
+            background-color: #F11C15;
+            color: #fff;
+            border-radius: 50%;
+            width: .8rem;
+            height: .8rem;
+            text-align: center;
+            line-height: .8rem;
         }
     </style>
 </head>
@@ -70,7 +80,8 @@
         <div>你的网络好像不太给力，请稍后再试</div>
         <div class="nodatabtn" @click="_getOrderList"><span class="iconfont icon-shuaxin"></span><span>重新加载</span></div>
     </div>
-    <div :class="['rel_btn', touch?'touchop':'']" @click="re_fn"><span class="iconfont icon-addTodo-nav"></span>
+    <div :class="['rel_btn', touch?'touchop':'']" @click="re_fn">
+        <div class="iconbox"><span class="iconfont icon-addTodo-nav"></span></div>
         <div>发布</div>
     </div>
 </div>

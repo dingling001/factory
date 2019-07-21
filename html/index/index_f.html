@@ -134,7 +134,7 @@
     <div class="swiper-container banner">
         <div class="swiper-wrapper">
             <div class="swiper-slide" v-for="(item,index) in slide_list" :key="item.id">
-                <img :src="imgUrl+item.pic?imgUrl+item.pic:'../../assets/image/load.gif'" alt>
+                <img :src="item.pic?imgUrl+item.pic:'../../assets/image/load.gif'" alt>
             </div>
         </div>
         <!-- 如果需要分页器 -->
@@ -142,7 +142,10 @@
     </div>
     <div class="nav_box">
         <div class="nav_item" v-for="(item,index) in cate_list" @click="more_fn(index,item.id)">
-            <span class="icon_box"><img :src="index==cate_list.length-1?item.pic:imgUrl+item.pic" alt=""></span>
+            <span class="icon_box">
+                <img :src="index==cate_list.length-1?item.pic:imgUrl+item.pic" alt="" v-if="item.pic">
+                <img src="../../assets/image/noimg.png" alt="" v-else>
+            </span>
             <span class="icon_name">{{item.cate_name}}</span>
         </div>
         <!--<div class="nav_item" @click="more_fn(0,'')" v-if="cate_list.length>=9">-->
@@ -286,13 +289,13 @@
                                             var title = ajpush.title;
                                             var content = ajpush.content;
                                             var extra = ajpush.extra;
-                                            app.go_detail(id,title)
+                                            app.go_detail(id, title)
                                         }
                                     })
-                                }else if(systemType=='ios'){
+                                } else if (systemType == 'ios') {
                                     api.addEventListener({
                                         name: 'noticeclicked'
-                                    }, function(ret, err) {
+                                    }, function (ret, err) {
                                         if (ret && ret.value) {
                                             var ajpush = ret.value;
                                             var content = ajpush.content;
@@ -324,8 +327,12 @@
             _getCateList: function () {
                 ApiAjax('api/getCateList', {}, function (ret, err) {
                     loadEnd('index_f');
-                    app.cate_list =ret.data.list.length>=9? ret.data.list.concat(app.cate_list):ret.data.list;
-                    app.cate_count = ret.data.count;
+                    // alert(JSON.stringify(ret))
+                    if (ret.code == 1) {
+                        app.cate_list = ret.data.list.length >= 9 ? ret.data.list.concat(app.cate_list) : ret.data.list;
+                        app.cate_count = ret.data.count;
+                    }
+
                 })
             },
             // 获取首页订单列表getOrderList

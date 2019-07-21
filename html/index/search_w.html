@@ -38,14 +38,17 @@
 </head>
 <body>
 <div id="app" v-cloak>
-    <header id="header" class="index_header">
-        <span class="iconfont icon-fanhui" @click="closeWindow('search_w')"></span>
-        <form>
-            <input class="input" v-model="keyword" @keyup.13="showHis" ref="input1" placeholder="请输入您要搜索的内容" autofocus
-                   type="search" autocomplete="off"/>
-        </form>
-        <div class="close_left" @click="search_fn">
-            <span class="iconfont icon-sousuo"></span>
+    <header id="header" class="">
+        <div class="index_header">
+            <span class="iconfont icon-fanhui" @click="closeWindow('search_w')"></span>
+            <form>
+                <input class="input" v-model="keyword" @keyup.13="showHis" ref="input1" placeholder="请输入您要搜索的内容"
+                       autofocus
+                       type="search" autocomplete="off"/>
+            </form>
+            <div class="close_left" @click="search_fn">
+                <span class="iconfont icon-sousuo"></span>
+            </div>
         </div>
     </header>
 </div>
@@ -95,6 +98,10 @@
         },
         methods: {
             search_fn: function () {
+                if (app.keyword == '') {
+                    toastMsg('请输入关键字或选择地区')
+                    return
+                }
                 api.sendEvent({
                     name: 'search_keyword',
                     extra: {
@@ -103,6 +110,10 @@
                 });
             },
             showHis: function () {
+                if (app.keyword == '') {
+                    toastMsg('请输入关键字')
+                    return
+                }
                 app.$refs.input1.blur();
                 api.sendEvent({
                     name: 'showHis',

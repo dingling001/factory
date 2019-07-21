@@ -24,7 +24,7 @@
             <span class="iconfont icon-mima"></span>
             <input type="password" placeholder="请输入您的密码" v-model="password">
         </div>
-        <div class="input_box red_text"><span @click="code_fn">验证码登录</span><span @click="forgot_fn">忘记密码</span></div>
+        <div class="input_box red_text"><span @click="code_fn">立即注册</span><span @click="forgot_fn">忘记密码</span></div>
         <div class="login_btn" @click="login">登录</div>
         <div class="login_agree" @click="go_agree">登录即代表您同意<span>《加工宝用户协议》</span></div>
     </form>
@@ -66,7 +66,6 @@
                     ApiAjax('Login/usernameLogin', post, function (ret, err) {
                         if (ret.code == 1) {
                             $api.setStorage('fac_token', ret.data);
-
                             app._checkComplete(ret.data)
                         } else {
                             toastMsg(ret.message)
@@ -118,10 +117,12 @@
             },
             // 查看协议
             go_agree: function () {
-                api.openWin({
-                    name: 'login_agree',
-                    url: './login_agree.html',
-                });
+                // api.openWin({
+                //     name: 'login_agree',
+                //     url: './login_agree.html',
+                // });
+                openView('login_agree', 'login/login_agree', '加工宝协议')
+
             },
             // 关闭登录
             // closeF: function () {

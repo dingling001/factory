@@ -22,15 +22,23 @@
         </div>
         <div class="input_box">
             <span class="iconfont icon-yanzhengma"></span>
-            <input type="text" placeholder="请输入您的验证码" v-model="code" maxlength="6">
+            <input type="password" placeholder="设置您的密码" v-model.trim="password">
+        </div>
+        <div class="input_box">
+            <span class="iconfont icon-yanzhengma"></span>
+            <input type="password" placeholder="确认您的密码" v-model.trim="repassword">
+        </div>
+        <div class="input_box">
+            <span class="iconfont icon-yanzhengma"></span>
+            <input type="text" placeholder="请输入您的验证码" v-model.trim="code" maxlength="6">
             <span v-if="show" class="code_btn" @click="getCode">获取验证码</span>
             <span v-else class="code_btn">{{count}}S后可重发</span>
         </div>
-        <div class="input_box red_text"><span @click="codelogin">密码登录</span><span @click="forgot_fn">忘记密码</span></div>
-        <div class="login_btn" @click="login">注册/登录</div>
+        <div class="input_box red_text"><span @click="codelogin">登录</span><span @click="forgot_fn">忘记密码</span></div>
+        <div class="login_btn" @click="login">立即注册</div>
     </form>
-    <div class="login_agree">注：首次手机号验证码形式登录视为注册并登录</div>
-    <div class="login_agree" @click="go_agree">登录即代表您同意<span>《加工宝用户协议》</span></div>
+    <!--<div class="login_agree">注：首次手机号验证码形式登录视为注册并登录</div>-->
+    <div class="login_agree" @click="go_agree">已阅读并且同意<span>《加工宝用户协议》</span></div>
 </div>
 </body>
 </html>
@@ -50,7 +58,9 @@
             code: '',
             timer: null,
             count: '',
-            show: true
+            show: true,
+            password: '',
+            repassword: ''
         },
         created: function () {
             apiready = function () {
@@ -58,18 +68,25 @@
             }
         },
         methods: {
-            // 登录
+            // 注册
             login: function () {
                 if (app.phone == '') {
                     toastMsg('请输入您的手机号')
                 } else if (!/^1\d{10}$/gi.test(app.phone)) {
                     toastMsg('请输入正确的手机号')
+                } else if (app.password == '' || app.repassword == '') {
+                    toastMsg('请输入密码')
+                } else if (app.password.length < 6 && app.password > 20) {
+                    toastMsg('您设置的密码不能少于6且不大于20位')
+                } else if (app.password != app.repassword) {
+                    toastMsg('两次密码不一致')
                 } else if (app.code == '') {
                     toastMsg('请输入验证码')
                 } else {
-                    ApiAjax('Login/phoneLogin', {
+                    ApiAjax('Login/register', {
                         tel: app.phone,
-                        code: app.code
+                        code: app.code,
+                        password: app.password
                     }, function (ret, err) {
                         if (ret.code == 1) {
                             $api.setStorage('fac_token', ret.data);
@@ -80,7 +97,7 @@
                     });
                 }
             },
-            // 获取登录验证码
+            // 获取注册验证码
             getCode: function () {
                 if (!/^1\d{10}$/gi.test(app.phone)) {
                     toastMsg('手机号不正确')
@@ -89,7 +106,7 @@
                     var post = {
                         tel: app.phone,
                     };
-                    ApiAjax('Login/loginSms', post, function (ret, err) {
+                    ApiAjax('Login/registerSms', post, function (ret, err) {
                         if (ret.code == 1) {
                             if (!app.timer) {
                                 app.count = TIME_COUNT;

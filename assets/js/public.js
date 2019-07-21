@@ -350,48 +350,6 @@ function toWan(str) {
 //     return promise
 // }
 
-//设备判断
-function getDevice() {
-    var login_device = '';
-    var sUserAgent = navigator.userAgent.toLowerCase();
-    var bIsIpad = sUserAgent.match(/ipad/i) == "ipad";
-    var bIsIphoneOs = sUserAgent.match(/iphone os/i) == "iphone os";
-    var bIsMidp = sUserAgent.match(/midp/i) == "midp";
-    var bIsUc7 = sUserAgent.match(/rv:1.2.3.4/i) == "rv:1.2.3.4";
-    var bIsUc = sUserAgent.match(/ucweb/i) == "ucweb";
-    var bIsAndroid = sUserAgent.match(/android/i) == "android";
-    var bIsCE = sUserAgent.match(/windows ce/i) == "windows ce";
-    var wx = sUserAgent.match(/MicroMessenger/i) == "micromessenger"
-    var mac = sUserAgent.match(/macintosh|mac os x/i) == "mac"
-    var bIsWM = sUserAgent.match(/windows mobile/i) == "windows mobile";
-    if (bIsIpad || bIsIphoneOs || bIsMidp || bIsUc7 || bIsUc || bIsAndroid || bIsCE || bIsWM) {
-        var UA = window.navigator.userAgent;
 
-        isAndorid = /android/i.test(UA),
-            isIphone = /iphone/i.test(UA),
-            //isIphone = /(?:iPhone)/.test(UA),
-            isPad = /ipad/i.test(UA),
-            isDolphin = typeof dolphin !== 'undefined';
-        device = isAndorid ? 'android' : isIphone ? 'iphone' : isPad ? 'ipad' : mac ? 'mac' : 'mobile';
-        switch (device) {
-            case 'iphone':
-                login_device = device;
-                break;
-            case 'android':
-                login_device = device;
-                break;
-            case 'ipad':
-                login_device = device;
-                break;
-            default:
-                login_device = device;
-                break;
-        }
-    } else {
-        pc_device = wx ? 'wx' : mac ? 'mac' : 'pc'
-        login_device = pc_device;
-    }
-    return login_device
-}
 
 

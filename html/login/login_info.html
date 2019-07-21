@@ -167,8 +167,16 @@
                 if (app.busine.length >= 200) {
                     toastMsg('请输入少于200字的内容')
                 }
-            }
+            },
+            // 绑定推送
 
+            bintag: function () {
+                var ajpush = api.require('ajpush');
+                var param = {alias: 'myalias', tags: ['tag1', 'tag2']};
+                ajpush.bindAliasAndTags(param, function (ret) {
+                    var statusCode = ret.statusCode;
+                });
+            }
 
         }
     })

@@ -70,6 +70,10 @@
             color: #E51F1F;
         }
 
+        .company {
+            padding: 0 0 .5rem 0;
+        }
+
         .company .border-t {
             border-top: 1px solid #EEEEEE;
         }
@@ -313,10 +317,10 @@
         <div class="infoinput">单价： <span class="price">{{d_info.price}}</span>元</div>
     </div>
     <!--<div class="input_box" v-else-if="type==2" @click="">已有50人报价，查看报价</div>-->
-    <div class="input_box" @click="lookPrice" v-else-if="type==2&&d_info.status==1"><span class="outordernum">已有{{d_info.offer_count}}人报价，查看报价</span>
+    <div class="input_box" @click="lookPrice" v-else-if="is_myorder&&d_info.status==1"><span class="outordernum">已有{{d_info.offer_count}}人报价，查看报价</span>
     </div>
-    <div v-show="type!=2">
-        <div class="tips" v-if="vip==0">注：您的剩余报价次数 <span>{{d_info.free_times}}</span>次</div>
+    <div v-show="type!=2&&vip==0">
+        <div class="tips">注：您的剩余报价次数 <span>{{d_info.free_times}}</span>次</div>
         <div class="vip_box">
             <div class="vip_btn" @click="vipShow">会员查看信息</div>
         </div>
@@ -345,7 +349,8 @@
             offer_list: [],
             btnstatus: true, //是否下载状态
             vip: 0,
-            dowmtext: '下载附件'
+            dowmtext: '下载附件',
+            is_myorder: false,
         },
         created: function () {
             apiready = function () {
@@ -372,9 +377,23 @@
                 });
                 app._offerList();
                 // app.checkDownload();
+                app._checkIfMyOrder();
             }
         },
         methods: {
+            // 查询是不是我的订单
+            _checkIfMyOrder: function () {
+                ApiAjax('api/checkIfMyOrder', {
+                    token: getToken(),
+                    order_id: app.id,
+                }, function (res, err) {
+                    if (res.code == 1) {
+                        app.is_myorder = res.data;
+                    } else {
+                        toastMsg(res.message)
+                    }
+                })
+            },
             // 获取订单详情
             _getOrderDetail: function () {
                 ApiAjax('api/getOrderDetail', {
@@ -557,7 +576,7 @@
                 if (app.offer_list.length <= 0) {
                     toastMsg('暂无人报价')
                 } else {
-                    openView('index_price', 'index/index_price', '查看报价',false, false, {id: app.id})
+                    openView('index_price', 'index/index_price', '查看报价', false, false, {id: app.id})
                 }
             },
             // 会员查看信息
@@ -573,6 +592,8 @@
                             openView('my_vip', 'my/my_vip', '开通会员', false, false, false, {vip: 1})
                         }
                     });
+                } else {
+                    toastMsg('您已经是会员了！')
                 }
 
             },
@@ -586,6 +607,7 @@
                     number: app.d_info.linktel
                 });
             },
+            // 检查vip状态
             _checkVip: function () {
                 ApiAjax('api/checkVip', {
                     token: getToken(),

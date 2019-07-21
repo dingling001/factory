@@ -81,7 +81,8 @@
                 ApiAjax('my/getAppInfo', {token: getToken()}, function (ret, err) {
                     if (ret.code == 1) {
                         app.pay_info = ret.data;
-                        app.pay_info.vip_desc = app.pay_info.vip_desc.replace(/(<img .*?src=.*ueditor)/g, '<img style="width:100%" src="'+ imgUrl+'ueditor')
+                        app.pay_info.vip_desc = app.pay_info.vip_desc.replace(/(<img .*?src=".*ueditor)/g, `<img style="width:100%" src="${imgUrl}ueditor`)
+                        // alert(JSON.stringify(app.pay_info.vip_desc))
                     }
                 })
             },

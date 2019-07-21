@@ -406,13 +406,14 @@
 </body>
 </html>
 <script type="text/javascript" src="../../assets/js/api.js"></script>
-<script type="text/javascript" src="../../assets/js/public.js"></script>
 <script type="text/javascript" src="../../assets/js/fastclick.js"></script>
 <script>
     new FastClick(document.body);
 </script>
 <script type="text/javascript" src="../../assets/js/vue.min.js"></script>
 <script type="text/javascript" src="../../assets/js/index.js"></script>
+<script type="text/javascript" src="../../assets/js/public.js"></script>
+<script type="text/javascript" src="../../assets/js/res.js"></script>
 <script>
     var app = new Vue({
         el: '#app',
@@ -541,6 +542,31 @@
             },
             // 添加图片
             addImg: function () {
+                var resultList = api.hasPermission({
+                    list: ['storage']
+                });
+                var hasThisPerm = JSON.stringify(resultList[0].granted);
+                if (hasThisPerm == "true") {
+                    app.actionsheet();
+                } else {
+                    //如果还没有获取存储权限，则动态获取
+                    api.requestPermission({
+                        list: ['storage']
+                    }, function (ret, err) {
+                        //权限选择结果，安卓机一般是：禁止、始终允许、不再提醒
+                        var selected = JSON.stringify(ret.list[0].granted);
+                        //如果选择始终允许，则返回true
+                        if (selected) {
+                            //业务处理，直接打开本地存储图片
+                            app.actionsheet()
+                        } else {
+                            toastMsg('请开启权限发布订单')
+                        }
+                    })
+                }
+            },
+            // 弹层选择
+            actionsheet: function () {
                 api.actionSheet({
                     title: '上传相关图片',
                     cancelTitle: '取消',
@@ -583,8 +609,9 @@
                     saveToPhotoAlbum: true,
                     groupName: 'jiagongbao'
                 }, function (ret, err) {
+                    // alert(JSON.stringify(ret))
+                    if (!ret.data) return;
                     if (ret) {
-
                         app.uploadImg(ret.data)
                     }
                 });

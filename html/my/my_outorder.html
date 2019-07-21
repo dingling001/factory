@@ -98,9 +98,9 @@
 <div id="app" v-cloak>
     <div class="out_head">
         <span :class="{activespan:ind==99}" @click="oder_tab(99)">全部</span>
-        <span :class="{activespan:ind==0}" @click="oder_tab(0)">审核中订单</span>
-        <span :class="{activespan:ind==1}" @click="oder_tab(1)">已发布订单</span>
-        <span :class="{activespan:ind==2}" @click="oder_tab(2)">审核失败订单</span>
+        <span :class="{activespan:ind==0}" @click="oder_tab(0)">审核中</span>
+        <span :class="{activespan:ind==1}" @click="oder_tab(1)">已发布</span>
+        <span :class="{activespan:ind==2}" @click="oder_tab(2)">审核失败</span>
     </div>
     <div class="hr"></div>
     <div class="new_list" v-if="order_list.length>0">
