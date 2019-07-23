@@ -67,9 +67,9 @@
             province: '',
             city: '',
             district: '',
-            indp: '',
-            indc: '',
-            indd: '',
+            indp: 0,
+            indc: 0,
+            indd: 0,
             listp: [],
             listc: [],
             listd: []
@@ -139,24 +139,35 @@
             },
 
             send_city: function () {
-                if (app.indp >= 0 && app.indc >= 0 && app.indd >= 0 && app.listp.length > 0 && app.listc.length > 0 && app.listd.length > 0) {
-                    api.sendEvent({
-                        name: 'city_event',
-                        extra: {
-                            province: app.province,
-                            city: app.city,
-                            district: app.district,
-                            province_code: app.listp[app.indp].code,
-                            city_code: app.listc[app.indc].code,
-                            region_code: app.listd[app.indc].code,
-                        }
-                    });
-                    app.closeCity();
-                } else {
-                    toastMsg('请完善地址信息')
-                }
+                // if (app.indp >= 0 && app.indc >= 0 && app.indd >= 0) {
+                api.sendEvent({
+                    name: 'seachcity',
+                    extra: {
+                        province: app.province,
+                        city: app.city,
+                        district: app.district,
+                        province_code: app.indp && app.listp.length > 0 ? app.listp[app.indp].code : '',
+                        city_code: app.indc && app.listc.length > 0 ? app.listc[app.indc].code : '',
+                        region_code: app.indc && app.listd.length > 0 ? app.listd[app.indc].code : '',
+                    }
+                });
+                api.closeFrame();
+                // } else {
+                //     toastMsg('请完善地址信息')
+                // }
             },
             closeCity: function () {
+                api.sendEvent({
+                    name: 'seachcity',
+                    extra: {
+                        province: '',
+                        city: '',
+                        district: '',
+                        province_code: '',
+                        city_code: '',
+                        region_code: '',
+                    }
+                });
                 api.closeFrame();
             }
         }

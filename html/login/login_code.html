@@ -11,26 +11,84 @@
     <link rel="stylesheet" href="../../assets/css/api.css">
     <link rel="stylesheet" href="../../assets/css/style.css">
     <!--<link rel="stylesheet" href="https://unpkg.com/mint-ui@1/lib/style.css">-->
-    <link rel="stylesheet" href="http://at.alicdn.com/t/font_1220513_njjndgm1akh.css">
+    <link rel="stylesheet" href="../../assets/font/iconfont.css">
+    <style>
+        .logobox {
+            position: absolute;
+            bottom: .7rem;
+            z-index: 1;
+            left: 0;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .logobox .img {
+            width: .7rem;
+            height: .64rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid rgba(228, 228, 228, 1);
+            border-radius: 5px;
+            overflow: hidden;
+            margin-right: 10px;
+        }
+
+
+        .logobox .img img {
+            width: 100%;
+        }
+
+        .logobox .name {
+            font-size: 16px;
+            color: #333;
+            font-weight: bold;
+            font-family: Hei;
+            letter-spacing: 12px;
+        }
+
+        .logobox .des {
+            font-size: 8px;
+            color: #666666;
+            letter-spacing: 4px;
+        }
+    </style>
 </head>
 <body>
 <div id="app" v-cloak>
     <form>
         <div class="input_box box">
             <span class="iconfont icon-shouji"></span>
-            <input type="number" placeholder="请输入您的手机号" v-model="phone">
+            <input type="number" placeholder="请输入您的手机号" v-model.trim="phone">
         </div>
         <div class="input_box">
             <span class="iconfont icon-yanzhengma"></span>
-            <input type="number" placeholder="请输入您的验证码" v-model="code">
+            <input type="password" placeholder="设置您的密码" v-model.trim="password">
+        </div>
+        <div class="input_box">
+            <span class="iconfont icon-yanzhengma"></span>
+            <input type="password" placeholder="确认您的密码" v-model.trim="repassword">
+        </div>
+        <div class="input_box">
+            <span class="iconfont icon-yanzhengma"></span>
+            <input type="text" placeholder="请输入您的验证码" v-model.trim="code" maxlength="6">
             <span v-if="show" class="code_btn" @click="getCode">获取验证码</span>
             <span v-else class="code_btn">{{count}}S后可重发</span>
         </div>
-        <div class="input_box red_text"><span @click="closeWindow">密码登录</span><span @click="forgot_fn">忘记密码</span></div>
-        <div class="login_btn" @click="login">登录</div>
+        <div class="input_box red_text"><span @click="codelogin">登录</span><span @click="forgot_fn">忘记密码</span></div>
+        <div class="login_btn" @click="login">立即注册</div>
     </form>
-    <div class="login_agree">注：首次手机号验证码形式登录视为注册并登录</div>
-    <div class="login_agree" @click="go_agree">登录及代表您同意<span>《加工宝用户协议》</span></div>
+    <!--<div class="login_agree">注：首次手机号验证码形式登录视为注册并登录</div>-->
+    <div class="login_agree" @click="go_agree">已阅读并且同意<span>《加工宝用户协议》</span></div>
+    <div class="logobox">
+        <div class="img"><img src='../../assets/image/logo.png' alt=""></div>
+        <div>
+            <div class="name">加工宝</div>
+            <div class="des">专注机械加工</div>
+        </div>
+    </div>
 </div>
 </body>
 </html>
@@ -50,29 +108,35 @@
             code: '',
             timer: null,
             count: '',
-            show: true
+            show: true,
+            password: '',
+            repassword: ''
         },
         created: function () {
             apiready = function () {
-                // $api.fixStatusBar($api.dom('header'));
-                // app.headerH = $api.offset($api.dom('header')).h;
-                // app.first = api.pageParam.first || 0;
+
             }
         },
         methods: {
-            // 登录
+            // 注册
             login: function () {
                 if (app.phone == '') {
                     toastMsg('请输入您的手机号')
-                } else if (!mobileReg.test(app.phone)) {
+                } else if (!/^1\d{10}$/gi.test(app.phone)) {
                     toastMsg('请输入正确的手机号')
-                }
-                else if (app.code == '') {
+                } else if (app.password == '' || app.repassword == '') {
+                    toastMsg('请输入密码')
+                } else if (app.password.length < 6 && app.password > 20) {
+                    toastMsg('您设置的密码不能少于6且不大于20位')
+                } else if (app.password != app.repassword) {
+                    toastMsg('两次密码不一致')
+                } else if (app.code == '') {
                     toastMsg('请输入验证码')
                 } else {
-                    ApiAjax('Login/phoneLogin', {
+                    ApiAjax('Login/register', {
                         tel: app.phone,
-                        code: app.code
+                        code: app.code,
+                        password: app.password
                     }, function (ret, err) {
                         if (ret.code == 1) {
                             $api.setStorage('fac_token', ret.data);
@@ -83,7 +147,7 @@
                     });
                 }
             },
-            // 获取登录验证码
+            // 获取注册验证码
             getCode: function () {
                 if (!/^1\d{10}$/gi.test(app.phone)) {
                     toastMsg('手机号不正确')
@@ -92,8 +156,8 @@
                     var post = {
                         tel: app.phone,
                     };
-                    ApiAjax('Login/loginSms', post, function (ret, err) {
-                        if (ret) {
+                    ApiAjax('Login/registerSms', post, function (ret, err) {
+                        if (ret.code == 1) {
                             if (!app.timer) {
                                 app.count = TIME_COUNT;
                                 app.show = false;
@@ -107,6 +171,8 @@
                                     }
                                 }, 1000)
                             }
+                        } else {
+                            toastMsg(ret.message)
                         }
                     });
                 }
@@ -138,9 +204,12 @@
             },
             // 去忘记密码
             forgot_fn: function () {
-                api.openWin({
-                    name: 'login_forgot',
-                    url: './login_forgot.html',
+                openView('login_forgot', 'login/login_forgot', '忘记密码')
+            },
+            // 去密码登录
+            codelogin: function () {
+                api.closeWin({
+                    animation: "reveal"
                 });
             },
             // 跳过去首页

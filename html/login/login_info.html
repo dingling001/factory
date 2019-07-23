@@ -12,7 +12,7 @@
     <link rel="stylesheet" href="../../assets/css/api.css">
     <link rel="stylesheet" href="../../assets/css/style.css">
     <!--<link rel="stylesheet" href="https://unpkg.com/mint-ui@1/lib/style.css">-->
-    <link rel="stylesheet" href="http://at.alicdn.com/t/font_1220513_njjndgm1akh.css">
+    <link rel="stylesheet" href="../../assets/font/iconfont.css">
     <style>
         .label {
             font-size: 16px;
@@ -99,7 +99,7 @@
             <span class="label">企业经营项目：</span>
         </div>
         <div class="area_box">
-            <textarea v-model="busine" placeholder="请输入企业经营项目（不超过200字）" ></textarea>
+            <textarea v-model="busine" placeholder="请输入企业经营项目（不超过200字）" maxlength="200" @input="getinputnum"></textarea>
         </div>
         <div class="login_btn" @click="_completeInfo">保存</div>
     </form>
@@ -128,7 +128,7 @@
             apiready = function () {
                 $api.fixStatusBar($api.dom('header'));
                 app.headerH = $api.offset($api.dom('header')).h;
-                app.first = api.pageParam.first || 0;
+                app._getMyinfo();
             }
         },
         methods: {
@@ -163,8 +163,51 @@
                         toastMsg(ret.message)
                     }
                 })
-            }
+            },
+            getinputnum: function () {
+                if (app.busine.length >= 200) {
+                    toastMsg('请输入少于200字的内容')
+                }
+            },
+            // 获取我的个人信息
+            _getMyinfo: function () {
+                ApiAjax('my/getMyinfo', {token: getToken()}, function (ret, err) {
+                    if (ret.code == 1) {
+                        app.initpush(JSON.stringify(ret.data.uid))
+                    } else {
 
+                    }
+                })
+            },
+            // 绑定推送
+            initpush: function (uid) {
+                ajpush = api.require('ajpush');
+                // 判断操作系统，只有在android才初始化，ios自动初始化
+                var sysType = api.systemType;
+                if (sysType == 'android') {
+                    ajpush.init(function (ret) {
+                        if (ret && ret.status) {
+                            //初始化成功 只有安卓有效 IOS 自动初始化
+                            // 极光官网 设备别名 推送测试
+                            var param = {alias: uid};
+                            ajpush.bindAliasAndTags(param, function (ret, err) {
+                                // var statusCode = ret.statusCode;
+                                // alert('ret:' + JSON.stringify(ret));
+                                // alert('err:' + JSON.stringify(err));
+                            });
+                        }
+                    });
+                } else {
+                    // 极光官网 设备别名 推送测试
+                    var param = {alias: uid};
+                    ajpush.bindAliasAndTags(param, function (ret, err) {
+                        var statusCode = ret.statusCode;
+                        // alert('ret:' + JSON.stringify(ret));
+                        // alert('err:' + JSON.stringify(err));
+                    });
+
+                }
+            },
 
         }
     })

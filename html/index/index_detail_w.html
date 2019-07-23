@@ -11,7 +11,7 @@
     <link rel="stylesheet" href="../../assets/css/api.css">
     <link rel="stylesheet" href="../../assets/css/style.css">
     <!--<link rel="stylesheet" href="https://unpkg.com/mint-ui@1/lib/style.css">-->
-    <link rel="stylesheet" href="http://at.alicdn.com/t/font_1220513_njjndgm1akh.css">
+    <link rel="stylesheet" href="../../assets/font/iconfont.css">
     <style>
         header {
             width: 100%;
@@ -67,14 +67,18 @@
         .share_box .icon-shoucang_ {
             color: #E72424;
         }
+
+        .price_btn.disabled {
+            background-color: #999999;
+        }
     </style>
 </head>
 <body>
-<div id="app" v-cloak class="company" v-cloak>
+<div id="app" v-cloak class="company">
     <header>
         <div class="my_info">
             <div class="close_left" @click="close_detail"><span class="iconfont icon-fanhui"></span></div>
-            <span class="order_detail el1">{{order_title}}</span>
+            <span class="order_detail el1">{{d_info.title}}</span>
             <div class="share_box" @click="openShare">
                 <span class="iconfont icon-fenxiang"></span>
                 <span :class="['iconfont',d_info.collect? 'icon-shoucang_':'icon-shoucang']"
@@ -82,9 +86,9 @@
             </div>
         </div>
     </header>
-    <div class="price_btn" id="price_btn" @click="orderPrice" v-show="type!=2">
+    <div :class="['price_btn',d_info.if_end==0?'':'disabled']" id="price_btn" @click="orderPrice" v-show="type!=2">
         <span v-if="type==3">修改报价</span>
-        <span v-else>立即报价</span>
+        <span v-else><span v-if="d_info.if_end==0">立即报价</span> <span v-else>订单已过期</span></span>
     </div>
 </div>
 </body>
@@ -114,7 +118,7 @@
         created: function () {
             apiready = function () {
                 app.id = api.pageParam.id;
-                app.order_title = api.pageParam.title;
+                // app.order_title = api.pageParam.title;
                 app.type = api.pageParam.type || 0;// 0 首页订单，1订单中心， 2外发订单 ,3 我的报价订单，4我的收藏订单
                 $api.fixStatusBar($api.dom('header'));
                 api.setStatusBarStyle({
@@ -127,11 +131,19 @@
         methods: {
             // 报价/修改报价
             orderPrice: function () {
-                if (app.vip == 0) {
-                    toastMsg('您还不是会员，不能报价')
+                if (app.d_info.status == 0 || app.d_info.status == 2) {
+                    toastMsg('订单审核中…')
                     return
                 }
-                if (app.d_info.free_times <= 0) {
+                if (app.d_info.if_end == 1) {
+                    toastMsg('订单已过期');
+                    return
+                }
+                // if (app.vip == 0) {
+                //     toastMsg('您还不是会员，不能报价')
+                //     return
+                // }
+                if (app.d_info.free_times <= 0 && app.vip == 0) {
                     toastMsg('您的报价次数已用完，请开通会员，不限制报价次数')
                     return
                 }
@@ -149,18 +161,19 @@
                             ApiAjax('api/offerPrice', {
                                 token: getToken(),
                                 order_id: app.id,
-                                price: price,
+                                price: price
                             }, function (res, err) {
                                 if (res.code == 1) {
                                     api.alert({
                                         title: app.order_title,
-                                        msg: '您的报价已提交',
+                                        msg: '您的报价已提交'
                                     }, function (ret, err) {
                                     });
+                                } else {
+                                    toastMsg(res.message)
                                 }
                             })
-                        }
-                        else {
+                        } else {
                             api.alert({
                                 title: '报价有误！',
                                 msg: '您的报价不能低于0元',
@@ -172,11 +185,10 @@
             },
             // 我的报价详情
             _offerDetail: function () {
-                ApiAjax('my/offerDetail', {
+                ApiAjax('api/getOrderDetail', {
                     token: getToken(),
                     order_id: app.id
                 }, function (ret, err) {
-                    // alert(JSON.stringify(ret))
                     app.d_info = ret.data;
                     app.price = ret.data.price;
                     app.type = parseFloat(app.price) > 0 ? 3 : app.type;
@@ -210,6 +222,14 @@
             },
             // 收藏
             collect_fn: function () {
+                if (app.d_info.status == 2) {
+                    toastMsg('订单审核中…');
+                    return
+                }
+                if (app.d_info.if_end == 1) {
+                    toastMsg('订单已过期');
+                    return
+                }
                 app.d_info.collect = !app.d_info.collect;
                 ApiAjax('api/orderCollect', {
                     token: getToken(),
@@ -232,6 +252,10 @@
             },
             // 分享
             openShare: function () {
+                if (app.d_info.status == 0 || app.d_info.status == 2) {
+                    toastMsg('订单审核中…')
+                    return
+                }
                 api.openFrame({
                     bgColor: 'rgba(0,0,0,0.05)',
                     name: 'share',

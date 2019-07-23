@@ -9,7 +9,7 @@
     <title></title>
     <script src="../../assets/js/fontsize.js"></script>
     <link rel="stylesheet" href="../../assets/css/api.css">
-    <link rel="stylesheet" href="http://at.alicdn.com/t/font_1220513_njjndgm1akh.css">
+    <link rel="stylesheet" href="../../assets/font/iconfont.css">
     <style>
         .set .login_btn {
             width: 45%;
@@ -21,12 +21,13 @@
 <div id="app" v-cloak class="set">
     <div class="input_box box">
         <span class="iconfont icon-shouji"></span>
-        <input type="number" placeholder="请输入您的手机号" v-model="phone">
+        <input type="number" placeholder="请输入您的手机号" v-model="tel" maxlength="11">
     </div>
     <div class="input_box">
         <span class="iconfont icon-yanzhengma"></span>
-        <input type="number" placeholder="请输入您的验证码" v-model="code">
-        <span class="code_btn">获取验证码</span>
+        <input type="text" placeholder="请输入您的验证码" v-model="code" maxlength="6">
+        <span v-if="show" class="code_btn" @click="getCode">获取验证码</span>
+        <span v-else class="code_btn">{{count}}S后可重发</span>
     </div>
     <div class="login_btn" @click="set_save">保存</div>
 </div>
@@ -44,15 +45,71 @@
     var app = new Vue({
         el: '#app',
         data: {
-            phone: '',
+            tel: '',
             code: '',
+            show: true,
+            count: 0,
+            timer: null
         },
         created: function () {
             apiready = function () {
             }
         },
         methods: {
+            // 获取登录验证码
+            getCode: function () {
+                if (!/^1\d{10}$/gi.test(app.tel)) {
+                    toastMsg('手机号不正确')
+                } else {
+                    const TIME_COUNT = 60;
+                    var post = {
+                        tel: app.tel,
+                        token:getToken()
+                    };
+                    ApiAjax('my/changeTelSms', post, function (ret, err) {
+                        if (ret.code == 1) {
+                            if (!app.timer) {
+                                app.count = TIME_COUNT;
+                                app.show = false;
+                                app.timer = setInterval(function () {
+                                    if (app.count > 0 && app.count <= TIME_COUNT) {
+                                        app.count--;
+                                    } else {
+                                        app.show = true;
+                                        clearInterval(app.timer);
+                                        app.timer = null;
+                                    }
+                                }, 1000)
+                            }
+                        } else {
+                            toastMsg(ret.message)
+                        }
+                    });
+                }
+            },
+            // 修改手机号
             set_save: function () {
+                if (!/^1\d{10}$/gi.test(app.tel)) {
+                    toastMsg('手机号不正确')
+                } else if (app.code == '') {
+                    toastMsg('请输入验证码')
+                } else {
+                    var post = {
+                        tel: app.tel,
+                        token: getToken(),
+                        code: app.code
+                    };
+                    ApiAjax('my/changeTel', post, function (ret, err) {
+                        if (ret.code == 1) {
+                            toastMsg('修改成功');
+                            setTimeout(function () {
+                                api.closeWin();
+                            }, 1500)
+                        } else {
+                            toastMsg(ret.message)
+                        }
+                    });
+                }
 
             }
         }

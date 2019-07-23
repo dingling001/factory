@@ -10,7 +10,7 @@
     <title></title>
     <script src="../../assets/js/fontsize.js"></script>
     <link rel="stylesheet" href="../../assets/css/api.css">
-    <link rel="stylesheet" href="http://at.alicdn.com/t/font_1220513_njjndgm1akh.css">
+    <link rel="stylesheet" href="../../assets/font/iconfont.css">
     <link rel="stylesheet" href="../../assets/css/swiper-3.4.2.min.css">
     <style type="text/css">
         body {
@@ -18,7 +18,7 @@
         }
 
         .banner {
-            height: 3.5rem;
+            height: 3.6rem;
             padding: .3rem 0;
             background-color: #fff;
         }
@@ -41,6 +41,7 @@
         .banner .swiper-slide-active {
             transform: scale(1);
         }
+
 
         .banner .swiper-pagination .swiper-pagination-bullet {
             width: 12px;
@@ -66,7 +67,7 @@
         }
 
         .index {
-            /*padding: 0 0 .1rem 0;*/
+            padding: 0 0 .1rem 0;
         }
 
         .nav_box {
@@ -133,7 +134,7 @@
     <div class="swiper-container banner">
         <div class="swiper-wrapper">
             <div class="swiper-slide" v-for="(item,index) in slide_list" :key="item.id">
-                <img :src="imgUrl+item.pic?imgUrl+item.pic:'../../assets/image/load.gif'" alt>
+                <img :src="item.pic?imgUrl+item.pic:'../../assets/image/load.gif'" alt>
             </div>
         </div>
         <!-- 如果需要分页器 -->
@@ -141,7 +142,10 @@
     </div>
     <div class="nav_box">
         <div class="nav_item" v-for="(item,index) in cate_list" @click="more_fn(index,item.id)">
-            <span class="icon_box"><img :src="index==cate_list.length-1?item.pic:imgUrl+item.pic" alt=""></span>
+            <span class="icon_box">
+                <img :src="index==cate_list.length-1?item.pic:imgUrl+item.pic" alt="" v-if="item.pic">
+                <img src="../../assets/image/noimg.png" alt="" v-else>
+            </span>
             <span class="icon_name">{{item.cate_name}}</span>
         </div>
         <!--<div class="nav_item" @click="more_fn(0,'')" v-if="cate_list.length>=9">-->
@@ -196,7 +200,7 @@
                     "id": '',
                     "cate_name": "更多",
                     "pic": "../../assets/image/more.png"
-                },
+                }
             ],
             order_list: [],
             cate_count: 0,
@@ -208,7 +212,8 @@
             // offsetTop: 0,
             showmore: false,
             showtext: '加载中...',
-            offline: false
+            offline: false,
+            ajpush: null
         },
         created: function () {
             apiready = function () {
@@ -255,10 +260,69 @@
                 //         app.page = 1;
                 //         app.showtext = '加载中...';
                 //     }
-                // });
+                // }
+                // 推送
+                var systemType = api.systemType
+                app.ajpush = api.require('ajpush');
+                api.addEventListener({name: 'pause'}, function (ret, err) {
+                    app.onPause();//监听应用进入后台，通知jpush暂停事件
+                });
+                api.addEventListener({name: 'resume'}, function (ret, err) {
+                    app.onResume();//监听应用恢复到前台，通知jpush恢复事件
+                });
+                app.ajpush.setListener(function (ret) {
+                        // alert(JSON.stringify(ret))
+                        // var id = ret.id;
+                        // var title = ret.title;
+                        // var content = ret.content;
+                        // var extra = ret.extra;
+                        if (ret && ret.extras) {
+                            app.ajpush.setBadge({
+                                badge: 1
+                            });
+                        }
+                    }
+                );
+                // 在Android平台
+                api.addEventListener({
+                    name: 'appintent'
+                }, function (ret, err) {
+                    // alert(JSON.stringify(ret))
+                    if (ret && ret.appParam.ajpush) {
+                        if (ret) {
+                            app.ajpush.setBadge({
+                                badge: 0
+                            });
+                            var ajpush = ret.appParam.ajpush;
+                            var id = ajpush.id;
+                            var title = ajpush.title;
+                            var content = ajpush.content;
+                            var extra = ajpush.extra;
+                            // var content = ajpush.content;
+                            // var extra = ajpush.extra;
+                            app.go_detail(ajpush.extras.order_id)
+                        }
+                    }
+                });
+                // 在iOS平台
+                api.addEventListener({
+                    name: 'noticeclicked'
+                }, function (ret, err) {
+                    // alert(JSON.stringify(ret))
+                    if (ret) {
+                        app.ajpush.setBadge({
+                            badge: 0
+                        });
+                        var ajpush = ret.value;
+                        // var content = ajpush.content;
+                        // var extra = ajpush.extra;
+                        app.go_detail(ajpush.extras.order_id, ajpush.extras.title)
+                    }
+                })
             }
         },
         methods: {
+
             // 获取首页轮播图getSlideList
             _getSlideList: function () {
                 ApiAjax('api/getSlideList', {}, function (ret, err) {
@@ -271,8 +335,12 @@
             _getCateList: function () {
                 ApiAjax('api/getCateList', {}, function (ret, err) {
                     loadEnd('index_f');
-                    app.cate_list = ret.data.list.concat(app.cate_list);
-                    app.cate_count = ret.data.count;
+                    // alert(JSON.stringify(ret))
+                    if (ret.code == 1) {
+                        app.cate_list = ret.data.list.length >= 9 ? ret.data.list.concat(app.cate_list) : ret.data.list;
+                        app.cate_count = ret.data.count;
+                    }
+
                 })
             },
             // 获取首页订单列表getOrderList
@@ -369,6 +437,26 @@
             //         app.isFixed = false;
             //     }
             // }
+            //统计-app恢复
+            onResume: function () {
+
+                app.ajpush.onResume();
+                console.log('JPush onResume');
+            },
+            //统计-app暂停
+            onPause: function () {
+                app.ajpush.onPause();
+                console.log('JPush onPause');
+            },
+            // 清除消息
+            clearpush: function () {
+                var param = {id: -1};
+                app.ajpush.clearNotification(param, function (ret) {
+                    if (ret && ret.status) {
+                        //success
+                    }
+                });
+            }
         },
         // destroyed: function () {
         //     window.removeEventListener('scroll', this.handleScroll); // 离开页面 关闭监听 不然会报错

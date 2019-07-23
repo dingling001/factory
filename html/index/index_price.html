@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title></title>
+    <script src="../../assets/js/fontsize.js"></script>
+    <link rel="stylesheet" href="../../assets/css/api.css">
+    <link rel="stylesheet" href="../../assets/font/iconfont.css">
+    <style type="text/css">
+        .plist {
+            background-color: #F9F9FA;
+            margin: .3rem .4rem;
+        }
+
+        .pitem {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 12px;
+            color: #666;
+        }
+
+        .pitem span {
+            padding: .3rem .1rem;
+            flex: 1 0;
+            text-align: center;
+        }
+
+        .pitem .name {
+            overflow: hidden; /*超出部分隐藏*/
+            text-overflow: ellipsis; /* 超出部分显示省略号 */
+            white-space: nowrap; /*规定段落中的文本不进行换行 */
+        }
+
+        .phead {
+            color: #000;
+        }
+
+        .pitem .unit {
+            font-size: 9px;
+            padding: 0;
+        }
+
+        .pitem:nth-child(2n) {
+            background-color: #EEEEEE;
+        }
+    </style>
+</head>
+<body>
+<div id="loadStart"></div>
+<div id="app" v-cloak>
+    <div class="plist">
+        <div class="pitem phead">
+            <span>企业名称</span><span>负责人</span><span>联系方式</span><span>报价/元 <span class="unit">(单价)</span></span>
+        </div>
+        <div class="pitem" v-for="(item,index) in offer_list">
+            <span class="name">{{item.name}}</span><span>{{item.linkman}}</span>
+            <span @click="callPhone(item.linktel)">{{item.linktel}}</span><span>{{toWan(item.price)}}</span>
+        </div>
+    </div>
+</div>
+</body>
+</html>
+<script type="text/javascript" src="../../assets/js/api.js"></script>
+<script type="text/javascript" src="../../assets/js/public.js"></script>
+<script type="text/javascript" src="../../assets/js/fastclick.js"></script>
+<script>
+    new FastClick(document.body);
+</script>
+<script type="text/javascript" src="../../assets/js/vue.min.js"></script>
+<script type="text/javascript" src="../../assets/js/index.js"></script>
+<script type="text/javascript" src="../../assets/js/swiper-3.4.2.min.js"></script>
+<script>
+    var app = new Vue({
+        el: '#app',
+        data: {
+            id: '',
+            offer_list: []
+        },
+        created: function () {
+            apiready = function () {
+                app.id = api.pageParam.id;
+                app._offerList();
+            }
+        },
+        methods: {
+            // 我的报价列表offerList
+            _offerList: function () {
+                ApiAjax('my/offerList', {
+                    token: getToken(),
+                    order_id: app.id
+                }, function (ret, err) {
+                    loadEnd('index_price');
+                    // alert(JSON.stringify(ret));
+                    app.offer_list = ret.data;
+                });
+            },
+            // 拨打联系人
+            callPhone: function (linktel) {
+                var flg = true;
+                if (flg) {
+                    flg = false;
+                    api.call({
+                        type: 'tel_prompt',
+                        number: linktel
+                    });
+                    setTimeout(function () {
+                        flg = true;
+                    }, 1500)
+                } else {
+                    toastMsg('请勿频繁操作')
+                }
+
+            },
+        }
+    })
+</script>

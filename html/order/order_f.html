@@ -8,11 +8,46 @@
     <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
     <title></title>
     <script src="../../assets/js/fontsize.js"></script>
-    <link rel="stylesheet" href="http://at.alicdn.com/t/font_1220513_njjndgm1akh.css">
+    <link rel="stylesheet" href="../../assets/font/iconfont.css">
+    <link rel="stylesheet" href="../../assets/font/iconfont.css">
     <link rel="stylesheet" href="../../assets/css/api.css">
     <style type="text/css">
         body {
             background-color: #F9F9FA;
+        }
+
+        .rel_btn {
+            position: fixed;
+            bottom: 2.5rem;
+            /*left: 0;*/
+            right: .3rem;
+            /*margin: 0 auto;*/
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            font-size: 12px;
+            align-items: center;
+            color: #F11C15;
+            transition: ease-in-out .3s;
+
+        }
+
+        .rel_btn .iconfont {
+            font-size: 22px;
+            font-weight: bold;
+        }
+
+        .touchop {
+            opacity: 0;
+        }
+        .iconbox{
+            background-color: #F11C15;
+            color: #fff;
+            border-radius: 50%;
+            width: .8rem;
+            height: .8rem;
+            text-align: center;
+            line-height: .8rem;
         }
     </style>
 </head>
@@ -20,11 +55,11 @@
 <div id='loadStart'></div>
 <div id="app" v-cloak>
     <div class="hr"></div>
-    <div class="new_list" v-if="flg&&order_list.length>0">
+    <div class="new_list" v-if="flg&&order_list.length>0" @touchmove="touchmove">
         <div class="new_item" v-for="item in order_list" @click="go_detail(item.id,item.title)">
             <!--<div class="new_img">-->
-                <!--<img :src="imgUrl+item.pics" alt="" v-if="item.pics">-->
-                <!--<span class="iconfont icon-zanwutupian"></span>-->
+            <!--<img :src="imgUrl+item.pics" alt="" v-if="item.pics">-->
+            <!--<span class="iconfont icon-zanwutupian"></span>-->
             <!--</div>-->
             <div class="new_img">
                 <img :src=" item.pics?imgUrl+item.pics:'../../assets/image/noimg.png'" alt="">
@@ -44,6 +79,10 @@
         <div class="nodataimg"><img src="../../assets/image/loading3.gif" alt=""></div>
         <div>你的网络好像不太给力，请稍后再试</div>
         <div class="nodatabtn" @click="_getOrderList"><span class="iconfont icon-shuaxin"></span><span>重新加载</span></div>
+    </div>
+    <div :class="['rel_btn', touch?'touchop':'']" @click="re_fn">
+        <div class="iconbox"><span class="iconfont icon-addTodo-nav"></span></div>
+        <div>发布</div>
     </div>
 </div>
 </body>
@@ -68,7 +107,8 @@
             showmore: false,
             showtext: '加载中...',
             flg: false,
-            offline: false
+            offline: false,
+            touch: false
         },
         created: function () {
             apiready = function () {
@@ -84,7 +124,7 @@
                     app.order_list = [];
                     app.flg = false;
                     app._getOrderList();
-                    // alert(JSON.stringify(ret.value));
+                    // //alert(JSON.stringify(ret.value));
                 });
                 // 监听断网
                 api.addEventListener({
@@ -96,6 +136,7 @@
                 api.setRefreshHeaderInfo({
                     // loadingImg: 'widget://assets/image/head.png',
                     // loadingImg: 'widget://assets/image/loading.gif',
+                    loadingImg: 'widget://assets/image/logo.png',
                     bgColor: '#fff',
                     textColor: '#F11C15',
                     textDown: '下拉刷新...',
@@ -163,8 +204,7 @@
                             type: 1
                         }
                     });
-                }
-                else {
+                } else {
                     openView('login', 'login/login', '账号登录')
                 }
             },
@@ -175,7 +215,19 @@
                     url: '../index/search_w.html',
                 });
             },
-
+            touchmove: function () {
+                app.touch = true;
+                setTimeout(function () {
+                    app.touch = false;
+                }, 1500)
+            },
+            re_fn: function () {
+                if (getToken()) {
+                    openView('order_rel', 'order/order_rel', '发布订单')
+                } else {
+                    openView('login', 'login/login', '登录')
+                }
+            }
         }
     })
 </script>

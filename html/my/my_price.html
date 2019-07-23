@@ -8,7 +8,7 @@
     <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
     <title></title>
     <script src="../../assets/js/fontsize.js"></script>
-    <link rel="stylesheet" href="http://at.alicdn.com/t/font_1220513_njjndgm1akh.css">
+    <link rel="stylesheet" href="../../assets/font/iconfont.css">
     <link rel="stylesheet" href="../../assets/css/api.css">
     <style type="text/css">
         .new_title {
@@ -24,6 +24,11 @@
         .new_list {
             padding: .5rem 0;
         }
+
+        .icon-shanchushu {
+            color: #E72424;
+            font-size: 20px;
+        }
     </style>
 </head>
 <body>
@@ -32,20 +37,24 @@
     <div class="new_title">我报价的订单</div>
     <div class="new_list">
         <div class="new_item" v-for="item in order_list" @click="go_detail(item.order_id,item.title)">
-            <div class="new_img"><img :src="imgUrl+item.pics" alt=""></div>
+            <div class="new_img"><img :src=" item.pics?imgUrl+item.pics:'../../assets/image/noimg.png'" alt=""></div>
             <div class="new_right">
                 <div>
-                    <div class="new_name"><span>{{item.title}}</span><span class="new_num">{{item.num}}件</span></div>
+                    <div class="new_name"><span>{{item.title}}</span><span class="new_num">{{toWan(item.num)}}件</span>
+                    </div>
                     <div class="new_city">{{item.address}}</div>
                 </div>
-                <div class="new_date">发布日期：{{item.create_time}}</div>
+                <div class="new_date"><span>发布日期：{{item.create_time}}</span><span
+                        @click.stop="delmyprice(item.order_id,item.title)"
+                        class="iconfont icon-shanchushu"></span>
+                </div>
             </div>
         </div>
         <div v-if='showmore&&order_list.length>=perpage' class="enddata">{{showtext}}</div>
     </div>
     <div v-else class="nodata_box">
         <div class="nodata_box_img"><img src="../../assets/image" alt=""></div>
-        <div class="nodata_box_text">暂无外发订单</div>
+        <div class="nodata_box_text">暂无报价</div>
     </div>
 </div>
 </body>
@@ -110,12 +119,17 @@
                     status: app.status
                 }, function (ret, err) {
                     loadEnd('my_price');
-                    var order_list = ret.data;
-                    if (ret.data.length > 0) {
-                        app.order_list = app.order_list.concat(order_list);
-                        app.showmore = true;
+                    // alert(JSON.stringify(ret))
+                    if (ret.code == 1) {
+                        var order_list = ret.data;
+                        if (ret.data.length > 0) {
+                            app.order_list = app.order_list.concat(order_list);
+                            app.showmore = true;
+                        } else {
+                            app.showtext = '到底了';
+                        }
                     } else {
-                        app.showtext = '到底了';
+                        toastMsg(ret.message)
                     }
                     // app.order_list = ret.data;
                 });
@@ -133,11 +147,40 @@
                             type: 3
                         }
                     });
-                }
-                else {
+                } else {
                     openView('login', 'login/login', '账号登录')
                 }
             },
+            delmyprice: function (id, name) {
+                api.confirm({
+                    title: name,
+                    msg: '是否删除对' + name + '的报价？',
+                    buttons: ['确定', '取消']
+                }, function (ret, err) {
+                    var index = ret.buttonIndex;
+                    if (index == 1) {
+                        app._offerCancel(id)
+                    }
+                });
+
+            },
+            // 删除报价
+            _offerCancel: function (id) {
+                ApiAjax('my/offerCancel', {
+                    token: getToken(),
+                    order_id: id
+                }, function (ret, err) {
+                    if (ret.code == 1) {
+                        toastMsg('删除成功');
+                        app.order_list = [];
+                        app._myOfferList();
+                    } else {
+                        toastMsg(ret.message)
+                    }
+                    // app.order_list = ret.data;
+                });
+            }
+
         }
     })
 </script>

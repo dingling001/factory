@@ -10,13 +10,52 @@
     <script src="../../assets/js/fontsize.js"></script>
     <link rel="stylesheet" href="../../assets/css/api.css">
     <link rel="stylesheet" href="../../assets/css/style.css">
-    <link rel="stylesheet" href="http://at.alicdn.com/t/font_1220513_njjndgm1akh.css">
+    <link rel="stylesheet" href="../../assets/font/iconfont.css">
+    <style>
+        header {
+            width: 100%;
+            height: auto;
+            font-size: 18px;
+            color: #424242;
+            overflow: hidden;
+        }
+
+        .index_headers {
+            line-height: 0.44rem;
+            color: #424242;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.2rem 0.4rem;
+            /*border-bottom: 1px solid #ececec;*/
+        }
+
+        .index_headers .icon-fanhui {
+            flex-shrink: 0;
+            color: #333;
+            font-size: 17px;
+        }
+
+        .win_mid {
+            padding-right: 0.5rem;
+            color: #333;
+            font-weight: bold;
+            font-size: 17px;
+        }
+    </style>
 </head>
 <body>
 <div id="app" v-cloak>
-    <header class="index_header">
-        <span class="title">账号登录</span>
-        <span @click="go_index">跳过</span>
+    <!--<header class="index_header">-->
+    <!--<span class="title">账号登录</span>-->
+    <!--<span @click="go_index">跳过</span>-->
+    <!--</header>-->
+    <header id="header">
+        <div class="index_headers">
+            <!--<div class="close_left" @click="closeWin"><span class="iconfont icon-fanhui"></span></div>-->
+            <div class="win_mid">账号登录</div>
+            <span @click="go_index">跳过</span>
+        </div>
     </header>
     <form>
         <div class="input_box box">
@@ -26,11 +65,11 @@
             <span class="iconfont icon-mima"></span>
             <input type="password" placeholder="请输入您的密码" v-model="password"></div>
         <div class="input_box red_text">
-            <span @click="code_fn">验证码登录</span>
+            <span @click="code_fn">立即注册</span>
             <span @click="forgot_fn">忘记密码</span>
         </div>
         <div class="login_btn" @click="login">登录</div>
-        <div class="login_agree" @click="go_agree">登录及代表您同意<span>《加工宝用户协议》</span></div>
+        <div class="login_agree" @click="go_agree">登录即代表您同意<span>《加工宝用户协议》</span></div>
     </form>
 </div>
 </body>
@@ -109,7 +148,7 @@
                 //     name: 'login_code',
                 //     url: './login_code.html',
                 // });
-                openView('login_code', 'login/login_code', '验证码登录')
+                openView('login_code', 'login/login_code', '注册')
             },
             // 去忘记密码
             forgot_fn: function () {
@@ -133,10 +172,11 @@
             },
             // 查看协议
             go_agree: function () {
-                api.openWin({
-                    name: 'login_agree',
-                    url: './login_agree.html',
-                });
+                // api.openWin({
+                //     name: 'login_agree',
+                //     url: './login_agree.html',
+                // });
+                openView('login_agree', 'login/login_agree', '加工宝协议')
             }
         }
     })

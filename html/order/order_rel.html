@@ -11,7 +11,7 @@
     <link rel="stylesheet" href="../../assets/css/api.css">
     <link rel="stylesheet" href="../../assets/css/style.css">
     <!--<link rel="stylesheet" href="https://unpkg.com/mint-ui@1/lib/style.css">-->
-    <link rel="stylesheet" href="http://at.alicdn.com/t/font_1220513_njjndgm1akh.css">
+    <link rel="stylesheet" href="../../assets/font/iconfont.css">
     <style type="text/css">
 
         .input_box {
@@ -406,13 +406,14 @@
 </body>
 </html>
 <script type="text/javascript" src="../../assets/js/api.js"></script>
-<script type="text/javascript" src="../../assets/js/public.js"></script>
 <script type="text/javascript" src="../../assets/js/fastclick.js"></script>
 <script>
     new FastClick(document.body);
 </script>
 <script type="text/javascript" src="../../assets/js/vue.min.js"></script>
 <script type="text/javascript" src="../../assets/js/index.js"></script>
+<script type="text/javascript" src="../../assets/js/public.js"></script>
+<script type="text/javascript" src="../../assets/js/res.js"></script>
 <script>
     var app = new Vue({
         el: '#app',
@@ -458,15 +459,16 @@
                         app.postData.region_code = ret.value.region_code;
                     }
                 });
-                if ($api.getStorage('postData')) {
-                    app.postData = JSON.parse($api.getStorage('postData'))
-                }
+                
+                // if ($api.getStorage('postData')) {
+                //     app.postData = JSON.parse($api.getStorage('postData'))
+                // }
             }
         },
         methods: {
             // 获取分类列表getCateList
             _getCateList: function () {
-                ApiAjax('api/getCateList', {}, function (ret, err) {
+                ApiAjax('api/getAllCateList', {}, function (ret, err) {
                     app.cate_list = ret.data.list;
                 })
             },
@@ -541,6 +543,33 @@
             },
             // 添加图片
             addImg: function () {
+                var resultList = api.hasPermission({
+                    list: ['storage', 'camera']
+                });
+                var hasThisPerm = JSON.stringify(resultList[0].granted);
+                var hasThiscamera = JSON.stringify(resultList[1].granted);
+                if (hasThisPerm == "true" && hasThiscamera == "true") {
+                    app.actionsheet();
+                } else {
+                    //如果还没有获取存储权限，则动态获取
+                    api.requestPermission({
+                        list: ['storage', 'camera']
+                    }, function (ret, err) {
+                        //权限选择结果，安卓机一般是：禁止、始终允许、不再提醒
+                        var selected = JSON.stringify(ret.list[0].granted);
+                        var selecteds = JSON.stringify(ret.list[1].granted);
+                        //如果选择始终允许，则返回true
+                        if (selected && selecteds) {
+                            //业务处理，直接打开本地存储图片
+                            app.actionsheet()
+                        } else {
+                            toastMsg('请开启权限发布订单')
+                        }
+                    })
+                }
+            },
+            // 弹层选择
+            actionsheet: function () {
                 api.actionSheet({
                     title: '上传相关图片',
                     cancelTitle: '取消',
@@ -583,8 +612,9 @@
                     saveToPhotoAlbum: true,
                     groupName: 'jiagongbao'
                 }, function (ret, err) {
+                    // alert(JSON.stringify(ret))
+                    if (!ret.data) return;
                     if (ret) {
-
                         app.uploadImg(ret.data)
                     }
                 });
@@ -658,7 +688,7 @@
                 }
                 if (app.postData.linktel == '') {
                     toastMsg('请输入联系电话');
-                } else if (!mobileReg.test(app.postData.linktel)) {
+                } else if (!/^1\d{10}$/gi.test(app.postData.linktel)) {
                     toastMsg('联系电话不正确');
                     return
                 }
@@ -700,21 +730,32 @@
                     linktel: app.postData.linktel,
                     linkman: app.postData.linkman
                 };
-                // alert(JSON.stringify(post));
+                // //alert(JSON.stringify(post));
                 $api.setStorage('postData', JSON.stringify(post));
                 ApiAjax('order/orderRelease', post, function (ret, err) {
-                    // alert(JSON.stringify(ret))
+                    // //alert(JSON.stringify(ret))
                     api.hideProgress();
                     if (ret.code == 1) {
                         toastMsg('发布成功，等待审核…');
-                        api.openWin({
-                            name: 'index_win',
-                            url: '../common/index_win.html',
-                            slidBackEnabled: false,
-                            reload: true,
-                            vScrollBarEnabled: false,
-                            hScrollBarEnabled: false,
-                        });
+                        // api.openWin({
+                        //     name: 'index_win',
+                        //     url: '../common/index_win.html',
+                        //     slidBackEnabled: false,
+                        //     reload: true,
+                        //     vScrollBarEnabled: false,
+                        //     hScrollBarEnabled: false,
+                        // });
+                        setTimeout(function () {
+                            // api.openWin({
+                            //     name: 'index_win',
+                            //     url: '../common/index_win.html',
+                            //     slidBackEnabled: false,
+                            //     reload: true,
+                            //     vScrollBarEnabled: false,
+                            //     hScrollBarEnabled: false,
+                            // });
+                            openView('my_outorder', 'my/my_outorder', '外发订单')
+                        }, 1500)
                     } else {
                         toastMsg(ret.message)
                     }
@@ -732,12 +773,12 @@
                     var postData = JSON.parse(JSON.stringify(app.postData));
                     for (var i in postData) {
                         if (obj[i] == postData[i]) {
-                            api.sendEvent({
-                                name: 'saveData',
-                                extra: {
-                                    savevalue: 1
-                                }
-                            });
+                            // api.sendEvent({
+                            //     name: 'saveData',
+                            //     extra: {
+                            //         savevalue: 1
+                            //     }
+                            // });
                         }
                     }
                 },

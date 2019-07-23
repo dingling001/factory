@@ -9,7 +9,7 @@
     <title></title>
     <script src="../../assets/js/fontsize.js"></script>
     <link rel="stylesheet" href="../../assets/css/api.css">
-    <link rel="stylesheet" href="http://at.alicdn.com/t/font_1220513_2apiqln0i2w.css">
+    <link rel="stylesheet" href="../../assets/font/iconfont.css">
     <style type="text/css">
         body {
             background-color: #F9F9FA;
@@ -157,6 +157,7 @@
             color: #666;
             font-size: 12px;
             padding: 0 0 0 .62rem;
+            min-height: 1.5rem;
         }
 
         .notice ul {
@@ -179,6 +180,7 @@
     </style>
 </head>
 <body>
+<div id="loadStart"></div>
 <div id="app" v-cloak ontouchstart>
     <div class="vip_top">
         <div class="vip_bg">
@@ -222,7 +224,9 @@
         <!--</ul>-->
         <span v-html="pay_info.pay_desc"></span>
     </div>
+    <!--<img :src="imgUrl+pay_info.vip_pic" alt="">-->
     <div class="login_btn" @click="pay_fn">立即支付</div>
+
 </div>
 </body>
 </html>
@@ -240,7 +244,8 @@
             vip: '',
             type: 0,
             pay_info: {},
-            vip_id: 1
+            vip_id: 1,
+            contact_info: {}
         },
         created: function () {
             apiready = function () {
@@ -249,17 +254,26 @@
                     bounces: false
                 });
                 app._getAppInfo();
+                app._vipPageViewTimes();
             }
         },
         methods: {
+            // 进入会员页面次数
+            _vipPageViewTimes: function () {
+                ApiAjax('my/vipPageViewTimes', {token: getToken()}, function (ret, err) {
+                    if (ret.code == 1) {
+                    } else {
+                        toastMsg(ret.message)
+                    }
+                })
+            },
             // 支付
-            pay_fn() {
+            pay_fn: function () {
                 if (app.type == 0) {
                     toastMsg('请选择支付方式')
                 } else if (app.type == 3) {
                     app.bankPay();
-                }
-                else {
+                } else {
                     app._recharge();
                 }
             },
@@ -270,7 +284,9 @@
             // 会员说明
             _getAppInfo: function () {
                 ApiAjax('my/getAppInfo', {token: getToken()}, function (ret, err) {
+                    loadEnd()
                     if (ret.code == 1) {
+                        // alert(JSON.stringify(ret))
                         app.pay_info = ret.data;
                     }
                 })
@@ -278,7 +294,7 @@
             // 生成订单
             _recharge: function () {
                 ApiAjax('my/recharge', {token: getToken(), vip_id: app.vip_id}, function (ret, err) {
-                    // alert(JSON.stringify(ret));
+                    // //alert(JSON.stringify(ret));
                     if (ret.code == 1) {
                         switch (app.type) {
                             case 1:
@@ -299,9 +315,9 @@
             // 微信支付
             wechatPay: function (pay_order_sn) {
                 var wx = api.require('wxPay');
-                // alert(JSON.stringify(wx));
+                // //alert(JSON.stringify(wx));
                 ApiAjax('pay/wxPay', {token: getToken(), pay_order_sn: pay_order_sn}, function (ret, err) {
-                    // alert(JSON.stringify(ret))
+                    // //alert(JSON.stringify(ret))
                     if (ret.code == 1) {
                         wx.payOrder({
                             apiKey: ret.data.appid,
@@ -346,16 +362,16 @@
             // 银行卡支付
             bankPay: function () {
                 // toastMsg('请联系客服人员，线下充值')
-                api.alert({
+                api.confirm({
                     title: '对公转账信息',
-                    msg: ' 请联系我们为您开通银联支付，我们的唯一账户为' + app.pay_info.bank_account,
-                    buttons: ['知道了']
+                    msg: '开户行：' + app.pay_info.bank_type + '；账号' + app.pay_info.bank_account + '；请联系我们会为您开通会员',
+                    buttons: ['联系我们', '知道了']
                 }, function (ret, err) {
-                    if (ret.index == 1) {
-
+                    if (ret.buttonIndex == 1) {
+                        openView('my_contact', 'my/my_contact', '联系我们')
                     }
                 });
-            }
+            },
         }
     })
 

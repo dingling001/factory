@@ -10,8 +10,7 @@
     <script src="../../assets/js/fontsize.js"></script>
     <link rel="stylesheet" href="../../assets/css/api.css">
     <link rel="stylesheet" href="../../assets/css/style.css">
-    <!--<link rel="stylesheet" href="https://unpkg.com/mint-ui@1/lib/style.css">-->
-    <link rel="stylesheet" href="http://at.alicdn.com/t/font_1220513_yobxgbxpb4.css">
+    <link rel="stylesheet" href="../../assets/font/iconfont.css">
     <style>
         body {
             background-color: #F9F9FA;
@@ -53,6 +52,7 @@
 
         .type .infoinput {
             display: flex;
+            flex: 1;
             align-items: center;
             justify-content: flex-end;
             flex-wrap: wrap;
@@ -63,11 +63,15 @@
             background-color: #E72424;
             border-radius: 5px;
             color: #fff;
-            margin-left: .2rem;
+            margin: 0 0 .2rem .2rem;
         }
 
         .infoinput .num {
             color: #E51F1F;
+        }
+
+        .company {
+            padding: 0 0 .5rem 0;
         }
 
         .company .border-t {
@@ -243,7 +247,7 @@
 <div id="app" v-cloak class="company">
     <div class="input_box title">
         <span class="label ">订单详情</span>
-        <div class="infoinput">发布日期：{{d_info.create_time}}</div>
+        <div class="infoinput" v-if="d_info.create_time">发布日期：{{d_info.create_time}}</div>
     </div>
     <div class="input_box">
         <span class="label">标题</span>
@@ -254,7 +258,7 @@
         <div class="infoinput">{{d_info.address}}</div>
     </div>
     <div class="input_box type">
-        <span class="label">类型1</span>
+        <span class="label">类型</span>
         <div class="infoinput"><span v-for="i in d_info.cate_names">{{i}}</span></div>
     </div>
     <div class="input_box ">
@@ -313,9 +317,9 @@
         <div class="infoinput">单价： <span class="price">{{d_info.price}}</span>元</div>
     </div>
     <!--<div class="input_box" v-else-if="type==2" @click="">已有50人报价，查看报价</div>-->
-    <div class="input_box" @click="lookPrice" v-else-if="type==2&&d_info.status==1"><span class="outordernum">已有{{d_info.offer_count}}人报价，查看报价</span>
+    <div class="input_box" @click="lookPrice" v-else-if="is_myorder&&d_info.status==1"><span class="outordernum">已有{{d_info.offer_count}}人报价，查看报价</span>
     </div>
-    <div v-show="type!=2">
+    <div v-show="type!=2&&vip==0">
         <div class="tips">注：您的剩余报价次数 <span>{{d_info.free_times}}</span>次</div>
         <div class="vip_box">
             <div class="vip_btn" @click="vipShow">会员查看信息</div>
@@ -345,13 +349,14 @@
             offer_list: [],
             btnstatus: true, //是否下载状态
             vip: 0,
-            dowmtext: '下载附件'
+            dowmtext: '下载附件',
+            is_myorder: false,
         },
         created: function () {
             apiready = function () {
                 app.id = api.pageParam.id;
                 app.type = api.pageParam.type || 0;// 0 首页订单，1订单中心， 2我的报价订单 ,3外发订单，4我的收藏订单
-                // alert(app.type)
+                // //alert(app.type)
                 if (app.type == 3) {
                     // 我的报价详情
                     app._offerDetail()
@@ -370,17 +375,32 @@
                     } else {
                     }
                 });
+                app._offerList();
                 // app.checkDownload();
+                app._checkIfMyOrder();
             }
         },
         methods: {
+            // 查询是不是我的订单
+            _checkIfMyOrder: function () {
+                ApiAjax('api/checkIfMyOrder', {
+                    token: getToken(),
+                    order_id: app.id,
+                }, function (res, err) {
+                    if (res.code == 1) {
+                        app.is_myorder = res.data;
+                    } else {
+                        toastMsg(res.message)
+                    }
+                })
+            },
             // 获取订单详情
             _getOrderDetail: function () {
                 ApiAjax('api/getOrderDetail', {
                     token: getToken(),
                     order_id: app.id
                 }, function (ret, err) {
-                    // alert(JSON.stringify(ret))
+                    // //alert(JSON.stringify(ret))
                     loadEnd('index_detail');
                     app.d_info = ret.data;
                     app.d_info.create_time = timestampToTime(app.d_info.create_time);
@@ -416,23 +436,23 @@
                     title: '下载附件'
                 }, function (ret, err) {
                     if (ret) {
-                        // alert(JSON.stringify(ret))
+                        // //alert(JSON.stringify(ret))
                         if (ret.id) {
                             downloadManager.openDownloadedFile({
                                 id: ret.id
                             }, function (ret, err) {
-                                // alert(JSON.stringify(ret) + 'downopen')
+                                // //alert(JSON.stringify(ret) + 'downopen')
                                 if (ret) {
-                                    // alert(JSON.stringify(ret)+'downopen')
+                                    // //alert(JSON.stringify(ret)+'downopen')
                                 } else {
                                     toastMsg(ret.message)
                                 }
                             });
                         } else {
-                            // alert(JSON.stringify(err));
+                            // //alert(JSON.stringify(err));
                         }
                     } else {
-                        // alert(JSON.stringify(err));
+                        // //alert(JSON.stringify(err));
                     }
                 });
             },
@@ -460,7 +480,8 @@
                                 ids: []
                                 , status: 3
                             }, function (ret, err) {
-                                if (ret.data.length > 0) {
+                                if (!ret) return false;
+                                if (ret && ret.data.length > 0) {
                                     for (var i in ret.data) {
                                         if (ret_enqueue.id == ret.data[i].id) {
                                             if (ret.data[i].status == 3) {
@@ -502,7 +523,7 @@
                     order_id: app.id
                 }, function (ret, err) {
                     loadEnd('index_detail');
-                    // alert(JSON.stringify(ret))
+                    // //alert(JSON.stringify(ret))
                     app.d_info = ret.data;
                     if (ret.data.pics) {
                         for (var i in app.d_info.pics) {
@@ -524,7 +545,7 @@
                     order_id: app.id
                 }, function (ret, err) {
                     loadEnd('index_detail');
-                    // alert(JSON.stringify(ret))
+                    // //alert(JSON.stringify(ret))
                     app.d_info = ret.data;
                     if (ret.data.pics) {
                         for (var i in app.d_info.pics) {
@@ -555,17 +576,38 @@
                 if (app.offer_list.length <= 0) {
                     toastMsg('暂无人报价')
                 } else {
-
+                    openView('index_price', 'index/index_price', '查看报价', false, false, {id: app.id})
                 }
             },
             // 会员查看信息
             vipShow: function () {
+                if (app.vip == 0) {
+                    api.confirm({
+                        title: '',
+                        msg: '您还没有开通会员，不可查看以下信息。 ',
+                        buttons: ['取消', '去开通']
+                    }, function (ret, err) {
+                        var index = ret.buttonIndex;
+                        if (index == 2) {
+                            openView('my_vip', 'my/my_vip', '开通会员', false, false, false, {vip: 1})
+                        }
+                    });
+                } else {
+                    toastMsg('您已经是会员了！')
+                }
 
             },
             // 拨打联系人
             callPhone: function () {
-
+                if (app.vip == 0) {
+                    return
+                }
+                api.call({
+                    type: 'tel_prompt',
+                    number: app.d_info.linktel
+                });
             },
+            // 检查vip状态
             _checkVip: function () {
                 ApiAjax('api/checkVip', {
                     token: getToken(),

@@ -9,7 +9,7 @@
     <title></title>
     <script src="../../assets/js/fontsize.js"></script>
     <link rel="stylesheet" href="../../assets/css/api.css">
-    <link rel="stylesheet" href="http://at.alicdn.com/t/font_1220513_2apiqln0i2w.css">
+    <link rel="stylesheet" href="../../assets/font/iconfont.css">
     <style type="text/css">
         body {
             background-color: #F9F9FA;
@@ -69,6 +69,7 @@
             font-size: 24px;
             font-weight: 900;
             padding: .1rem 0 0 0;
+            position: relative;
         }
 
         .vip_item {
@@ -118,9 +119,22 @@
         .vip_item:active {
             background-color: #F9F9FA;
         }
+        .viptime{
+            position: absolute;
+            bottom: .4rem;
+            left: 0;
+            text-align: center;
+            width: 100%;
+            z-index: 1;
+            color: #333;
+            font-weight: bold;
+            font-size: 18px;
+            font-family: Hei;
+        }
     </style>
 </head>
 <body>
+<div id="loadStart"></div>
 <div id="app" v-cloak>
     <div class="vip_top">
         <div class="vip_bg">
@@ -128,7 +142,7 @@
             <span class="vip_day">
                 <span class="iconfont icon-VIPCopy"></span>
                 <span class="vip">VIP会员</span>
-                <span v-if="vip_time">{{vip_time}}</span>
+                <span v-if="vip_time" class="viptime">{{vip_time}}</span>
                 <span v-else>尚未开通会员</span>
             </span>
         </div>
@@ -184,6 +198,7 @@
             // 获取我的个人信息
             _getMyinfo: function () {
                 ApiAjax('my/getMyinfo', {token: getToken()}, function (ret, err) {
+                    loadEnd();
                     if (ret.code == 1) {
                         app.my_info = ret.data;
                         app.vip_time = timestampToTime(ret.data.vip_time);
