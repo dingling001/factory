@@ -40,7 +40,8 @@
         .touchop {
             opacity: 0;
         }
-        .iconbox{
+
+        .iconbox {
             background-color: #F11C15;
             color: #fff;
             border-radius: 50%;
@@ -66,7 +67,8 @@
             </div>
             <div class="new_right">
                 <div>
-                    <div class="new_name"><span>{{item.title}}</span><span class="new_num">{{item.num}}件</span></div>
+                    <div class="new_name"><span>{{item.title}}</span><span class="new_num">{{toWan(item.num)}}{{item.unit}}</span>
+                    </div>
                     <div class="new_city">{{item.address}}</div>
                 </div>
                 <div class="new_date">发布日期：{{item.create_time}}</div>
@@ -136,6 +138,7 @@
                 api.setRefreshHeaderInfo({
                     // loadingImg: 'widget://assets/image/head.png',
                     // loadingImg: 'widget://assets/image/loading.gif',
+                    loadingImg: 'widget://assets/image/logo.png',
                     bgColor: '#fff',
                     textColor: '#F11C15',
                     textDown: '下拉刷新...',

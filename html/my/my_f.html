@@ -22,8 +22,9 @@
             background-image: url("../../assets/image/mybg.jpg");
             background-size: cover;
             background-repeat: no-repeat;
-            /*height: 2.4rem;*/
+            /*height: 1.6rem;*/
             position: relative;
+            background-position: center -.88rem;
             /*box-shadow: 0 4px 7px 2px rgba(246, 122, 118, 0.33);*/
         }
 
@@ -33,7 +34,7 @@
         }
 
         .company {
-            /*margin: .5rem 0 0 0;*/
+            padding: .5rem 0 0 0;
             /*background-color: #fff;*/
         }
 
@@ -106,7 +107,6 @@
             /*height: 0.76rem;*/
             /*border-radius: 50%;*/
             font-size: 25px;
-            margin-bottom: 0.13rem;
         }
 
         .icon-gerenxinxi {
@@ -179,6 +179,17 @@
             text-shadow: 2px 1px 0 rgba(246, 122, 118, 0.2);
         }
 
+        .my_item .iconitem {
+            width: 50%;
+            margin: 0 auto 0.13rem auto;
+            font-size: 25px;
+            height: 0.48rem;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
         .border_1 {
             border-bottom: 0;
         }
@@ -211,14 +222,9 @@
 <body class="my_body">
 <!--<div id="loadStart"></div>-->
 <div id="app" v-cloak>
-    <header class="my_head">
+    <div class="my_head">
         <!--<div class="addheader"></div>-->
         <!--<div class="my_head">-->
-        <div class="order_index">
-            <span></span>
-            <span class="center">个人中心</span>
-            <span class="iconfont icon-shezhi" @click="go_view('my_set','账号设置')"></span>
-        </div>
         <!--</div>-->
         <div class="company" v-if="fac_token">
             <div class="company_name">
@@ -230,38 +236,38 @@
                 <div class="my_btn">登录</div>
             </div>
         </div>
-    </header>
+    </div>
     <div class="my_item_box">
         <div class="my_item" @click="go_view('my_vip','会员中心')">
-            <span class="iconfont icon-huiyuanzhongxin"></span>
+            <div class="iconitem"><span class="iconfont icon-huiyuanzhongxin"></span></div>
             <span>会员中心</span>
         </div>
         <div class="my_item " @click="go_view('my_collection','我的收藏')">
-            <span class="iconfont icon-shoucang_"></span>
+            <div class="iconitem"><span class="iconfont icon-shoucang_"></span></div>
             <span>我的收藏</span>
         </div>
         <div class="my_item border_2" @click="go_view('my_price','我的报价')">
-            <span class="iconfont icon-wodebaojia"></span>
+            <div class="iconitem"><span class="iconfont icon-wodebaojia"></span></div>
             <span>我的报价</span>
         </div>
         <div class="my_item" @click="go_item('my_info_w')">
-            <span class="iconfont icon-gerenxinxi"></span>
+            <div class="iconitem"><span class="iconfont icon-gerenxinxi"></span></div>
             <span>个人信息</span>
         </div>
-        <div class="my_item" @click="go_view('my_outorder','外发订单')">
-            <span class="iconfont icon-waifadingdan"></span>
-            <span>外发订单</span>
+        <div class="my_item" @click="go_view('my_outorder','已发订单')">
+            <div class="iconitem"><span class="iconfont icon-waifadingdan"></span></div>
+            <span>已发订单</span>
         </div>
         <div class="my_item " @click="go_fabu">
-            <span class="iconfont icon-fabu"></span>
+            <div class="iconitem"><span class="iconfont icon-fabu"></span></div>
             <span>发布订单</span>
         </div>
         <div class="my_item  border_1" @click="go_view('my_about','关于我们')">
-            <span class="iconfont icon-guanyuwomen"></span>
+            <div class="iconitem"><span class="iconfont icon-guanyuwomen"></span></div>
             <span>关于我们</span>
         </div>
         <div class="my_item border_1" @click="go_view('my_contact','联系我们')">
-            <span class="iconfont icon-lianxiwomen"></span>
+            <div class="iconitem"><span class="iconfont icon-lianxiwomen"></span></div>
             <span>联系我们</span>
         </div>
 
@@ -283,20 +289,19 @@
         el: '#app',
         data: {
             fac_token: getToken(),
-            my_info: {}
+            my_info: {},
+            // position: ''
         },
         created: function () {
             apiready = function () {
-                api.setStatusBarStyle({
-                    style: 'light'
-                });
-                $api.fixStatusBar($api.dom('header'));
+                // api.setStatusBarStyle({
+                //     style: 'light'
+                // });
+                // $api.fixStatusBar($api.dom('header'));
+                // app.position = 'center' + api.pageParam.position + 'px';
+                // alert(JSON.stringify(app.position))
                 if (getToken()) {
                     app._getMyinfo();
-                } else {
-                    setTimeout(function () {
-                        loadEnd('my_f');
-                    }, 1500)
                 }
                 api.addEventListener({
                     name: 'changtab'
@@ -309,6 +314,7 @@
                     name: 'loginOut'
                 }, function (ret, err) {
                     app.fac_token = null;
+                    app.login()
                 });
                 api.addEventListener({
                     name: 'loginindex'
@@ -318,6 +324,41 @@
             }
         },
         methods: {
+            // 绑定推送
+            initpush: function (uid) {
+                ajpush = api.require('ajpush');
+                // 判断操作系统，只有在android才初始化，ios自动初始化
+                var sysType = api.systemType;
+                if (sysType == 'android') {
+                    ajpush.init(function (ret) {
+                        if (ret && ret.status) {
+                            //初始化成功 只有安卓有效 IOS 自动初始化
+                            // 极光官网 设备别名 推送测试
+                            var param = {alias: uid};
+                            ajpush.bindAliasAndTags(param, function (ret, err) {
+                                var statusCode = ret.statusCode;
+                                if (statusCode == 0) {
+                                    console.log('绑定成功')
+                                }
+                                // alert('ret:' + JSON.stringify(ret));
+                                // alert('err:' + JSON.stringify(err));
+                            });
+                        }
+                    });
+                } else {
+                    // 极光官网 设备别名 推送测试
+                    var param = {alias: uid};
+                    ajpush.bindAliasAndTags(param, function (ret, err) {
+                        var statusCode = ret.statusCode;
+                        if (statusCode == 0) {
+                            console.log('绑定成功')
+                        }
+                        // alert('ret:' + JSON.stringify(ret));
+                        // alert('err:' + JSON.stringify(err));
+                    });
+
+                }
+            },
             // 获取我的个人信息
             _getMyinfo: function () {
                 loadEnd('my_f');
@@ -326,8 +367,10 @@
                     if (ret.code == 1) {
                         app.my_info = ret.data;
                         app.fac_token = getToken();
+                        app.initpush(JSON.stringify(app.my_info.uid))
                     } else {
-
+                        app.fac_token = null;
+                        app.login()
                     }
                 })
             },
@@ -353,6 +396,7 @@
                     app.login()
                 }
             },
+            // 登录
             login: function () {
                 openView('login', 'login/login', '账号登录')
                 // api.openWin({

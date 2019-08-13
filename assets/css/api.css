@@ -178,6 +178,20 @@ td, th {
 }
 
 /*无数据处理/网络差*/
+.nodatabox {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    height: 100%;
+    position: fixed;
+    width: 100%;
+    z-index: 1000;
+    padding: 0;
+}
+.nodatabox .nodatabtn{
+    margin: 20px;
+}
 .nodata {
     text-align: center;
     color: #ccc;
@@ -435,7 +449,7 @@ footer {
 .new_list {
     padding-bottom: .2rem;
     min-height: 2.34rem;
-    transition: all .3s;
+    transition: height .3s;
 }
 
 .new_title {
@@ -519,6 +533,9 @@ footer {
 }
 
 .new_date {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
     color: #999999;
     font-size: 11px;
 }

@@ -36,11 +36,13 @@
             </div>
             <div class="new_right">
                 <div>
-                    <div class="new_name"><span>{{item.title}}</span><span class="new_num">{{toWan(item.num)}}件</span>
+                    <div class="new_name"><span>{{item.title}}</span><span class="new_num">{{toWan(item.num)}}{{item.unit}}</span>
                     </div>
                     <div class="new_city">{{item.address}}</div>
                 </div>
-                <div class="new_date">发布日期：{{item.create_time}}</div>
+                <div class="new_date"><span>发布日期：{{item.create_time}}</span>
+                    <span @click.stop="_collectCancel(item.id)">取消收藏</span>
+                </div>
             </div>
         </div>
         <div v-if='showmore&&order_list.length>=perpage' class="enddata">{{showtext}}</div>
@@ -113,14 +115,29 @@
                         pageParam: {
                             id: id,
                             title: title,
-                            type: 3
+                            type: 4
                         }
                     });
-                }
-                else {
+                } else {
                     openView('login', 'login/login', '账号登录')
                 }
             },
+            // 取消收藏
+            _collectCancel: function (id) {
+                ApiAjax('my/collectCancel', {
+                    token: getToken(),
+                    order_id: id,
+                }, function (ret, err) {
+                    if (ret.code == 1) {
+                        toastMsg('已取消')
+                        app.order_list = [];
+                        app._myCollectList()
+                    } else {
+                        toastMsg(ret.message)
+                    }
+                });
+            },
+            // 收藏列表
             _myCollectList: function () {
                 ApiAjax('my/myCollectList', {
                     token: getToken(),
@@ -130,14 +147,27 @@
                     loadEnd('my_collection');
                     // alert(JSON.stringify(ret))
                     if (ret.code == 1) {
+
                         var order_list = ret.data;
                         if (ret.data.length > 0) {
+                            api.setFrameAttr({
+                                name: 'my_collection',
+                                bounces: true
+                            });
                             app.order_list = app.order_list.concat(order_list);
                             app.showmore = true;
                         } else {
+                            api.setFrameAttr({
+                                name: 'my_collection',
+                                bounces: false
+                            });
                             app.showtext = '到底了';
                         }
                     } else {
+                        api.setFrameAttr({
+                            name: 'my_collection',
+                            bounces: false
+                        });
                         toastMsg(ret.message)
                     }
                 });

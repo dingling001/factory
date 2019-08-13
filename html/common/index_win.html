@@ -56,6 +56,23 @@
             justify-content: space-between;
             padding: 0.2rem 0.4rem;
         }
+
+        .icon-shezhi {
+            color: #fff;
+            font-size: 20px;
+            font-weight: normal;
+        }
+
+        .center {
+            font-weight: bold;
+            color: #fff;
+        }
+
+        .myhead {
+            background-image: url("../../assets/image/mybg.png");
+            background-size: cover;
+            background-repeat: no-repeat;
+        }
     </style>
 </head>
 <body>
@@ -70,7 +87,7 @@
         <!--<span class="input">请输入您要搜索的内容</span>-->
         <!--<span class="iconfont icon-sousuo"></span>-->
     </header>
-    <header :class="['', iphonex?'iphonex':'']" v-else-if="index==1">
+    <header class="" v-else-if="index==1">
         <div class="index_headers">
             <span></span>
             <span>订单中心</span>
@@ -91,7 +108,13 @@
             <div class="icon_box" v-show="cate_list.length>7"><span class="iconfont icon-arrow-right"></span></div>
         </div>
     </header>
-    <header class="index_header height0" v-else-if="index==2"></header>
+    <header v-else-if="index==2" class="myhead">
+        <div class="index_headers">
+            <span></span>
+            <span class="center">个人中心</span>
+            <span class="iconfont icon-shezhi" @click="go_view"></span>
+        </div>
+    </header>
     <footer id="footer">
         <div class="footer_item" :class="{footer_item_active:index==0}" @click="changeTab(0)">
             <i :class="['iconfont' ,index==0?'icon-shouye1':'icon-shouye']"></i>
@@ -135,12 +158,12 @@
                 }
             ],
             cate_count: 0,
-            iphonex: false
+            ajpush: null,
+            extras: 0
         },
         created: function () {
             apiready = function () {
                 api.removeLaunchView();
-                // app.iphonex=api.decv
                 exit_app();
                 app._getCateList();
                 //导航轮播
@@ -178,6 +201,7 @@
                     app.index = ret.index;
                     var index = ret.index;
                     if (app.index == 2) {
+                        app.headerH = $api.offset($api.dom('header')).h;
                         api.setStatusBarStyle({
                             style: 'light',
                         });
@@ -185,13 +209,10 @@
                             name: 'index',
                             rect: {
                                 x: 0,
-                                y: 0,
+                                y: app.headerH,
                                 w: 'auto',
-                                h: api.winHeight - app.footerH
+                                h: api.winHeight - app.footerH - app.headerH
                             }
-                        });
-                        api.setStatusBarStyle({
-                            style: 'light'
                         });
                     } else {
                         app.headerH = $api.offset($api.dom('header')).h;
@@ -221,11 +242,94 @@
                 });
                 $api.fixStatusBar($api.dom('header'));
                 $api.fixTabBar($api.byId('footer'));
-                app.headerH = $api.offset($api.dom('header')).h;
+                // app.headerH = $api.offset($api.dom('header')).h;
                 app.footerH = $api.offset($api.dom('footer')).h;
                 api.setWinAttr({
                     slidBackEnabled: false
                 });
+                // 推送
+                var systemType = api.systemType
+                app.ajpush = api.require('ajpush');
+                api.addEventListener({name: 'pause'}, function (ret, err) {
+                    app.onPause();//监听应用进入后台，通知jpush暂停事件
+                });
+                api.addEventListener({name: 'resume'}, function (ret, err) {
+                    app.onResume();//监听应用恢复到前台，通知jpush恢复事件
+                });
+                app.ajpush.setListener(function (ret) {
+                        // alert(JSON.stringify(ret))
+                        // var id = ret.id;
+                        // var title = ret.title;
+                        // var content = ret.content;
+                        // var extra = ret.extra;
+                        if (ret && ret.extras) {
+                            app.extras = ret.extras;
+                            app.ajpush.setBadge({
+                                badge: app.extras.length
+                            });
+                        }
+                    }
+                );
+                // 在Android平台
+                api.addEventListener({
+                    name: 'appintent'
+                }, function (ret, err) {
+                    // alert(JSON.stringify(ret))
+                    if (ret && ret.appParam.ajpush) {
+                        if (ret) {
+                            if (app.extras.length > 0) {
+                                app.extras = app.extras - 1;
+                                app.ajpush.setBadge({
+                                    badge: app.extras
+                                });
+                            } else {
+                                app.ajpush.setBadge({
+                                    badge: 0
+                                });
+                            }
+
+                            var ajpush = ret.appParam.ajpush;
+                            var id = ajpush.id;
+                            var title = ajpush.title;
+                            var content = ajpush.content;
+                            var extra = ajpush.extra;
+                            // var content = ajpush.content;
+                            // var extra = ajpush.extra;
+                            app.index = 1;
+                            api.setFrameGroupIndex({
+                                name: 'index',
+                                index: 1
+                            });
+                        }
+                    }
+                });
+                // 在iOS平台
+                api.addEventListener({
+                    name: 'noticeclicked'
+                }, function (ret, err) {
+                    // alert(JSON.stringify(ret))
+                    if (ret) {
+                        if (app.extras.length > 0) {
+                            app.extras = app.extras - 1;
+                            app.ajpush.setBadge({
+                                badge: app.extras
+                            });
+                        } else {
+                            app.ajpush.setBadge({
+                                badge: 0
+                            });
+                        }
+                        var ajpush = ret.value;
+                        // var content = ajpush.content;
+                        // var extra = ajpush.extra;
+                        // app.go_detail(ajpush.extras.order_id, ajpush.extras.title)
+                        app.index = 1;
+                        api.setFrameGroupIndex({
+                            name: 'index',
+                            index: 1
+                        });
+                    }
+                })
             }
         },
         methods: {
@@ -274,6 +378,35 @@
                 } else {
                     openView('login', 'login/login', '登录')
                 }
+            },
+            go_view: function () {
+                if (getToken()) {
+                    openView('my_set', 'my/my_set', '账号设置', false, false, false, {
+                        set: 1
+                    })
+                } else {
+                    openView('login', 'login/login', '登录')
+                }
+            },
+            //统计-app恢复
+            onResume: function () {
+
+                app.ajpush.onResume();
+                console.log('JPush onResume');
+            },
+            //统计-app暂停
+            onPause: function () {
+                app.ajpush.onPause();
+                console.log('JPush onPause');
+            },
+            // 清除消息
+            clearpush: function () {
+                var param = {id: -1};
+                app.ajpush.clearNotification(param, function (ret) {
+                    if (ret && ret.status) {
+                        //success
+                    }
+                });
             }
         }
     })

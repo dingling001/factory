@@ -88,7 +88,9 @@
                 ApiAjax('my/aboutUs', {token: getToken()}, function (ret, err) {
                     if (ret.code == 1) {
                         app.about_info = ret.data;
-                        app.about_info.intro = app.about_info.intro.replace(/(<img .*?src=".*ueditor)/ig, `<img style='width:100%' src="${imgUrl}ueditor`)
+                        // app.about_info.intro = app.about_info.intro.replace(/(<img .*?src=".*ueditor)/ig, `<img style='width:100%' src="${imgUrl}ueditor`)
+                        app.about_info.intro = app.about_info.intro.replace(/(<img .*?src=".*ueditor)/g, '<img style="width:100%" src="' + imgUrl + 'ueditor')
+
                         // alert(JSON.stringify(app.about_info.intro))
                     }
                 })

@@ -131,50 +131,54 @@
 <body ontouchstart>
 <div id="loadStart"></div>
 <div id="app" class="index" v-cloak>
-    <div class="swiper-container banner">
-        <div class="swiper-wrapper">
-            <div class="swiper-slide" v-for="(item,index) in slide_list" :key="item.id">
-                <img :src="item.pic?imgUrl+item.pic:'../../assets/image/load.gif'" alt>
+    <div v-if="!offline">
+        <div class="swiper-container banner">
+            <div class="swiper-wrapper">
+                <div class="swiper-slide" v-for="(item,index) in slide_list" :key="item.id">
+                    <img :src="item.pic?imgUrl+item.pic:'../../assets/image/load.gif'" alt>
+                </div>
             </div>
+            <!-- 如果需要分页器 -->
+            <div class="swiper-pagination"></div>
         </div>
-        <!-- 如果需要分页器 -->
-        <div class="swiper-pagination"></div>
-    </div>
-    <div class="nav_box">
-        <div class="nav_item" v-for="(item,index) in cate_list" @click="more_fn(index,item.id)">
+        <div class="nav_box">
+            <div class="nav_item" v-for="(item,index) in cate_list" @click="more_fn(index,item.id)">
             <span class="icon_box">
                 <img :src="index==cate_list.length-1?item.pic:imgUrl+item.pic" alt="" v-if="item.pic">
                 <img src="../../assets/image/noimg.png" alt="" v-else>
             </span>
-            <span class="icon_name">{{item.cate_name}}</span>
-        </div>
-        <!--<div class="nav_item" @click="more_fn(0,'')" v-if="cate_list.length>=9">-->
-        <!--<span class="icon_box"><img src="../../assets/image/more.png" alt=""></span>-->
-        <!--<span class="icon_name">更多</span>-->
-        <!--</div>-->
-    </div>
-    <div class="new_title">最新订单</div>
-    <div class="new_list" v-if="order_list.length>0">
-        <div class="new_item" v-for="(item,index) in order_list" @click="go_detail(item.id,item.title)" :key="item.id">
-            <div class="new_img">
-                <img :src=" item.pics?imgUrl+item.pics:'../../assets/image/noimg.png'" alt="">
+                <span class="icon_name">{{item.cate_name}}</span>
             </div>
-            <div class="new_right">
-                <div>
-                    <div class="new_name"><span>{{item.title}}</span><span class="new_num">{{toWan(item.num)}}件</span>
-                    </div>
-                    <div class="new_city">{{item.address}}</div>
+            <!--<div class="nav_item" @click="more_fn(0,'')" v-if="cate_list.length>=9">-->
+            <!--<span class="icon_box"><img src="../../assets/image/more.png" alt=""></span>-->
+            <!--<span class="icon_name">更多</span>-->
+            <!--</div>-->
+        </div>
+        <div class="new_title">最新订单</div>
+        <div class="new_list" v-if="order_list.length>0">
+            <div class="new_item" v-for="(item,index) in order_list" @click="go_detail(item.id,item.title)"
+                 :key="item.id">
+                <div class="new_img">
+                    <img :src=" item.pics?imgUrl+item.pics:'../../assets/image/noimg.png'" alt="">
                 </div>
-                <div class="new_date">发布日期：{{item.create_time}}</div>
+                <div class="new_right">
+                    <div>
+                        <div class="new_name"><span>{{item.title}}</span><span
+                                class="new_num">{{toWan(item.num)}}{{item.unit}}</span>
+                        </div>
+                        <div class="new_city">{{item.address}}</div>
+                    </div>
+                    <div class="new_date">发布日期：{{item.create_time}}</div>
+                </div>
             </div>
+            <div v-if='showmore&&order_list.length>=perpage' class="enddata">{{showtext}}</div>
         </div>
-        <div v-if='showmore&&order_list.length>=perpage' class="enddata">{{showtext}}</div>
+        <div v-else class="nodata">暂无订单</div>
     </div>
-    <div v-else class="nodata">暂无订单</div>
-    <div v-if="offline" class="nodata">
+    <div v-if="offline" class="nodata nodatabox">
         <div class="nodataimg"><img src="../../assets/image/loading3.gif" alt=""></div>
         <div>你的网络好像不太给力，请稍后再试</div>
-        <div class="nodatabtn" @click="_getOrderList"><span class="iconfont icon-shuaxin"></span><span>重新加载</span></div>
+        <div class="nodatabtn" @click="getreload()"><span class="iconfont icon-shuaxin"></span><span>重新加载</span></div>
     </div>
     <!--<button @click='clear_fn' style="font-size: 20px;">清除缓存</button>-->
     <!--<button @click='clear_local' style="font-size: 20px;">清除首次登陆状态</button>-->
@@ -226,6 +230,15 @@
                 }, function (ret, err) {
                     app.offline = true;
                 });
+                api.addEventListener({
+                    name: 'neterror'
+                }, function (ret, err) {
+                    if (ret) {
+                        loadEnd();
+                        app.offline = true;
+
+                    }
+                });
                 // 下拉刷新
                 api.setRefreshHeaderInfo({
                     // loadingImg: 'widget://assets/image/head.png',
@@ -261,56 +274,7 @@
                 //         app.showtext = '加载中...';
                 //     }
                 // }
-                // 推送
-                var systemType = api.systemType
-                app.ajpush = api.require('ajpush');
-                api.addEventListener({name: 'pause'}, function (ret, err) {
-                    app.onPause();//监听应用进入后台，通知jpush暂停事件
-                });
-                api.addEventListener({name: 'resume'}, function (ret, err) {
-                    app.onResume();//监听应用恢复到前台，通知jpush恢复事件
-                });
-                app.ajpush.init(function (ret) {
-                    if (ret && ret.status) {
-                        app.ajpush.setListener(
-                            function (ret) {
-                                alert(JSON.stringify(ret))
-                                var id = ret.id;
-                                var title = ret.title;
-                                var content = ret.content;
-                                var extra = ret.extra;
-                                if (systemType == 'android') {
-                                    api.addEventListener({
-                                        name: 'appintent'
-                                    }, function (ret, err) {
-                                        if (ret && ret.appParam.ajpush) {
-                                            var ajpush = ret.appParam.ajpush;
-                                            var id = ajpush.id;
-                                            var title = ajpush.title;
-                                            var content = ajpush.content;
-                                            var extra = ajpush.extra;
-                                            app.go_detail(id, title)
-                                        }
-                                    })
-                                } else if (systemType == 'ios') {
-                                    api.addEventListener({
-                                        name: 'noticeclicked'
-                                    }, function (ret, err) {
-                                        if (ret && ret.value) {
-                                            var ajpush = ret.value;
-                                            var content = ajpush.content;
-                                            var extra = ajpush.extra;
-                                        }
-                                    })
-                                }
-                                // ajpush.getRegistrationId(function (res) {
-                                //     alert(JSON.stringify())
-                                //     var registrationId = res.id;
-                                // });
-                            }
-                        );
-                    }
-                });
+
             }
         },
         methods: {
@@ -429,17 +393,7 @@
             //         app.isFixed = false;
             //     }
             // }
-            //统计-app恢复
-            onResume: function () {
 
-                app.ajpush.onResume();
-                console.log('JPush onResume');
-            },
-            //统计-app暂停
-            onPause: function () {
-                app.ajpush.onPause();
-                console.log('JPush onPause');
-            }
         },
         // destroyed: function () {
         //     window.removeEventListener('scroll', this.handleScroll); // 离开页面 关闭监听 不然会报错

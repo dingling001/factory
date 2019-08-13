@@ -44,7 +44,10 @@ function ApiAjax(url, subDatas, callbackfun, file, type, post) {
         }, function (ret, err) {
             // alert(JSON.stringify(ret))
             if (!ret) {
-                toastMsg('网络错误')
+                toastMsg('网络错误');
+                api.sendEvent({
+                    name: 'neterror',
+                });
                 return
             }
             if (ret.code == -3 || ret.code == 5) {
@@ -56,6 +59,10 @@ function ApiAjax(url, subDatas, callbackfun, file, type, post) {
         });
     }
 
+}
+
+function getreload() {
+    window.location.reload();
 }
 
 function offline() {

@@ -36,20 +36,21 @@
         }
 
         .p_content {
-            padding: .1rem 1rem;
+            /*padding: .1rem 0;*/
+            margin: -2px 0 0 0;
             text-align: justify;
             font-size: 13px;
             color: #666666;
-            white-space: pre-wrap;
+            /*white-space: pre-wrap;*/
         }
     </style>
 </head>
 <body>
 <div id="app" v-cloak>
-    <div class="vip_l">
-        <div class="vip_logo"><img src="../../assets/image/vip_logo.png" alt=""></div>
-        <span>会员特权</span>
-    </div>
+    <!--<div class="vip_l">-->
+    <!--<div class="vip_logo"><img src="../../assets/image/vip_logo.png" alt=""></div>-->
+    <!--<span>会员特权</span>-->
+    <!--</div>-->
     <div class="p_content" v-html="pay_info.vip_desc">
         <!--<p>    会员俱乐部 |VIP特权 |VIP等级 |我的账户 |帮助中心 黄金VIP会员 适用于电脑/手机/iPad</p><p>    开通声明: 钻石VIP会员开通黄金VIP会员,将会在钻石VIP会员到期后消耗黄金..</p>-->
     </div>
@@ -72,6 +73,11 @@
         },
         created: function () {
             apiready = function () {
+                api.setFrameAttr({
+                    name: 'my_vip_power',
+                    bounces: false,
+                });
+
                 app._getAppInfo();
             }
         },
@@ -81,7 +87,7 @@
                 ApiAjax('my/getAppInfo', {token: getToken()}, function (ret, err) {
                     if (ret.code == 1) {
                         app.pay_info = ret.data;
-                        app.pay_info.vip_desc = app.pay_info.vip_desc.replace(/(<img .*?src=".*ueditor)/g, `<img style="width:100%" src="${imgUrl}ueditor`)
+                        app.pay_info.vip_desc = app.pay_info.vip_desc.replace(/(<img .*?src=".*ueditor)/g, '<img style="width:100%" src="' + imgUrl + 'ueditor')
                         // alert(JSON.stringify(app.pay_info.vip_desc))
                     }
                 })

@@ -267,7 +267,7 @@
     </div>
     <div class="input_box">
         <span class="label">数量</span>
-        <div class="infoinput"><span class="num">{{d_info.num}}个</span></div>
+        <div class="infoinput"><span class="num">{{d_info.num}}{{d_info.unit?d_info.unit:'件'}}</span></div>
     </div>
     <div class="input_box ">
         <span class="label">订单截止日期</span>
@@ -317,10 +317,10 @@
         <div class="infoinput">单价： <span class="price">{{d_info.price}}</span>元</div>
     </div>
     <!--<div class="input_box" v-else-if="type==2" @click="">已有50人报价，查看报价</div>-->
-    <div class="input_box" @click="lookPrice" v-else-if="is_myorder&&d_info.status==1"><span class="outordernum">已有{{d_info.offer_count}}人报价，查看报价</span>
+    <div class="input_box" @click="lookPrice" v-if="is_myorder&&d_info.status==1&&offer_list.length>0"><span class="outordernum">已有{{offer_list.length}}人报价，查看报价</span>
     </div>
     <div v-show="type!=2&&vip==0">
-        <div class="tips">注：您的剩余报价次数 <span>{{d_info.free_times}}</span>次</div>
+        <div class="tips">注：您的本月剩余报价次数 <span>{{d_info.free_times}}</span>次</div>
         <div class="vip_box">
             <div class="vip_btn" @click="vipShow">会员查看信息</div>
         </div>
@@ -357,6 +357,7 @@
                 app.id = api.pageParam.id;
                 app.type = api.pageParam.type || 0;// 0 首页订单，1订单中心， 2我的报价订单 ,3外发订单，4我的收藏订单
                 // //alert(app.type)
+                app._checkIfMyOrder();
                 if (app.type == 3) {
                     // 我的报价详情
                     app._offerDetail()
@@ -377,7 +378,6 @@
                 });
                 app._offerList();
                 // app.checkDownload();
-                app._checkIfMyOrder();
             }
         },
         methods: {
@@ -390,17 +390,18 @@
                     if (res.code == 1) {
                         app.is_myorder = res.data;
                     } else {
-                        toastMsg(res.message)
+                        // toastMsg(res.message)
                     }
                 })
             },
+
             // 获取订单详情
             _getOrderDetail: function () {
                 ApiAjax('api/getOrderDetail', {
                     token: getToken(),
                     order_id: app.id
                 }, function (ret, err) {
-                    // //alert(JSON.stringify(ret))
+                    // alert(JSON.stringify(ret))
                     loadEnd('index_detail');
                     app.d_info = ret.data;
                     app.d_info.create_time = timestampToTime(app.d_info.create_time);
@@ -523,7 +524,7 @@
                     order_id: app.id
                 }, function (ret, err) {
                     loadEnd('index_detail');
-                    // //alert(JSON.stringify(ret))
+                    // alert(JSON.stringify(ret))
                     app.d_info = ret.data;
                     if (ret.data.pics) {
                         for (var i in app.d_info.pics) {
@@ -545,7 +546,7 @@
                     order_id: app.id
                 }, function (ret, err) {
                     loadEnd('index_detail');
-                    // //alert(JSON.stringify(ret))
+                    // alert(JSON.stringify(ret))
                     app.d_info = ret.data;
                     if (ret.data.pics) {
                         for (var i in app.d_info.pics) {

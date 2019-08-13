@@ -30,8 +30,7 @@
             display: flex;
             align-items: center;
             flex-wrap: wrap;
-            padding: 0 .73rem;
-
+            /*padding: 0 .73rem 0 0;*/
         }
 
         .his_list span {
@@ -40,7 +39,9 @@
             background: rgba(231, 36, 36, .8);
             padding: 6px 15px;
             border-radius: 5px;
-            margin: 0 .5rem .44rem 0;
+            margin: 0 0 .3rem .5rem;
+            min-width: .88rem;
+            text-align: center;
         }
 
         .search_city {
@@ -50,11 +51,26 @@
             padding: .15rem .5rem;
             background-color: #fff;
             border-bottom: 1px solid #f2f2f2;
+            position: fixed;
+            top: 0;
+            width: 100%;
         }
 
         .search_city .citem {
             font-size: 14px;
             color: #5a5a5a;
+        }
+
+        .search_city .clear {
+            color: rgba(231, 36, 36, .8);
+            font-size: 12px;
+            border: 1px solid rgba(231, 36, 36, .5);
+            border-radius: 3px;
+            padding: 0 4px;
+        }
+
+        .result {
+            margin-top: 1rem;
         }
     </style>
 </head>
@@ -64,9 +80,11 @@
         <span class="citem">{{province?province:'请选择省'}}</span>
         <span class="citem">{{city?city:'请选择市'}}</span>
         <span class="citem">{{district?district:'请选择区'}}</span>
+        <span class="citem clear" @click.stop="clearcity">重置</span>
     </div>
-    <div v-if="seachstatus">
+    <div v-if="seachstatus" class="result">
         <div class="new_title">搜索结果</div>
+        <div v-if="showall" class="nodata">暂无搜索结果，已为您推荐以下订单</div>
         <div class="new_list" v-if="order_list.length>0">
             <div class="new_item" v-for="item in order_list" @click="go_detail(item.id,item.title)">
                 <div class="new_img">
@@ -74,18 +92,19 @@
                 </div>
                 <div class="new_right">
                     <div>
-                        <div class="new_name"><span>{{item.title}}</span><span class="new_num">{{item.num}}件</span>
+                        <div class="new_name"><span>{{item.title}}</span><span
+                                class="new_num">{{toWan(item.num)}}{{item.unit}}</span>
                         </div>
                         <div class="new_city">{{item.address}}</div>
                     </div>
                     <div class="new_date">发布日期：{{item.create_time}}</div>
                 </div>
             </div>
-            <!--<div v-if='showmore&&order_list.length>=perpage' class="enddata">{{showtext}}</div>-->
+            <div v-if='showmore&&order_list.length>=perpage' class="enddata">{{showtext}}</div>
         </div>
     </div>
-    <div v-else>
-        <div class="search_his"><span class="his">历史搜索</span><span @click="clearS">清空历史搜索记录</span></div>
+    <div v-else class="result">
+        <div class="search_his" v-if="token"><span class="his">历史搜索</span><span @click="clearS">清空历史搜索记录</span></div>
         <div class="his_list"><span v-for="(item,index) in history_list"
                                     @click="history_fn(index)">{{item.search}}</span>
         </div>
@@ -103,32 +122,36 @@
 <script type="text/javascript" src="../../assets/js/index.js"></script>
 <script type="text/javascript" src="../../assets/js/swiper-3.4.2.min.js"></script>
 <script>
-    var app = new Vue({
-        el: '#app',
-        data: {
-            order_list: [],
-            cate_count: 0,
-            page: 1,
-            perpage: 10,
-            cate_id: '',
-            keyword: '',
-            flg: false,
-            isFixed: false,
-            // offsetTop: 0,
-            showmore: false,
-            showtext: '加载中...',
-            offline: false,
-            history_list: [],
-            province: '',
-            city: '',
-            district: '',
-            seachstatus: false,
-            province_code: '',
-            city_code: '',
-            region_code: ''
-        },
-        created: function () {
-            apiready = function () {
+    window.apiready = function () {
+        var app = new Vue({
+            el: '#app',
+            data: {
+                order_list: [],
+                cate_count: 0,
+                page: 1,
+                perpage: 5,
+                cate_id: '',
+                keyword: '',
+                flg: false,
+                isFixed: false,
+                // offsetTop: 0,
+                showmore: false,
+                showtext: '加载中...',
+                offline: false,
+                history_list: [],
+                province: '',
+                city: '',
+                district: '',
+                seachstatus: false,
+                province_code: '',
+                city_code: '',
+                region_code: '',
+                showall: false,
+                token: getToken() || ''
+            },
+            created: function () {
+                var app = this;
+                // apiready = function () {
                 api.addEventListener({
                     name: 'search_keyword'
                 }, function (ret, err) {
@@ -137,133 +160,218 @@
                         app._getOrderList(app.keyword);
                     }
                 });
-                api.addEventListener({
-                    name: 'showHis'
-
-                }, function (ret, err) {
-                    app.keyword = ret.value.keyword;
-                    if (app.keyword) {
-                        app._getOrderList(app.keyword)
-                    }
-                });
-                app._searchLogList();
+                if (getToken()) {
+                    app._searchLogList();
+                }
                 // 城市选择监听
                 api.addEventListener({
                     name: 'seachcity'
                 }, function (ret, err) {
+                    // alert(JSON.stringify(ret))
+                    if (ret.value.province_code == '' && ret.value.province == '') {
+                        return
+                    }
                     if (ret.value) {
+                        app.page = 1;
+                        app.order_list = [];
                         app.province = ret.value.province;
                         app.city = ret.value.city;
                         app.district = ret.value.district;
                         app.province_code = ret.value.province_code;
                         app.city_code = ret.value.city_code;
                         app.region_code = ret.value.region_code;
-                        app._getOrderList('');
+                        app._getOrderList(app.keyword);
                     }
                 });
-            }
-        },
-        methods: {
-            // 搜索结果
-            _getOrderList: function (keyword) {
-                ApiAjax('api/getOrderList', {
-                    page: app.page,
-                    perpage: app.perpage,
-                    cate_id: app.cate_id,
-                    search: keyword,
-                    province_code: app.province_code,
-                    city_code: app.city_code,
-                    region_code: app.region_code
-                }, function (ret, err) {
-                    // alert(JSON.stringify(ret))
-                    if (ret.code == 1) {
-                        app.seachstatus = true;
-                        //     app.order_list = ret.data;
-                        // }
-                        if (ret.data.length > 0) {
-                            app.order_list = ret.data;
-                        } else {
-                            app._getOrderList('');
-                        }
-                    }
-                });
-                app._searchLog();
-            },
-            // 清除历史记录
-            clearS: function () {
-                ApiAjax('api/clearSearchLog', {
-                    token: getToken(),
-                }, function (ret, err) {
-                    if (ret.code == 1) {
-                        toastMsg('清除成功')
-                    } else {
-                        toastMsg(ret.message)
-                    }
-                });
-                app._searchLogList();
-            },
-            history_fn: function (index) {
-                // app.keyword = app.history_list[index].search;
-                app._getOrderList(app.history_list[index].search)
-            },
-            // 查询历史
-            _searchLogList: function () {
-                ApiAjax('api/searchLogList', {
-                    token: getToken(),
-                    search: app.search
-                }, function (ret, err) {
-                    if (ret.code == 1) {
-                        app.history_list = ret.data;
-                    }
-                });
-            },
-            // 存储关键字
-            _searchLog: function () {
-                ApiAjax('api/searchLog', {
-                    token: getToken(),
-                    search: app.keyword
-                }, function (ret, err) {
 
-                });
+                // }
             },
-            opensearchcity() {
-                // 打开城市选择
-                api.openFrame({
-                    name: 'city',
-                    url: '../common/searchcity.html',
-                    rect: {
-                        x: 0,
-                        y: 0,
-                        w: 'auto',
-                        h: 'auto'
-                    },
-                    animation: {
-                        type: "none",                //动画类型（详见动画类型常量）
-                        subType: "from_bottom",       //动画子类型（详见动画子类型常量）
-                        duration: 1000                //动画过渡时间，默认300毫秒
-                    },
-                    reload: true,
-                    bounces: false,
-                    bgColor: 'rgba(0,0,0,0.6)',
-                });
-            },
-            // 订单详情
-            go_detail: function (id, title) {
-                if (getToken()) {
-                    api.openWin({
-                        name: 'index_detail_w',
-                        url: './index_detail_w.html',
-                        bgColor: '#fff',
-                        pageParam: {
-                            id: id,
-                            title: title,
-                            type: 0
+            watch: {
+                'seachstatus': {
+                    handler(newVal) {
+                        // apiready = function () {
+                        if (newVal) {
+                            api.addEventListener({
+                                name: 'scrolltobottom',
+                                extra: {
+                                    threshold: 50            //设置距离底部多少距离时触发，默认值为0，数字类型
+                                }
+                            }, function (ret, err) {
+                                app.page++;
+                                app._getOrderList(app.keyword);
+                            });
+                        } else {
+                            api.removeEventListener({
+                                name: 'scrolltobottom'
+                            });
                         }
-                    });
-                } else {
-                    openView('login', 'login/login', '账号登录')
+                        // }
+                    },
+                    immediate: true,
+                    deep: true
                 }
             },
-        }
-    })
+            methods: {
+                // 搜索结果
+                _getOrderList: function (keyword) {
+                    var app = this;
+                    api.showProgress({
+                        title: '搜索',
+                        text: '搜索中...',
+                    });
+                    var post = {
+                        page: app.page,
+                        perpage: app.perpage,
+                        cate_id: app.cate_id,
+                        search: keyword,
+                        province_code: app.province_code,
+                        city_code: app.city_code,
+                        region_code: app.region_code
+                    }
+                    ApiAjax('api/getOrderList', post, function (ret, err) {
+                        // alert(JSON.stringify(ret))
+                        api.hideProgress();
+                        if (ret.code == 1) {
+                            app.seachstatus = true;
+                            //     app.order_list = ret.data;
+                            // }
+                            var order_list = ret.data;
+                            if (ret.data.length > 0) {
+                                app.order_list = app.order_list.concat(order_list);
+                                app.showmore = true;
+                            } else if (app.page == 1 && order_list.length == 0) {
+                                app.showall = true;
+                                // app.perpage=10;
+                                app.province = '';
+                                app.city = '';
+                                app.district = '';
+                                app.province_code = '';
+                                app.city_code = '';
+                                app.region_code = '';
+                                app._getOrderList('');
+                            } else {
+                                // app.showall = true;
+                                // app.province = '';
+                                // app.city = '';
+                                // app.district = '';
+                                // app.province_code = '';
+                                // app.city_code = '';
+                                // app.region_code = '';
+                                // app._getOrderList('');
+                                app.showtext = '到底了';
+                            }
+                        }
+                    });
+                    if (getToken()) {
+                        app._searchLog();
+                    }
+                },
+                clearcity: function () {
+                    var app = this;
+                    app.province = '';
+                    app.city = '';
+                    app.district = '';
+                    app.province_code = '';
+                    app.city_code = '';
+                    app.region_code = '';
+                    app.seachstatus = false;
+                    api.sendEvent({
+                        name: 'historykeword',
+                        extra: {
+                            keyword: ''
+                        }
+                    });
+                    if (app.token) {
+                        app._searchLogList()
+                    }
+                },
+                // 清除历史记录
+                clearS: function () {
+                    var app = this;
+                    ApiAjax('api/clearSearchLog', {
+                        token: getToken(),
+                    }, function (ret, err) {
+                        if (ret.code == 1) {
+                            toastMsg('清除成功')
+                        } else {
+                            toastMsg(ret.message)
+                        }
+                    });
+                    app._searchLogList();
+                },
+                history_fn: function (index) {
+                    var app = this;
+                    // app.keyword = app.history_list[index].search;
+                    app._getOrderList(app.history_list[index].search);
+                    api.sendEvent({
+                        name: 'historykeword',
+                        extra: {
+                            keyword: app.history_list[index].search
+                        }
+                    });
+                },
+                // 查询历史
+                _searchLogList: function () {
+                    var app = this;
+                    ApiAjax('api/searchLogList', {
+                        token: getToken(),
+                        search: app.search
+                    }, function (ret, err) {
+                        // alert(JSON.stringify(ret))
+                        if (ret.code == 1) {
+                            app.history_list = ret.data;
+                        }
+                    });
+                },
+                // 存储关键字
+                _searchLog: function () {
+                    var app = this;
+                    ApiAjax('api/searchLog', {
+                        token: getToken(),
+                        search: app.keyword
+                    }, function (ret, err) {
+
+                    });
+                },
+                opensearchcity: function () {
+                    // 打开城市选择
+                    api.openFrame({
+                        name: 'city',
+                        url: '../common/searchcity.html',
+                        rect: {
+                            x: 0,
+                            y: 0,
+                            w: 'auto',
+                            h: 'auto'
+                        },
+                        animation: {
+                            type: "none",                //动画类型（详见动画类型常量）
+                            subType: "from_bottom",       //动画子类型（详见动画子类型常量）
+                            duration: 1000                //动画过渡时间，默认300毫秒
+                        },
+                        reload: true,
+                        bounces: false,
+                        bgColor: 'rgba(0,0,0,0.6)',
+                    });
+                },
+                // 订单详情
+                go_detail: function (id, title) {
+                    if (getToken()) {
+                        api.openWin({
+                            name: 'index_detail_w',
+                            url: './index_detail_w.html',
+                            bgColor: '#fff',
+                            pageParam: {
+                                id: id,
+                                title: title,
+                                type: 0
+                            }
+                        });
+                    } else {
+                        openView('login', 'login/login', '账号登录')
+                    }
+                },
+            }
+        })
+    }
 </script>

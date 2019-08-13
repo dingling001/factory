@@ -11,9 +11,14 @@
     <link rel="stylesheet" href="../../assets/css/api.css">
     <link rel="stylesheet" href="../../assets/font/iconfont.css">
     <style type="text/css">
-        .plist {
+        html, body {
             background-color: #F9F9FA;
-            margin: .3rem .4rem;
+            height: 100%;
+        }
+
+        .plist {
+            padding: 0 .4rem;
+            margin-bottom: .2rem;
         }
 
         .pitem {
@@ -21,45 +26,86 @@
             align-items: center;
             justify-content: space-between;
             font-size: 12px;
-            color: #666;
+            color: #333;
+            background-color: #fff;
+            padding: .2rem .2rem .2rem .32rem;
         }
 
-        .pitem span {
-            padding: .3rem .1rem;
-            flex: 1 0;
-            text-align: center;
+        .pname {
+            display: flex;
+            align-items: center;
+            font-size: 16px;
         }
 
-        .pitem .name {
-            overflow: hidden; /*超出部分隐藏*/
-            text-overflow: ellipsis; /* 超出部分显示省略号 */
-            white-space: nowrap; /*规定段落中的文本不进行换行 */
+        .icon-VIPCopy {
+            font-weight: 900;
+            font-size: 20px;
+            /*background: linear-gradient(to top, #C0A069, #E8D3AA);*/
+            /*-webkit-background-clip: text;*/
+            /*-webkit-text-fill-color: transparent;*/
+            color: #F1C61B;
+            margin-right: .1rem;
         }
 
-        .phead {
-            color: #000;
+        .transform90 {
+            transform: rotate(90deg);
         }
 
-        .pitem .unit {
-            font-size: 9px;
-            padding: 0;
+        .icon-arrow-right {
+            font-size: 22px;
+            color: #ccc;
+            transition: ease-in-out .3s;
         }
 
-        .pitem:nth-child(2n) {
-            background-color: #EEEEEE;
+        .pinfo {
+            background-color: #fff;
         }
+
+
+        .pinfoitem {
+            display: flex;
+            align-items: center;
+            font-size: 14px;
+            justify-content: space-between;
+            padding: .2rem .2rem .2rem .32rem;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .pinfoitem:last-child {
+            border: 0;
+        }
+
+
+        .colorvip {
+            background: none;
+            color: #ddd;
+        }
+
+        .pinfoitem .price {
+            color: #FF3B3B;
+        }
+
+        @keyframes bounceInDown {
+
+        }
+
     </style>
 </head>
 <body>
 <div id="loadStart"></div>
 <div id="app" v-cloak>
-    <div class="plist">
-        <div class="pitem phead">
-            <span>企业名称</span><span>负责人</span><span>联系方式</span><span>报价/元 <span class="unit">(单价)</span></span>
+    <div class="plist" @click="togglehide(index)" v-for="(item,index) in offer_list" :key="item.id">
+        <div class="pitem">
+            <div class="pname"><span :class="['iconfont','icon-VIPCopy',item.vip==1?'':'colorvip']"></span><span>{{item.name}}</span>
+            </div>
+            <span :class="['iconfont icon-arrow-right',ind==index?'transform90':'']"></span>
         </div>
-        <div class="pitem" v-for="(item,index) in offer_list">
-            <span class="name">{{item.name}}</span><span>{{item.linkman}}</span>
-            <span @click="callPhone(item.linktel)">{{item.linktel}}</span><span>{{toWan(item.price)}}</span>
+        <div class="pinfo" v-show="ind==index">
+            <div class="pinfoitem"><span>报价时间：</span><span>{{timestampToTime(item.offer_time)}}</span></div>
+            <div class="pinfoitem"><span>联系人：</span><span>{{item.linkman}}</span></div>
+            <div class="pinfoitem" @click.stop="callPhone(item.linktel)"><span>联系电话：</span><span>{{item.linktel}}</span>
+            </div>
+            <div class="pinfoitem"><span>报价/元：</span><span class="price">¥ {{item.price}}</span></div>
         </div>
     </div>
 </div>
@@ -79,7 +125,21 @@
         el: '#app',
         data: {
             id: '',
-            offer_list: []
+            offer_list: [
+                // {
+                //     "price": "10.00",
+                //     "offer_time": 1564406882,
+                //     "uid": 14,
+                //     "name": "天津天灵科技有限公司",
+                //     "address": "天津市东丽区",
+                //     "linkman": "台",
+                //     "linktel": "18902060721",
+                //     "busine": "机械加工，五金加工，注塑加工，各种非标配件加工",
+                //     "create_time": 1564406970,
+                //     "vip": 0
+                // },
+            ],
+            ind: 0
         },
         created: function () {
             apiready = function () {
@@ -95,9 +155,20 @@
                     order_id: app.id
                 }, function (ret, err) {
                     loadEnd('index_price');
-                    // alert(JSON.stringify(ret));
-                    app.offer_list = ret.data;
+                    if (ret.code == 1) {
+                        app.offer_list = ret.data;
+                        // for (var i in app.order_list) {
+                        //     app.offer_list[i].offer_time = timestampToTime(app.offer_list[i].offer_time)
+                        // }
+                        // alert(JSON.stringify(app.offer_list))
+                    } else {
+                        toastMsg(ret.message || '稍后再试')
+                    }
+
                 });
+            },
+            togglehide: function (index) {
+                app.ind = index;
             },
             // 拨打联系人
             callPhone: function (linktel) {

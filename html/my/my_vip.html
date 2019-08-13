@@ -69,6 +69,7 @@
             font-size: 24px;
             font-weight: 900;
             padding: .1rem 0 0 0;
+            position: relative;
         }
 
         .vip_item {
@@ -118,9 +119,23 @@
         .vip_item:active {
             background-color: #F9F9FA;
         }
+
+        .viptime {
+            position: absolute;
+            bottom: .4rem;
+            left: 0;
+            text-align: center;
+            width: 100%;
+            z-index: 1;
+            color: #333;
+            font-weight: bold;
+            font-size: 18px;
+            font-family: Hei;
+        }
     </style>
 </head>
 <body>
+<div id="loadStart"></div>
 <div id="app" v-cloak>
     <div class="vip_top">
         <div class="vip_bg">
@@ -128,7 +143,7 @@
             <span class="vip_day">
                 <span class="iconfont icon-VIPCopy"></span>
                 <span class="vip">VIP会员</span>
-                <span v-if="vip_time">{{vip_time}}</span>
+                <span v-if="vip_time&&vip==1" class="viptime">{{vip_time}}</span>
                 <span v-else>尚未开通会员</span>
             </span>
         </div>
@@ -178,6 +193,7 @@
             }
         },
         methods: {
+            // 打开会员
             openPower: function (name, title) {
                 openView(name, 'my/' + name, title, false, false, false, {vip: 1})
             },
@@ -187,19 +203,27 @@
                     if (ret.code == 1) {
                         app.my_info = ret.data;
                         app.vip_time = timestampToTime(ret.data.vip_time);
+                    } else {
+                        app.login();
                     }
                 })
             },
+            // 登录
+            login: function () {
+                openView('login', 'login/login', '账号登录')
+            },
             // 查看是否是会员
             _checkVip: function () {
+                loadEnd('my_vip');
                 ApiAjax('api/checkVip', {
                     token: getToken(),
                 }, function (ret, err) {
+                    loadEnd('my_vip');
                     if (ret.code == 1 && ret.data) {
                         app.vip = 1;
-                        app._getMyinfo()
                     }
-                })
+                });
+                app._getMyinfo()
             }
         }
     })

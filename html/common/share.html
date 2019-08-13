@@ -179,10 +179,14 @@
                             imgUrl: app.img ? imgUrl + app.img : 'widget://assets/image/logo.png'
                         }, function (ret, err) {
                             // //alert(JSON.stringify(ret))
-                            if (ret.status) {
-                                toastMsg("分享成功！");
+                            if (ret) {
+                                if (ret.status) {
+                                    toastMsg("分享成功！");
+                                } else {
+                                    toastMsg(err.code)
+                                }
                             } else {
-                                toastMsg(err.code)
+                                toastMsg('取消分享')
                             }
                             api.closeFrame({name: 'share'})
                         });
@@ -191,24 +195,24 @@
                     }
                 });
             },
-            clipBoard: function () {
-                var clipBoard = api.require('clipBoard');
-                clipBoard.set({
-                    value: app.url ? app.url : goodUrl + 'download.html'
-                }, function (ret, err) {
-                    if (ret) {
-                        clipBoard.get(function (ret, err) {
-                            if (ret) {
-                                toastMsg('复制成功')
-                            } else {
-                                toastMsg('复制失败,请重试')
-                            }
-                            api.closeFrame();
-                        });
-                    } else {
-                    }
-                });
-            }
+            // clipBoard: function () {
+            //     var clipBoard = api.require('clipBoard');
+            //     clipBoard.set({
+            //         value: app.url ? app.url : goodUrl + 'mdownload.html'
+            //     }, function (ret, err) {
+            //         if (ret) {
+            //             clipBoard.get(function (ret, err) {
+            //                 if (ret) {
+            //                     toastMsg('复制成功')
+            //                 } else {
+            //                     toastMsg('复制失败,请重试')
+            //                 }
+            //                 api.closeFrame();
+            //             });
+            //         } else {
+            //         }
+            //     });
+            // }
         }
     })
 </script>

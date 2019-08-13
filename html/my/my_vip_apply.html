@@ -53,7 +53,7 @@
             padding: .25rem 0;
         }
 
-        .vip_day .iconfont {
+        .vip_day .icon-VIPCopy {
             font-weight: 900;
             font-size: 25px;
             background: linear-gradient(to top, #C0A069, #E8D3AA);
@@ -157,6 +157,7 @@
             color: #666;
             font-size: 12px;
             padding: 0 0 0 .62rem;
+            min-height: 1.5rem;
         }
 
         .notice ul {
@@ -179,6 +180,7 @@
     </style>
 </head>
 <body>
+<div id="loadStart"></div>
 <div id="app" v-cloak ontouchstart>
     <div class="vip_top">
         <div class="vip_bg">
@@ -222,7 +224,9 @@
         <!--</ul>-->
         <span v-html="pay_info.pay_desc"></span>
     </div>
+    <!--<img :src="imgUrl+pay_info.vip_pic" alt="">-->
     <div class="login_btn" @click="pay_fn">立即支付</div>
+
 </div>
 </body>
 </html>
@@ -240,7 +244,8 @@
             vip: '',
             type: 0,
             pay_info: {},
-            vip_id: 1
+            vip_id: 1,
+            contact_info: {}
         },
         created: function () {
             apiready = function () {
@@ -253,6 +258,7 @@
             }
         },
         methods: {
+            // 进入会员页面次数
             _vipPageViewTimes: function () {
                 ApiAjax('my/vipPageViewTimes', {token: getToken()}, function (ret, err) {
                     if (ret.code == 1) {
@@ -278,6 +284,7 @@
             // 会员说明
             _getAppInfo: function () {
                 ApiAjax('my/getAppInfo', {token: getToken()}, function (ret, err) {
+                    loadEnd()
                     if (ret.code == 1) {
                         // alert(JSON.stringify(ret))
                         app.pay_info = ret.data;
@@ -355,16 +362,16 @@
             // 银行卡支付
             bankPay: function () {
                 // toastMsg('请联系客服人员，线下充值')
-                api.alert({
+                api.confirm({
                     title: '对公转账信息',
-                    msg: ' 请联系我们为您开通银联支付，我们的唯一账户为' + app.pay_info.bank_account,
-                    buttons: ['知道了']
+                    msg: '公司名称：' + app.pay_info.corporation + '开户行：' + app.pay_info.bank_type + '；账号' + app.pay_info.bank_account + '；请联系我们会为您开通会员',
+                    buttons: ['联系我们', '知道了']
                 }, function (ret, err) {
-                    if (ret.index == 1) {
-
+                    if (ret.buttonIndex == 1) {
+                        openView('my_contact', 'my/my_contact', '联系我们')
                     }
                 });
-            }
+            },
         }
     })
 

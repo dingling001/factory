@@ -67,6 +67,10 @@
         .share_box .icon-shoucang_ {
             color: #E72424;
         }
+
+        .price_btn.disabled {
+            background-color: #999999;
+        }
     </style>
 </head>
 <body>
@@ -74,7 +78,7 @@
     <header>
         <div class="my_info">
             <div class="close_left" @click="close_detail"><span class="iconfont icon-fanhui"></span></div>
-            <span class="order_detail el1">{{order_title}}</span>
+            <span class="order_detail el1">{{d_info.title}}</span>
             <div class="share_box" @click="openShare">
                 <span class="iconfont icon-fenxiang"></span>
                 <span :class="['iconfont',d_info.collect? 'icon-shoucang_':'icon-shoucang']"
@@ -82,9 +86,10 @@
             </div>
         </div>
     </header>
-    <div class="price_btn" id="price_btn" @click="orderPrice" v-show="type!=2">
+    <div :class="['price_btn',d_info.if_end==0?'':'disabled']" id="price_btn" @click="orderPrice"
+         v-show="type!=2&&!is_myorder">
         <span v-if="type==3">修改报价</span>
-        <span v-else>立即报价</span>
+        <span v-else><span v-if="d_info.if_end==1">订单已过期</span><span v-else>立即报价</span></span>
     </div>
 </div>
 </body>
@@ -109,39 +114,63 @@
             type: 0,
             price: 0,
             showbtn: true,
-            vip: 0
+            vip: 0,
+            is_myorder: false
         },
         created: function () {
             apiready = function () {
                 app.id = api.pageParam.id;
-                app.order_title = api.pageParam.title;
+                // app.order_title = api.pageParam.title;
                 app.type = api.pageParam.type || 0;// 0 首页订单，1订单中心， 2外发订单 ,3 我的报价订单，4我的收藏订单
                 $api.fixStatusBar($api.dom('header'));
                 api.setStatusBarStyle({
                     style: 'dark',
                 });
-                app._checkVip();
-                app._offerDetail();
+                if (getToken()) {
+                    app._checkIfMyOrder();
+                    app._checkVip();
+                    app._offerDetail();
+                } else {
+                    openView('login', 'login/login', '账号登录')
+                }
+
             }
         },
         methods: {
+            _checkIfMyOrder: function () {
+                ApiAjax('api/checkIfMyOrder', {
+                    token: getToken(),
+                    order_id: app.id,
+                }, function (res, err) {
+                    // alert(JSON.stringify(res))
+                    if (res.code == 1) {
+                        app.is_myorder = res.data;
+                    } else {
+                        // toastMsg(res.message)
+                    }
+                })
+            },
             // 报价/修改报价
             orderPrice: function () {
-                if (app.d_info.status == 2) {
+                if (app.d_info.status == 0 || app.d_info.status == 2) {
                     toastMsg('订单审核中…')
                     return
                 }
-                // if (app.vip == 0) {
-                //     toastMsg('您还不是会员，不能报价')
-                //     return
-                // }
-                if (app.d_info.free_times <= 0) {
+                if (app.d_info.if_end == 1) {
+                    toastMsg('订单已过期');
+                    return
+                }
+                if (app.is_myorder) {
+                    toastMsg('自己不能给自己的订单报价')
+                    return
+                }
+                if (app.d_info.free_times <= 0 && app.vip == 0) {
                     toastMsg('您的报价次数已用完，请开通会员，不限制报价次数')
                     return
                 }
                 api.prompt({
                     buttons: ['确定', '取消'],
-                    title: app.order_title,
+                    title: app.d_info.title,
                     type: 'number',
                     text: app.price || 0,
                     msg: '请输入您的报价（元）',
@@ -157,10 +186,11 @@
                             }, function (res, err) {
                                 if (res.code == 1) {
                                     api.alert({
-                                        title: app.order_title,
+                                        title: app.d_info.title,
                                         msg: '您的报价已提交'
                                     }, function (ret, err) {
                                     });
+                                    app._offerDetail();
                                 } else {
                                     toastMsg(res.message)
                                 }
@@ -177,11 +207,10 @@
             },
             // 我的报价详情
             _offerDetail: function () {
-                ApiAjax('my/offerDetail', {
+                ApiAjax('api/getOrderDetail', {
                     token: getToken(),
                     order_id: app.id
                 }, function (ret, err) {
-                    // //alert(JSON.stringify(ret))
                     app.d_info = ret.data;
                     app.price = ret.data.price;
                     app.type = parseFloat(app.price) > 0 ? 3 : app.type;
@@ -219,6 +248,10 @@
                     toastMsg('订单审核中…');
                     return
                 }
+                if (app.d_info.if_end == 1) {
+                    toastMsg('订单已过期');
+                    return
+                }
                 app.d_info.collect = !app.d_info.collect;
                 ApiAjax('api/orderCollect', {
                     token: getToken(),
@@ -241,12 +274,12 @@
             },
             // 分享
             openShare: function () {
-                if (app.d_info.status == 2) {
+                if (app.d_info.status == 0 || app.d_info.status == 2) {
                     toastMsg('订单审核中…')
                     return
                 }
                 api.openFrame({
-                    bgColor: 'rgba(0,0,0,0.05)',
+                    bgColor: 'rgba(0,0,0,0.6)',
                     name: 'share',
                     url: '../common/share.html',
                     bounces: false,
@@ -262,10 +295,10 @@
                         h: 'auto'
                     },
                     pageParam: {
-                        share_url: 'http://www.jiagongbao.net/',
+                        share_url: 'http://www.jiagongbao.net/mdownload.html',
                         share_title: app.d_info.title,
                         share_img: app.d_info.pics[0],
-                        share_desc: '急需' + app.d_info.material + app.d_info.num + '件',
+                        share_desc: '急需' + app.d_info.material + app.d_info.num + app.d_info.unit,
                         share_id: app.id
                     }
                 });

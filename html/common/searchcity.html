@@ -67,9 +67,9 @@
             province: '',
             city: '',
             district: '',
-            indp: 0,
-            indc: 0,
-            indd: 0,
+            indp: '',
+            indc: '',
+            indd: '',
             listp: [],
             listc: [],
             listd: []
@@ -93,7 +93,7 @@
                 })
             },
             // 获取区列表getRegionList
-            _getRegionList: function (city_code = '1101') {
+            _getRegionList: function (city_code) {
                 ApiAjax('api/getRegionList', {
                     city_code: city_code
                 }, function (ret) {
@@ -140,21 +140,22 @@
 
             send_city: function () {
                 // if (app.indp >= 0 && app.indc >= 0 && app.indd >= 0) {
-                api.sendEvent({
-                    name: 'seachcity',
-                    extra: {
-                        province: app.province,
-                        city: app.city,
-                        district: app.district,
-                        province_code: app.indp && app.listp.length > 0 ? app.listp[app.indp].code : '',
-                        city_code: app.indc && app.listc.length > 0 ? app.listc[app.indc].code : '',
-                        region_code: app.indc && app.listd.length > 0 ? app.listd[app.indc].code : '',
-                    }
-                });
-                api.closeFrame();
-                // } else {
-                //     toastMsg('请完善地址信息')
-                // }
+                if (parseInt(app.indp, 10) >= 0) {
+                    api.sendEvent({
+                        name: 'seachcity',
+                        extra: {
+                            province: app.province,
+                            city: app.city,
+                            district: app.district,
+                            province_code: app.listp[app.indp].code,
+                            city_code: app.listc.length > 0 && parseInt(app.indc, 10) >= 0 ? app.listc[app.indc].code : '',
+                            region_code: app.listd.length > 0 && parseInt(app.indd, 10) >= 0 ? app.listd[app.indd].code : '',
+                        }
+                    });
+                    api.closeFrame();
+                } else {
+                    toastMsg('至少选择一个省，市，区')
+                }
             },
             closeCity: function () {
                 api.sendEvent({

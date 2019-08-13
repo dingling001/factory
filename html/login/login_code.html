@@ -12,6 +12,54 @@
     <link rel="stylesheet" href="../../assets/css/style.css">
     <!--<link rel="stylesheet" href="https://unpkg.com/mint-ui@1/lib/style.css">-->
     <link rel="stylesheet" href="../../assets/font/iconfont.css">
+    <style>
+        html, body, #app {
+            height: 100%;
+            overflow: hidden;
+        }
+
+        .logobox {
+            /*position: absolute;*/
+            /*bottom: .7rem;*/
+            /*z-index: 1;*/
+            /*left: 0;*/
+            /*width: 100%;*/
+            margin: 10vh 0 0 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .logobox .img {
+            width: .7rem;
+            height: .64rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid rgba(228, 228, 228, 1);
+            border-radius: 5px;
+            overflow: hidden;
+            margin-right: 10px;
+        }
+
+        .logobox .img img {
+            width: 100%;
+        }
+
+        .logobox .name {
+            font-size: 16px;
+            color: #333;
+            font-weight: bold;
+            font-family: Hei;
+            letter-spacing: 12px;
+        }
+
+        .logobox .des {
+            font-size: 8px;
+            color: #666666;
+            letter-spacing: 4px;
+        }
+    </style>
 </head>
 <body>
 <div id="app" v-cloak>
@@ -39,6 +87,13 @@
     </form>
     <!--<div class="login_agree">注：首次手机号验证码形式登录视为注册并登录</div>-->
     <div class="login_agree" @click="go_agree">已阅读并且同意<span>《加工宝用户协议》</span></div>
+    <div class="logobox">
+        <div class="img"><img src='../../assets/image/logo.png' alt=""></div>
+        <div>
+            <div class="name">加工宝</div>
+            <div class="des">专注机械加工</div>
+        </div>
+    </div>
 </div>
 </body>
 </html>
@@ -76,7 +131,7 @@
                     toastMsg('请输入正确的手机号')
                 } else if (app.password == '' || app.repassword == '') {
                     toastMsg('请输入密码')
-                } else if (app.password.length < 6 && app.password > 20) {
+                } else if (app.password.length < 6 || app.password.length > 20) {
                     toastMsg('您设置的密码不能少于6且不大于20位')
                 } else if (app.password != app.repassword) {
                     toastMsg('两次密码不一致')
@@ -89,6 +144,7 @@
                         password: app.password
                     }, function (ret, err) {
                         if (ret.code == 1) {
+                            toastMsg('注册成功，请完善信息');
                             $api.setStorage('fac_token', ret.data);
                             app._checkComplete(ret.data)
                         } else {
@@ -175,10 +231,11 @@
             },
             // 查看协议
             go_agree: function () {
-                api.openWin({
-                    name: 'login_agree',
-                    url: './login_agree.html',
-                });
+                // api.openWin({
+                //     name: 'login_agree',
+                //     url: './login_agree.html',
+                // });
+                openView('login_agree', 'login/login_agree', '加工宝协议')
             }
         }
     })

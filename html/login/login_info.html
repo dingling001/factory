@@ -128,6 +128,7 @@
             apiready = function () {
                 $api.fixStatusBar($api.dom('header'));
                 app.headerH = $api.offset($api.dom('header')).h;
+                app._getMyinfo();
             }
         },
         methods: {
@@ -136,7 +137,7 @@
                     toastMsg('请输入您的企业名称');
                     return
                 }
-                if (!mobileReg.test(app.linktel)) {
+                if (!/^1\d{10}$/gi.test(app.linktel)) {
                     toastMsg('请输入正确的手机号');
                     return
                 }
@@ -150,6 +151,9 @@
                 };
                 ApiAjax('api/completeInfo', post, function (ret, err) {
                     if (ret.code == 1) {
+                        api.sendEvent({
+                            name: 'loginindex',
+                        });
                         api.openWin({
                             name: 'index_win',
                             url: '../common/index_win.html',
@@ -168,15 +172,45 @@
                     toastMsg('请输入少于200字的内容')
                 }
             },
-            // 绑定推送
+            // 获取我的个人信息
+            _getMyinfo: function () {
+                ApiAjax('my/getMyinfo', {token: getToken()}, function (ret, err) {
+                    if (ret.code == 1) {
+                        app.initpush(JSON.stringify(ret.data.uid))
+                    } else {
 
-            bintag: function () {
-                var ajpush = api.require('ajpush');
-                var param = {alias: 'myalias', tags: ['tag1', 'tag2']};
-                ajpush.bindAliasAndTags(param, function (ret) {
-                    var statusCode = ret.statusCode;
-                });
-            }
+                    }
+                })
+            },
+            // 绑定推送
+            initpush: function (uid) {
+                ajpush = api.require('ajpush');
+                // 判断操作系统，只有在android才初始化，ios自动初始化
+                var sysType = api.systemType;
+                if (sysType == 'android') {
+                    ajpush.init(function (ret) {
+                        if (ret && ret.status) {
+                            //初始化成功 只有安卓有效 IOS 自动初始化
+                            // 极光官网 设备别名 推送测试
+                            var param = {alias: uid};
+                            ajpush.bindAliasAndTags(param, function (ret, err) {
+                                // var statusCode = ret.statusCode;
+                                // alert('ret:' + JSON.stringify(ret));
+                                // alert('err:' + JSON.stringify(err));
+                            });
+                        }
+                    });
+                } else {
+                    // 极光官网 设备别名 推送测试
+                    var param = {alias: uid};
+                    ajpush.bindAliasAndTags(param, function (ret, err) {
+                        var statusCode = ret.statusCode;
+                        // alert('ret:' + JSON.stringify(ret));
+                        // alert('err:' + JSON.stringify(err));
+                    });
+
+                }
+            },
 
         }
     })

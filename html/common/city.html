@@ -17,29 +17,31 @@
 <body>
 <div id="app" v-cloak>
     <div class="mod_address_slide show" @click="closeCity">
-        <div class="mod_address_slide_main type_flex" @click.stop>
+        <div class="mod_address_slide_main type_flex" @click.stop="clickstop">
             <div class="mod_address_slide_head control_box">
                 <span class="" @click="closeCity">取消</span>
                 <span class="right" @click="send_city">确定</span>
             </div>
             <div class="mod_address_slide_body">
                 <ul class="mod_address_slide_tabs_1">
-                    <li :class="[showProvince?'cur':'']" @click="showp"><span>{{province?province:'请选择'}}</span></li>
-                    <li :class="[showCity?'cur':'']" @click="showc"><span>{{city?city:'请选择'}}</span></li>
-                    <li :class="[showDistrict?'cur':'']" @click="showd"><span>{{district?district:'请选择'}}</span></li>
+                    <li :class="[showProvince?'cur':'']" @click.stop="showp"><span>{{province?province:'请选择'}}</span>
+                    </li>
+                    <li :class="[showCity?'cur':'']" @click.stop="showc"><span>{{city?city:'请选择'}}</span></li>
+                    <li :class="[showDistrict?'cur':'']" @click.stop="showd"><span>{{district?district:'请选择'}}</span></li>
                 </ul>
                 <ul class="mod_address_slide_list_2" v-show="showProvince">
-                    <li :class="indp==index?'on':''" v-for="(item,index) in listp" @click="chooseP(index)">
+                    <li v-if="listp.length==0">加载中……</li>
+                    <li :class="indp==index?'on':''" v-for="(item,index) in listp" @click.stop="chooseP(index)">
                         {{item.name}}
                     </li>
                 </ul>
                 <ul class="mod_address_slide_list_2" v-show="showCity">
-                    <li :class="indc==index?'on':''" v-for="(item,index) in listc" @click="chooseC(index)">
+                    <li :class="indc==index?'on':''" v-for="(item,index) in listc" @click.stop="chooseC(index)">
                         {{item.name}}
                     </li>
                 </ul>
                 <ul class="mod_address_slide_list_2" v-show="showDistrict">
-                    <li :class="indd==index?'on':''" v-for="(item,index) in listd" @click="chooseD(index)">
+                    <li :class="indd==index?'on':''" v-for="(item,index) in listd" @click.stop="chooseD(index)">
                         {{item.name}}
                     </li>
                 </ul>
@@ -80,6 +82,9 @@
             }
         },
         methods: {
+            clickstop: function () {
+                console.log('stop')
+            },
             // 获取省市getProvinceList
             _getProvinceList: function () {
                 ApiAjax('api/getProvinceList', {}, function (ret) {
@@ -139,7 +144,7 @@
             },
 
             send_city: function () {
-                if (app.indp >= 0 && app.indc >= 0 && app.indd >= 0 && app.listp.length > 0 && app.listc.length > 0 && app.listd.length > 0) {
+                if (parseInt(app.indp, 10) >= 0 && parseInt(app.indc, 10) >= 0 && parseInt(app.indd, 10) >= 0 && app.listp.length > 0 && app.listc.length > 0 && app.listd.length > 0) {
                     api.sendEvent({
                         name: 'city_event',
                         extra: {
@@ -148,7 +153,7 @@
                             district: app.district,
                             province_code: app.listp[app.indp].code,
                             city_code: app.listc[app.indc].code,
-                            region_code: app.listd[app.indc].code,
+                            region_code: app.listd[app.indd].code,
                         }
                     });
                     app.closeCity();
